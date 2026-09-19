@@ -55,14 +55,11 @@ export default function AdminOrders({ selectedOrder, setSelectedOrder }) {
     }
   };
 
+  const [deleteConfirmOrder, setDeleteConfirmOrder] = useState(null);
+
   const handleDelete = (orderId, e) => {
     e.stopPropagation();
-    if (window.confirm(`Are you sure you want to delete Order #${orderId}?`)) {
-      deleteOrder(orderId);
-      if (selectedOrder?.orderId === orderId) {
-        setSelectedOrder(null);
-      }
-    }
+    setDeleteConfirmOrder(orderId);
   };
 
   const formatDate = (dateStr) => {
@@ -351,6 +348,41 @@ export default function AdminOrders({ selectedOrder, setSelectedOrder }) {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* CUSTOM DELETE CONFIRMATION MODAL */}
+      {deleteConfirmOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Delete Order?</h3>
+            <p className="text-xs text-gray-500">
+              Are you sure you want to delete Order <strong className="text-gray-800">#{deleteConfirmOrder}</strong>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setDeleteConfirmOrder(null)}
+                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteOrder(deleteConfirmOrder);
+                  if (selectedOrder?.orderId === deleteConfirmOrder) {
+                    setSelectedOrder(null);
+                  }
+                  setDeleteConfirmOrder(null);
+                }}
+                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -63,13 +63,10 @@ export default function AdminCategories() {
     handleCancel();
   };
 
-  const handleDelete = (catId, catName) => {
-    if (window.confirm(`Are you sure you want to delete category "${catName}"?`)) {
-      deleteCategory(catId);
-      if (editingCategory?.id === catId) {
-        handleCancel();
-      }
-    }
+  const [deleteConfirmCategory, setDeleteConfirmCategory] = useState(null);
+
+  const handleDelete = (cat) => {
+    setDeleteConfirmCategory(cat);
   };
 
   return (
@@ -202,7 +199,7 @@ export default function AdminCategories() {
 
                         {/* Delete Trash Icon Button */}
                         <button
-                          onClick={() => handleDelete(cat.id, cat.name)}
+                          onClick={() => handleDelete(cat)}
                           title="Delete Category"
                           className="p-1.5 bg-red-50 hover:bg-red-100 text-red-400 hover:text-red-500 rounded-md transition-colors cursor-pointer"
                         >
@@ -218,6 +215,41 @@ export default function AdminCategories() {
           </table>
         </div>
       </div>
+
+      {/* CUSTOM DELETE CONFIRMATION MODAL */}
+      {deleteConfirmCategory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Delete Category?</h3>
+            <p className="text-xs text-gray-500">
+              Are you sure you want to delete <strong className="text-gray-800">"{deleteConfirmCategory.name}"</strong>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setDeleteConfirmCategory(null)}
+                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteCategory(deleteConfirmCategory.id);
+                  if (editingCategory?.id === deleteConfirmCategory.id) {
+                    handleCancel();
+                  }
+                  setDeleteConfirmCategory(null);
+                }}
+                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

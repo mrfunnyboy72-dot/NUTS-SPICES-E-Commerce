@@ -4,6 +4,7 @@ import { Star, CheckCircle, EyeOff, Trash2, MessageSquare, ShieldAlert } from 'l
 
 export default function AdminReviews() {
   const { reviews, updateReviewStatus, deleteReview } = useCart();
+  const [deleteConfirmReview, setDeleteConfirmReview] = useState(null);
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -110,11 +111,7 @@ export default function AdminReviews() {
 
                     {/* Delete */}
                     <button
-                      onClick={() => {
-                        if (window.confirm('Delete this review permanently?')) {
-                          deleteReview(rev.id);
-                        }
-                      }}
+                      onClick={() => setDeleteConfirmReview(rev)}
                       className="p-1.5 bg-[#1E0F07] hover:bg-red-950 border border-red-500/40 text-red-400 rounded-lg cursor-pointer"
                       title="Delete Review"
                     >
@@ -129,6 +126,38 @@ export default function AdminReviews() {
           </table>
         </div>
       </div>
+
+      {/* CUSTOM DELETE CONFIRMATION MODAL */}
+      {deleteConfirmReview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Delete Review?</h3>
+            <p className="text-xs text-gray-500">
+              Are you sure you want to delete this review by <strong className="text-gray-800">"{deleteConfirmReview.customerName}"</strong>?
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setDeleteConfirmReview(null)}
+                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteReview(deleteConfirmReview.id);
+                  setDeleteConfirmReview(null);
+                }}
+                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

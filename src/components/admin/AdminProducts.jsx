@@ -151,6 +151,8 @@ export default function AdminProducts() {
     setIsModalOpen(false);
   };
 
+  const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       
@@ -308,11 +310,7 @@ export default function AdminProducts() {
 
                         {/* Red/Pink Delete Button */}
                         <button
-                          onClick={() => {
-                            if (window.confirm(`Are you sure you want to delete "${p.name}"?`)) {
-                              deleteProduct(p.id);
-                            }
-                          }}
+                          onClick={() => setDeleteConfirmProduct(p)}
                           className="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 rounded-lg transition-colors cursor-pointer"
                           title="Delete Product"
                         >
@@ -328,6 +326,38 @@ export default function AdminProducts() {
           </table>
         </div>
       </div>
+
+      {/* CUSTOM DELETE CONFIRMATION MODAL */}
+      {deleteConfirmProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Delete Product?</h3>
+            <p className="text-xs text-gray-500">
+              Are you sure you want to delete <strong className="text-gray-800">"{deleteConfirmProduct.name}"</strong>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setDeleteConfirmProduct(null)}
+                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteProduct(deleteConfirmProduct.id);
+                  setDeleteConfirmProduct(null);
+                }}
+                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ADD / EDIT PRODUCT MODAL */}
       {isModalOpen && (
