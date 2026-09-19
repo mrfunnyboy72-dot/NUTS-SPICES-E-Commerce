@@ -63,11 +63,11 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* 2. CENTER: DARK BROWN SEARCH BUTTON */}
-            <div className="flex-1 flex items-center justify-center">
+            {/* 2. CENTER: DARK BROWN WIDE SEARCH BUTTON */}
+            <div className="flex-1 flex items-center justify-center px-2">
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="px-5 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-sm flex items-center gap-2 cursor-pointer border border-[#8B3A13]"
+                className="w-44 sm:w-60 py-2.5 px-6 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-md flex items-center justify-center gap-2 cursor-pointer border border-[#8B3A13] hover:scale-105"
                 title="Search Products"
               >
                 <Search className="w-4 h-4 text-white" />
