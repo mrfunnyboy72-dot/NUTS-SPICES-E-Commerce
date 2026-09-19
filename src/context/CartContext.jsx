@@ -12,49 +12,85 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   // 1. STORE & APPLICATION SETTINGS (Admin Configurable)
   const [storeSettings, setStoreSettings] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_store_settings');
-    return saved ? JSON.parse(saved) : INITIAL_STORE_SETTINGS;
+    try {
+      const saved = localStorage.getItem('nuts_spices_store_settings');
+      return saved ? JSON.parse(saved) : INITIAL_STORE_SETTINGS;
+    } catch {
+      return INITIAL_STORE_SETTINGS;
+    }
   });
 
   // 2. PRODUCTS STATE (Admin Editable)
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_products');
-    return saved ? JSON.parse(saved) : PRODUCTS;
+    try {
+      const saved = localStorage.getItem('nuts_spices_products');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return PRODUCTS;
   });
 
   // 3. CATEGORIES STATE (Admin Editable)
   const [categories, setCategories] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_categories');
-    return saved ? JSON.parse(saved) : CATEGORIES;
+    try {
+      const saved = localStorage.getItem('nuts_spices_categories');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return CATEGORIES;
   });
 
   // 4. ORDERS STATE (Admin & Customer Live Sync)
   const [orders, setOrders] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_orders');
-    return saved ? JSON.parse(saved) : INITIAL_ORDERS;
+    try {
+      const saved = localStorage.getItem('nuts_spices_orders');
+      return saved ? JSON.parse(saved) : INITIAL_ORDERS;
+    } catch {
+      return INITIAL_ORDERS;
+    }
   });
 
   // 5. OFFERS STATE (Admin Editable)
   const [offers, setOffers] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_offers');
-    return saved ? JSON.parse(saved) : INITIAL_OFFERS;
+    try {
+      const saved = localStorage.getItem('nuts_spices_offers');
+      return saved ? JSON.parse(saved) : INITIAL_OFFERS;
+    } catch {
+      return INITIAL_OFFERS;
+    }
   });
 
   // 6. REVIEWS STATE (Admin Editable)
   const [reviews, setReviews] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_reviews');
-    return saved ? JSON.parse(saved) : INITIAL_REVIEWS;
+    try {
+      const saved = localStorage.getItem('nuts_spices_reviews');
+      return saved ? JSON.parse(saved) : INITIAL_REVIEWS;
+    } catch {
+      return INITIAL_REVIEWS;
+    }
   });
 
   // 7. CART & WISHLIST STATE
   const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_cart');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('nuts_spices_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   const [wishlist, setWishlist] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_wishlist');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('nuts_spices_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   // 8. NAVIGATION & ROUTING STATE
@@ -94,18 +130,30 @@ export const CartProvider = ({ children }) => {
 
   // 9. AUTHENTICATION (USER & ADMIN)
   const [registeredUsers, setRegisteredUsers] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_registered_users');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('nuts_spices_registered_users');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('nuts_spices_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   });
 
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
-    const saved = localStorage.getItem('nuts_spices_admin_logged');
-    return saved ? JSON.parse(saved) : false;
+    try {
+      const saved = localStorage.getItem('nuts_spices_admin_logged');
+      return saved ? JSON.parse(saved) : false;
+    } catch {
+      return false;
+    }
   });
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -160,16 +208,16 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('nuts_spices_admin_logged', JSON.stringify(isAdminLoggedIn));
   }, [isAdminLoggedIn]);
 
-const CLOUD_DB_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a0bb391ebc49d7';
-
   // Realtime multi-tab localStorage state synchronizer
   useEffect(() => {
     const handleStorageChange = (e) => {
       try {
         if (e.key === 'nuts_spices_products' && e.newValue) {
-          setProducts(JSON.parse(e.newValue));
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed) && parsed.length > 0) setProducts(parsed);
         } else if (e.key === 'nuts_spices_categories' && e.newValue) {
-          setCategories(JSON.parse(e.newValue));
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed) && parsed.length > 0) setCategories(parsed);
         } else if (e.key === 'nuts_spices_orders' && e.newValue) {
           setOrders(JSON.parse(e.newValue));
         } else if (e.key === 'nuts_spices_offers' && e.newValue) {
@@ -188,71 +236,21 @@ const CLOUD_DB_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a0bb
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Fetch Live Global Cloud DB Catalog on Mount
-  useEffect(() => {
-    const fetchCloudCatalog = async () => {
-      try {
-        const res = await fetch(CLOUD_DB_URL);
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.data) {
-            if (Array.isArray(json.data.products) && json.data.products.length > 0) {
-              setProducts(json.data.products);
-              localStorage.setItem('nuts_spices_products', JSON.stringify(json.data.products));
-            }
-            if (Array.isArray(json.data.categories) && json.data.categories.length > 0) {
-              setCategories(json.data.categories);
-              localStorage.setItem('nuts_spices_categories', JSON.stringify(json.data.categories));
-            }
-            if (Array.isArray(json.data.orders)) {
-              setOrders(json.data.orders);
-              localStorage.setItem('nuts_spices_orders', JSON.stringify(json.data.orders));
-            }
-            if (Array.isArray(json.data.offers)) {
-              setOffers(json.data.offers);
-              localStorage.setItem('nuts_spices_offers', JSON.stringify(json.data.offers));
-            }
-            if (Array.isArray(json.data.reviews)) {
-              setReviews(json.data.reviews);
-              localStorage.setItem('nuts_spices_reviews', JSON.stringify(json.data.reviews));
-            }
-            if (json.data.storeSettings) {
-              setStoreSettings(json.data.storeSettings);
-              localStorage.setItem('nuts_spices_store_settings', JSON.stringify(json.data.storeSettings));
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Cloud DB connection fallback to local storage:', err);
-      }
-    };
+  // Helper to reset store state to default seed data
+  const resetStoreToDefault = () => {
+    setProducts(PRODUCTS);
+    setCategories(CATEGORIES);
+    setOrders(INITIAL_ORDERS);
+    setOffers(INITIAL_OFFERS);
+    setReviews(INITIAL_REVIEWS);
+    setStoreSettings(INITIAL_STORE_SETTINGS);
 
-    fetchCloudCatalog();
-  }, []);
-
-  // Helper to persist changes to Cloud DB globally
-  const syncToCloud = async (overrideData = {}) => {
-    try {
-      const payload = {
-        name: 'Nuts & Spices Store Catalog',
-        data: {
-          products: overrideData.products || products,
-          categories: overrideData.categories || categories,
-          orders: overrideData.orders || orders,
-          offers: overrideData.offers || offers,
-          reviews: overrideData.reviews || reviews,
-          storeSettings: overrideData.storeSettings || storeSettings
-        }
-      };
-
-      await fetch(CLOUD_DB_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      console.warn('Cloud DB sync warning:', err);
-    }
+    localStorage.setItem('nuts_spices_products', JSON.stringify(PRODUCTS));
+    localStorage.setItem('nuts_spices_categories', JSON.stringify(CATEGORIES));
+    localStorage.setItem('nuts_spices_orders', JSON.stringify(INITIAL_ORDERS));
+    localStorage.setItem('nuts_spices_offers', JSON.stringify(INITIAL_OFFERS));
+    localStorage.setItem('nuts_spices_reviews', JSON.stringify(INITIAL_REVIEWS));
+    localStorage.setItem('nuts_spices_store_settings', JSON.stringify(INITIAL_STORE_SETTINGS));
   };
 
   // USER AUTH HANDLERS
@@ -477,69 +475,41 @@ const CLOUD_DB_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a0bb
       status: 'Active',
       ...newProductData
     };
-    setProducts(prev => {
-      const updated = [productToAdd, ...prev];
-      syncToCloud({ products: updated });
-      return updated;
-    });
+    setProducts(prev => [productToAdd, ...prev]);
     return productToAdd;
   };
 
   const updateProduct = (productId, updatedFields) => {
-    setProducts(prev => {
-      const updated = prev.map(p => p.id === productId ? { ...p, ...updatedFields } : p);
-      syncToCloud({ products: updated });
-      return updated;
-    });
+    setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...updatedFields } : p));
   };
 
   const deleteProduct = (productId) => {
-    setProducts(prev => {
-      const updated = prev.filter(p => p.id !== productId);
-      syncToCloud({ products: updated });
-      return updated;
-    });
+    setProducts(prev => prev.filter(p => p.id !== productId));
   };
 
   const toggleProductStatus = (productId) => {
-    setProducts(prev => {
-      const updated = prev.map(p => {
-        if (p.id === productId) {
-          const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
-          return { ...p, status: newStatus, active: newStatus === 'Active' };
-        }
-        return p;
-      });
-      syncToCloud({ products: updated });
-      return updated;
-    });
+    setProducts(prev => prev.map(p => {
+      if (p.id === productId) {
+        const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
+        return { ...p, status: newStatus, active: newStatus === 'Active' };
+      }
+      return p;
+    }));
   };
 
   // ADMIN - CATEGORIES CRUD
   const addCategory = (categoryData) => {
     const newId = categoryData.id || `cat-${Date.now()}`;
     const newCategory = { id: newId, ...categoryData };
-    setCategories(prev => {
-      const updated = [...prev, newCategory];
-      syncToCloud({ categories: updated });
-      return updated;
-    });
+    setCategories(prev => [...prev, newCategory]);
   };
 
   const updateCategory = (categoryId, updatedFields) => {
-    setCategories(prev => {
-      const updated = prev.map(c => c.id === categoryId ? { ...c, ...updatedFields } : c);
-      syncToCloud({ categories: updated });
-      return updated;
-    });
+    setCategories(prev => prev.map(c => c.id === categoryId ? { ...c, ...updatedFields } : c));
   };
 
   const deleteCategory = (categoryId) => {
-    setCategories(prev => {
-      const updated = prev.filter(c => c.id !== categoryId);
-      syncToCloud({ categories: updated });
-      return updated;
-    });
+    setCategories(prev => prev.filter(c => c.id !== categoryId));
   };
 
   // ADMIN - ORDERS CRUD & CUSTOMER CHECKOUT CREATION
@@ -714,7 +684,10 @@ const CLOUD_DB_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a0bb
         deleteReview,
 
         // Admin Customer Actions
-        deleteCustomer
+        deleteCustomer,
+
+        // Reset Store Helper
+        resetStoreToDefault
       }}
     >
       {children}
