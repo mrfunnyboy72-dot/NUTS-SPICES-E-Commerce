@@ -58,13 +58,39 @@ export const CartProvider = ({ children }) => {
   });
 
   // 8. NAVIGATION & ROUTING STATE
-  const [activePage, setActivePage] = useState('admin');
+  const [activePage, setActivePage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      if (path.startsWith('/admin')) {
+        return 'admin';
+      }
+    }
+    return 'home';
+  });
+
   const [adminTab, setAdminTab] = useState('dashboard'); // dashboard | products | categories | orders | customers | offers | reviews | settings
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
+
+  // Sync initial URL pathname and handle browser back/forward buttons
+  useEffect(() => {
+    const syncRouteFromPath = () => {
+      if (typeof window === 'undefined') return;
+      const path = window.location.pathname.toLowerCase();
+      if (path.startsWith('/admin')) {
+        setActivePage('admin');
+      } else if (path === '/' || path === '') {
+        setActivePage('home');
+      }
+    };
+
+    syncRouteFromPath();
+    window.addEventListener('popstate', syncRouteFromPath);
+    return () => window.removeEventListener('popstate', syncRouteFromPath);
+  }, []);
 
   // 9. AUTHENTICATION (USER & ADMIN)
   const [registeredUsers, setRegisteredUsers] = useState(() => {
@@ -233,6 +259,18 @@ export const CartProvider = ({ children }) => {
       setAdminTab(params.adminTab);
     }
     setActivePage(page);
+
+    // Update browser URL bar
+    if (typeof window !== 'undefined') {
+      if (page === 'admin') {
+        window.history.pushState({}, '', '/admin');
+      } else if (page === 'home') {
+        window.history.pushState({}, '', '/');
+      } else {
+        window.history.pushState({}, '', `/${page}`);
+      }
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

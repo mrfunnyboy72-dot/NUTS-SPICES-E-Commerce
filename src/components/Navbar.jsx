@@ -103,15 +103,6 @@ export default function Navbar() {
                 >
                   CONTACT
                 </button>
-
-                <button
-                  onClick={() => navigate('admin')}
-                  className={`text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-md transition-colors ${
-                    activePage === 'admin' ? 'bg-[#8B3A13] text-white' : 'bg-[#8B3A13]/10 text-[#8B3A13] hover:bg-[#8B3A13] hover:text-white'
-                  }`}
-                >
-                  ⚙️ ADMIN
-                </button>
               </nav>
 
               {/* Dark Brown SEARCH Button with White Search Icon Inside */}
