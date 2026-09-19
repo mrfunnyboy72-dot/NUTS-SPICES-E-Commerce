@@ -475,6 +475,32 @@ export const CartProvider = ({ children }) => {
     setReviews(prev => prev.filter(r => r.id !== reviewId));
   };
 
+  // ADMIN - CUSTOMER DELETE
+  const deleteCustomer = (customer) => {
+    if (!customer) return;
+    const phone = (customer.phone || '').trim();
+    const email = (customer.email || '').trim().toLowerCase();
+    const name = (customer.name || '').trim().toLowerCase();
+
+    setOrders(prev => prev.filter(o => {
+      const oPhone = (o.phone || '').trim();
+      const oName = (o.customerName || '').trim().toLowerCase();
+      const matchPhone = phone && phone !== 'n/a' && oPhone === phone;
+      const matchName = name && oName === name;
+      return !(matchPhone || matchName);
+    }));
+
+    setRegisteredUsers(prev => prev.filter(u => {
+      const uPhone = (u.phone || '').trim();
+      const uEmail = (u.email || '').trim().toLowerCase();
+      const uName = (u.name || '').trim().toLowerCase();
+      const matchPhone = phone && phone !== 'n/a' && uPhone === phone;
+      const matchEmail = email && uEmail && uEmail === email;
+      const matchName = name && uName === name;
+      return !(matchPhone || matchEmail || matchName);
+    }));
+  };
+
   // ADMIN - SETTINGS UPDATE
   const updateStoreSettings = (newSettings) => {
     setStoreSettings(prev => ({ ...prev, ...newSettings }));
@@ -562,7 +588,10 @@ export const CartProvider = ({ children }) => {
 
         // Admin Review Actions
         updateReviewStatus,
-        deleteReview
+        deleteReview,
+
+        // Admin Customer Actions
+        deleteCustomer
       }}
     >
       {children}

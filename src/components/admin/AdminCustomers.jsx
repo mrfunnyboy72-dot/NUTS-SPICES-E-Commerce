@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { Users, Search, Phone, Mail, MapPin, Calendar, ChevronRight, X, UserCheck, Eye } from 'lucide-react';
+import { Users, Search, Phone, Mail, MapPin, Calendar, ChevronRight, X, UserCheck, Eye, Trash2 } from 'lucide-react';
 
 export default function AdminCustomers({ onViewOrderDetails }) {
-  const { orders, registeredUsers } = useCart();
+  const { orders, registeredUsers, deleteCustomer } = useCart();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [deleteConfirmCustomer, setDeleteConfirmCustomer] = useState(null);
 
   // Compile full customer list from orders + registeredUsers
   const customersMap = {};
@@ -136,15 +137,26 @@ export default function AdminCustomers({ onViewOrderDetails }) {
                     ₹{cust.totalPurchase.toLocaleString('en-IN')}
                   </td>
 
-                  {/* Profile Action */}
+                  {/* Profile & Delete Actions */}
                   <td className="py-3.5 px-4 text-right">
-                    <button
-                      onClick={() => setSelectedCustomer(cust)}
-                      className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200/80 rounded-xl transition-colors cursor-pointer inline-flex items-center gap-1.5 font-bold text-xs"
-                    >
-                      <Eye className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Customer Profile</span>
-                    </button>
+                    <div className="inline-flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => setSelectedCustomer(cust)}
+                        className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200/80 rounded-xl transition-colors cursor-pointer inline-flex items-center gap-1.5 font-bold text-xs"
+                        title="View Customer Profile"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-blue-600" />
+                        <span>Customer Profile</span>
+                      </button>
+
+                      <button
+                        onClick={() => setDeleteConfirmCustomer(cust)}
+                        className="p-2 bg-rose-50 hover:bg-rose-100 text-rose-500 hover:text-rose-700 border border-rose-200/80 rounded-xl transition-colors cursor-pointer inline-flex items-center justify-center"
+                        title="Delete Customer Record"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
 
                 </tr>
@@ -251,6 +263,41 @@ export default function AdminCustomers({ onViewOrderDetails }) {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* CUSTOM DELETE CUSTOMER CONFIRMATION MODAL */}
+      {deleteConfirmCustomer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Delete Customer Record?</h3>
+            <p className="text-xs text-gray-500">
+              Are you sure you want to delete customer <strong className="text-gray-800">"{deleteConfirmCustomer.name}"</strong>? This will remove their profile and associated order records.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setDeleteConfirmCustomer(null)}
+                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteCustomer(deleteConfirmCustomer);
+                  if (selectedCustomer?.name === deleteConfirmCustomer.name) {
+                    setSelectedCustomer(null);
+                  }
+                  setDeleteConfirmCustomer(null);
+                }}
+                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
