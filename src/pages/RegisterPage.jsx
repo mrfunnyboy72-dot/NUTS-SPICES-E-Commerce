@@ -1,0 +1,276 @@
+import React, { useState } from 'react';
+import { useCart } from '../context/CartContext';
+import { Mail, Lock, User, Phone, Eye, EyeOff, Sparkles, CheckCircle2, ShieldCheck, LogIn, Gift } from 'lucide-react';
+
+export default function RegisterPage() {
+  const { user, registerUser, navigate } = useCart();
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const [regName, setRegName] = useState('');
+  const [regMobile, setRegMobile] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState('');
+  const [agreedTerms, setAgreedTerms] = useState(true);
+
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  if (user) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-12 text-center space-y-4">
+        <div className="bg-white rounded-3xl p-8 border border-[#E6D7C3] shadow-lg">
+          <h2 className="text-2xl font-black font-serif text-[#2B1509]">Already Registered!</h2>
+          <p className="text-xs text-[#8C7A6B] mt-2">You are currently logged in as {user.name}.</p>
+          <button
+            onClick={() => navigate('shop', { category: 'all' })}
+            className="mt-6 px-6 py-3 bg-[#8B3A13] text-white font-bold text-xs rounded-2xl uppercase tracking-wider cursor-pointer"
+          >
+            BROWSE SHOP CATALOG
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const handleRegisterSubmit = (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    if (!regName.trim() || !regMobile.trim() || !regPassword) {
+      setErrorMessage('Please fill in all required fields (*).');
+      return;
+    }
+    if (regPassword !== regConfirmPassword) {
+      setErrorMessage('Passwords do not match.');
+      return;
+    }
+    if (!agreedTerms) {
+      setErrorMessage('Please accept the Terms & Conditions.');
+      return;
+    }
+
+    setSuccessMessage('Account registered successfully!');
+    setTimeout(() => {
+      registerUser({
+        name: regName.trim(),
+        phone: regMobile.trim(),
+        email: regEmail.trim() || `${regName.toLowerCase().replace(/\s+/g, '')}@nutsandspices.in`,
+        password: regPassword
+      });
+      navigate('home');
+    }, 600);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-[#E6D7C3] grid grid-cols-1 md:grid-cols-12">
+        
+        {/* Left Side Brand Banner */}
+        <div className="md:col-span-5 bg-[#2B1509] text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#8B3A13]/40 rounded-full blur-2xl pointer-events-none" />
+          
+          <div className="space-y-4">
+            <div>
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#D4AF37]">
+                Gourmet Club Register
+              </span>
+            </div>
+            <h2 className="text-3xl font-black font-serif leading-tight">
+              CREATE YOUR ACCOUNT
+            </h2>
+            <p className="text-xs text-[#E6D7C3] leading-relaxed">
+              Join the Nuts & Spices Gourmet Club for direct WhatsApp order fulfillment, exclusive seasonal spice deals, and priority customer care.
+            </p>
+          </div>
+
+          <div className="space-y-4 pt-8 border-t border-[#8B3A13]/60">
+            <div className="flex items-center gap-3 text-xs text-[#E6D7C3]">
+              <Gift className="w-5 h-5 text-[#D4AF37] shrink-0" />
+              <span>Instant Member Privileges & Offers</span>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-[#E6D7C3]">
+              <ShieldCheck className="w-5 h-5 text-[#25D366] shrink-0" />
+              <span>Fast 1-Click WhatsApp Checkout</span>
+            </div>
+
+            {/* Redirect to Separate Login Page */}
+            <div className="bg-[#1A0B04] p-4 rounded-2xl border border-[#8B3A13]/50 space-y-2">
+              <span className="text-xs font-bold text-white block">Already a Member?</span>
+              <button
+                onClick={() => navigate('login')}
+                className="w-full py-2.5 bg-white/10 hover:bg-white/20 text-[#D4AF37] font-extrabold text-xs rounded-xl transition-all flex items-center justify-center gap-2 border border-[#D4AF37]/40 cursor-pointer"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>GO TO LOGIN PAGE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side Registration Form */}
+        <div className="md:col-span-7 p-8 sm:p-10 bg-[#FAF5EF]">
+          
+          <div className="mb-6">
+            <h3 className="text-2xl font-black font-serif text-[#2B1509]">
+              Member Registration
+            </h3>
+            <p className="text-xs text-[#8C7A6B] mt-1">
+              Fill in your details below to create your free account.
+            </p>
+          </div>
+
+          {/* Notifications */}
+          {errorMessage && (
+            <div className="bg-red-50 text-red-700 border border-red-200 text-xs font-semibold p-3.5 rounded-2xl mb-4">
+              ⚠️ {errorMessage}
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold p-3.5 rounded-2xl flex items-center gap-2 mb-4">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>{successMessage}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
+            
+            {/* Name */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#4A3525]">
+                Name *
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 text-[#8C7A6B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  required
+                  placeholder="Enter name"
+                  value={regName}
+                  onChange={(e) => setRegName(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E6D7C3] rounded-2xl text-xs font-semibold text-[#2B1509] outline-none focus:border-[#8B3A13]"
+                />
+              </div>
+            </div>
+
+            {/* Mobile Phone */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#4A3525]">
+                Mobile Phone Number *
+              </label>
+              <div className="relative">
+                <Phone className="w-4 h-4 text-[#8C7A6B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="tel"
+                  required
+                  placeholder="10-digit mobile number"
+                  value={regMobile}
+                  onChange={(e) => setRegMobile(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E6D7C3] rounded-2xl text-xs font-semibold text-[#2B1509] outline-none focus:border-[#8B3A13]"
+                />
+              </div>
+            </div>
+
+            {/* Email Address */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#4A3525]">
+                Email Address (Optional)
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-[#8C7A6B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  placeholder="name@example.com"
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E6D7C3] rounded-2xl text-xs font-semibold text-[#2B1509] outline-none focus:border-[#8B3A13]"
+                />
+              </div>
+            </div>
+
+            {/* Create Password */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#4A3525]">
+                Create Password *
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-[#8C7A6B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  placeholder="At least 6 characters"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2.5 bg-white border border-[#E6D7C3] rounded-2xl text-xs font-semibold text-[#2B1509] outline-none focus:border-[#8B3A13]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8C7A6B] hover:text-[#2B1509] cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#4A3525]">
+                Confirm Password *
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-[#8C7A6B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  placeholder="Re-enter password"
+                  value={regConfirmPassword}
+                  onChange={(e) => setRegConfirmPassword(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E6D7C3] rounded-2xl text-xs font-semibold text-[#2B1509] outline-none focus:border-[#8B3A13]"
+                />
+              </div>
+            </div>
+
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-2 pt-1">
+              <input
+                type="checkbox"
+                id="reg-terms"
+                checked={agreedTerms}
+                onChange={(e) => setAgreedTerms(e.target.checked)}
+                className="mt-0.5 rounded text-[#8B3A13] focus:ring-[#8B3A13]"
+              />
+              <label htmlFor="reg-terms" className="text-[11px] text-[#4A3525]">
+                I agree to Nuts & Spices Terms of Service & Privacy Policy.
+              </label>
+            </div>
+
+            {/* Register Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3.5 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-2xl transition-all shadow-md uppercase tracking-wider cursor-pointer mt-2"
+            >
+              CREATE MY ACCOUNT
+            </button>
+
+            {/* Link to Login */}
+            <div className="text-center pt-4 border-t border-[#E6D7C3]">
+              <span className="text-xs text-[#8C7A6B]">Already have an account? </span>
+              <button
+                type="button"
+                onClick={() => navigate('login')}
+                className="text-xs font-bold text-[#8B3A13] hover:underline cursor-pointer"
+              >
+                Login Here →
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}

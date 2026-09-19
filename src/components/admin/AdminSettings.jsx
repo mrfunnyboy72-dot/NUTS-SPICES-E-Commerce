@@ -1,0 +1,229 @@
+import React, { useState } from 'react';
+import { useCart } from '../../context/CartContext';
+import { 
+  Settings, Save, Phone, MessageSquare, 
+  Truck, Share2, CheckCircle 
+} from 'lucide-react';
+
+export default function AdminSettings() {
+  const { storeSettings, updateStoreSettings } = useCart();
+  const [formData, setFormData] = useState({ ...storeSettings });
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateStoreSettings(formData);
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 3000);
+  };
+
+  return (
+    <div className="space-y-6">
+      
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#2B1509] p-6 rounded-2xl border border-[#4A3525]">
+        <div>
+          <h2 className="text-2xl font-black font-serif text-white tracking-wide flex items-center gap-2">
+            <Settings className="w-6 h-6 text-[#D4AF37]" />
+            ⚙️ ADMIN — STORE SETTINGS
+          </h2>
+          <p className="text-xs text-[#C4A484] mt-1">
+            Configure global store parameters, live WhatsApp order contact, delivery rates, and store address.
+          </p>
+        </div>
+      </div>
+
+      {isSaved && (
+        <div className="p-4 bg-emerald-950/80 border border-emerald-500/50 rounded-2xl text-emerald-200 text-xs flex items-center gap-3 animate-in fade-in duration-300">
+          <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
+          <div>
+            <strong className="block font-bold">Store Settings Saved Successfully!</strong>
+            <span>All storefront order links & WhatsApp dispatch numbers have been updated live across the website.</span>
+          </div>
+        </div>
+      )}
+
+      {/* SETTINGS FORM */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* SECTION 1: STORE IDENTITY & WHATSAPP CONFIG */}
+        <div className="bg-[#2B1509] border border-[#4A3525] rounded-2xl p-6 shadow-xl space-y-4">
+          <div className="pb-3 border-b border-[#4A3525] flex items-center justify-between">
+            <h3 className="text-base font-black font-serif text-[#D4AF37] flex items-center gap-2">
+              <MessageSquare className="w-5 h-5 text-[#25D366]" />
+              Store Identity & WhatsApp Connection
+            </h3>
+            <span className="text-[10px] bg-[#25D366]/20 text-[#25D366] px-2.5 py-1 rounded-full font-extrabold border border-[#25D366]/40 uppercase">
+              Dynamic Live Sync
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            {/* Store Name */}
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Store Name *</label>
+              <input
+                type="text"
+                required
+                value={formData.storeName}
+                onChange={(e) => setFormData({ ...formData, storeName: e.target.value })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none font-bold"
+              />
+            </div>
+
+            {/* WhatsApp Number */}
+            <div>
+              <label className="block font-bold uppercase text-emerald-400 mb-1">WhatsApp Order Number *</label>
+              <div className="relative">
+                <MessageSquare className="w-4 h-4 text-[#25D366] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  required
+                  value={formData.whatsappNumber}
+                  onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                  placeholder="919876543210"
+                  className="w-full bg-[#1E0F07] border border-[#25D366]/60 focus:border-[#25D366] rounded-xl p-3 pl-10 text-white outline-none font-mono font-bold"
+                />
+              </div>
+              <p className="text-[10px] text-[#C4A484] mt-1">
+                Include country code without '+' (e.g. <code>919876543210</code>). All checkout orders direct here!
+              </p>
+            </div>
+
+            {/* Logo URL */}
+            <div className="sm:col-span-2">
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Logo Image URL</label>
+              <input
+                type="text"
+                value={formData.logoUrl}
+                onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+                placeholder="https://..."
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 2: CONTACT & ADDRESS */}
+        <div className="bg-[#2B1509] border border-[#4A3525] rounded-2xl p-6 shadow-xl space-y-4">
+          <h3 className="text-base font-black font-serif text-[#D4AF37] pb-3 border-b border-[#4A3525] flex items-center gap-2">
+            <Phone className="w-5 h-5 text-[#8B3A13]" />
+            Contact & Location Information
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            {/* Phone */}
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Support Phone Number</label>
+              <input
+                type="text"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Store Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none"
+              />
+            </div>
+
+            {/* Address */}
+            <div className="sm:col-span-2">
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Store Full Address</label>
+              <textarea
+                rows={2}
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 3: DELIVERY & SHIPPING CONFIG */}
+        <div className="bg-[#2B1509] border border-[#4A3525] rounded-2xl p-6 shadow-xl space-y-4">
+          <h3 className="text-base font-black font-serif text-[#D4AF37] pb-3 border-b border-[#4A3525] flex items-center gap-2">
+            <Truck className="w-5 h-5 text-[#D4AF37]" />
+            Delivery Rates & Free Shipping Minimums
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            {/* Delivery Charge */}
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Standard Delivery Fee (₹)</label>
+              <input
+                type="number"
+                min="0"
+                value={formData.deliveryCharge}
+                onChange={(e) => setFormData({ ...formData, deliveryCharge: Number(e.target.value) })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white font-serif font-bold text-sm outline-none"
+              />
+            </div>
+
+            {/* Minimum Order Amount for Free Delivery */}
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Free Delivery Threshold (₹)</label>
+              <input
+                type="number"
+                min="0"
+                value={formData.minOrderAmount}
+                onChange={(e) => setFormData({ ...formData, minOrderAmount: Number(e.target.value) })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white font-serif font-bold text-sm outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 4: SOCIAL MEDIA */}
+        <div className="bg-[#2B1509] border border-[#4A3525] rounded-2xl p-6 shadow-xl space-y-4">
+          <h3 className="text-base font-black font-serif text-[#D4AF37] pb-3 border-b border-[#4A3525] flex items-center gap-2">
+            <Share2 className="w-5 h-5 text-[#8B3A13]" />
+            Social Media Handles & Links
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Instagram Profile URL</label>
+              <input
+                type="text"
+                value={formData.instagram}
+                onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold uppercase text-[#C4A484] mb-1">Facebook Page URL</label>
+              <input
+                type="text"
+                value={formData.facebook}
+                onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
+                className="w-full bg-[#1E0F07] border border-[#4A3525] focus:border-[#D4AF37] rounded-xl p-3 text-white outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* SAVE BUTTON */}
+        <div className="flex justify-end pt-4">
+          <button
+            type="submit"
+            className="px-8 py-3.5 bg-gradient-to-r from-[#8B3A13] to-[#D4AF37] hover:from-[#722F0F] hover:to-[#B59226] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-xl transition-all cursor-pointer flex items-center gap-2"
+          >
+            <Save className="w-5 h-5" />
+            <span>Save & Apply Store Settings</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  );
+}
