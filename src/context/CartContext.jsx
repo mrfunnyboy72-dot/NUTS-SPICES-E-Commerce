@@ -105,7 +105,7 @@ export const CartProvider = ({ children }) => {
 
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
     const saved = localStorage.getItem('nuts_spices_admin_logged');
-    return saved ? JSON.parse(saved) : true;
+    return saved ? JSON.parse(saved) : false;
   });
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -229,18 +229,16 @@ export const CartProvider = ({ children }) => {
   };
 
   // ADMIN AUTH HANDLERS
-  const loginAdmin = (username, password) => {
-    // Simple demo authentication check (admin / admin123)
-    if ((username === 'admin' || username === 'admin@nutsandspices.store') && password === 'admin123') {
+  const loginAdmin = (emailInput, passwordInput) => {
+    const email = (emailInput || '').trim().toLowerCase();
+    const password = (passwordInput || '').trim();
+
+    if (email === 'admin702@admin.com' && password === 'yorrnutsandspices') {
       setIsAdminLoggedIn(true);
       return { success: true };
     }
-    // Also accept any non-empty demo submission for user convenience
-    if (username.trim() && password.trim()) {
-      setIsAdminLoggedIn(true);
-      return { success: true };
-    }
-    return { success: false, message: 'Invalid Admin Credentials' };
+
+    return { success: false, message: 'Invalid Admin Email or Password' };
   };
 
   const logoutAdmin = () => {
