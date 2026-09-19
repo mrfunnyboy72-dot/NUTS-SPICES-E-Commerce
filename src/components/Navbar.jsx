@@ -52,43 +52,22 @@ export default function Navbar() {
               {/* Brand Logo Text */}
               <button 
                 onClick={() => navigate('home')}
-                className="flex flex-col text-left focus:outline-none shrink min-w-0 group cursor-pointer"
+                className="flex flex-col text-left focus:outline-none shrink-0 group cursor-pointer"
               >
-                <span className="text-sm sm:text-2xl font-black tracking-wider text-[#2B1509] font-serif group-hover:text-[#8B3A13] transition-colors leading-none truncate">
+                <span className="text-lg sm:text-2xl font-black tracking-wider text-[#2B1509] font-serif group-hover:text-[#8B3A13] transition-colors leading-none whitespace-nowrap">
                   NUTS & SPICES
                 </span>
-                <span className="text-[8px] sm:text-[10px] tracking-widest text-[#8B3A13] font-bold uppercase mt-0.5 truncate">
+                <span className="text-[9px] sm:text-[10px] tracking-widest text-[#8B3A13] font-bold uppercase mt-1 whitespace-nowrap">
                   Gourmet Store
                 </span>
               </button>
             </div>
 
-            {/* 2. CENTER: PILL SEARCH BAR */}
-            <form 
-              onSubmit={handleSearchSubmit}
-              className="hidden md:flex items-center flex-1 max-w-md bg-white border border-[#E6D7C3] rounded-full p-1 pl-4 shadow-sm hover:border-[#8B3A13] transition-all"
-            >
-              <Search className="w-4 h-4 text-[#8C7A6B] shrink-0 mr-2" />
-              <input
-                type="text"
-                placeholder="Search The Product"
-                value={navSearch}
-                onChange={(e) => setNavSearch(e.target.value)}
-                className="w-full bg-transparent outline-none text-xs text-[#2B1509] placeholder-[#8C7A6B] font-medium"
-              />
-              <button
-                type="submit"
-                className="px-6 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-bold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-xs cursor-pointer"
-              >
-                Search
-              </button>
-            </form>
-
-            {/* 3. RIGHT: LINKS & ACTION ICONS */}
-            <div className="flex items-center gap-1 sm:gap-4 shrink-0">
+            {/* 2. CENTER / RIGHT: LINKS & ACTION ICONS */}
+            <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
               
               {/* Nav Links */}
-              <nav className="hidden lg:flex items-center gap-6">
+              <nav className="hidden lg:flex items-center gap-6 mr-1">
                 <button
                   onClick={() => navigate('home')}
                   className={`text-xs font-bold uppercase tracking-wider transition-colors ${
@@ -135,13 +114,14 @@ export default function Navbar() {
                 </button>
               </nav>
 
-              {/* Mobile Search Button */}
+              {/* Dark Brown SEARCH Button with White Search Icon Inside */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="md:hidden p-1.5 sm:p-2 text-[#4A3525] hover:text-[#8B3A13] hover:bg-[#F3E8DC] rounded-full transition-colors"
-                title="Search"
+                className="px-4 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-sm flex items-center gap-1.5 cursor-pointer border border-[#8B3A13]"
+                title="Search Products"
               >
-                <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Search className="w-4 h-4 text-white" />
+                <span>SEARCH</span>
               </button>
 
               {/* 1. Wishlist Heart Button (1st) */}
