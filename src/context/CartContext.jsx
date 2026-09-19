@@ -20,13 +20,48 @@ export const CartProvider = ({ children }) => {
     }
   });
 
+  // Helper to ensure every product has valid fields & weights array
+  const sanitizeProductList = (list) => {
+    if (!Array.isArray(list)) return PRODUCTS;
+    return list.map(p => {
+      if (!p || typeof p !== 'object') return null;
+      const basePrice = Number(p.price) || 350;
+      const defaultWeights = [
+        { label: '250g', price: basePrice, originalPrice: Math.round(basePrice * 1.2) },
+        { label: '500g', price: Math.round(basePrice * 1.8), originalPrice: Math.round(basePrice * 2.1) }
+      ];
+      const validWeights = Array.isArray(p.weights) && p.weights.length > 0 
+        ? p.weights.map(w => ({
+            label: w?.label || '250g',
+            price: Number(w?.price) || basePrice,
+            originalPrice: Number(w?.originalPrice) || Math.round((Number(w?.price) || basePrice) * 1.2)
+          }))
+        : defaultWeights;
+
+      return {
+        ...p,
+        id: p.id || `prod-${Math.random()}`,
+        name: p.name || 'Gourmet Item',
+        category: p.category || 'nuts-dry-fruits',
+        categoryName: p.categoryName || 'NUTS & DRY FRUITS',
+        image: p.image || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
+        price: basePrice,
+        weights: validWeights,
+        status: p.status || 'Active',
+        active: p.active !== false
+      };
+    }).filter(Boolean);
+  };
+
   // 2. PRODUCTS STATE (Admin Editable)
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('nuts_spices_products');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return sanitizeProductList(parsed);
+        }
       }
     } catch {}
     return PRODUCTS;

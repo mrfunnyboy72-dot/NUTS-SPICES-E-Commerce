@@ -59,46 +59,49 @@ export default function SearchModal() {
               <p className="text-xs mt-1">Try searching for "Almonds", "Spices", or "Dates"</p>
             </div>
           ) : (
-            filteredProducts.map((product) => (
-              <div 
-                key={product.id}
-                className="py-3 flex items-center justify-between group hover:bg-[#FAF5EF] rounded-xl px-2 transition-colors cursor-pointer"
-                onClick={() => {
-                  setIsSearchOpen(false);
-                  navigate('product-details', { product });
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-12 h-12 rounded-lg object-cover border border-[#E6D7C3]"
-                  />
-                  <div>
-                    <h4 className="text-sm font-bold text-[#2B1509] group-hover:text-[#8B3A13] transition-colors">
-                      {product.name}
-                    </h4>
-                    <span className="text-xs text-[#8B3A13] font-semibold">
-                      ₹{product.weights[0].price} / {product.weights[0].label}
-                    </span>
+            filteredProducts.map((product) => {
+              const weightObj = product?.weights?.[0] || { label: '250g', price: Number(product?.price) || 350 };
+              return (
+                <div 
+                  key={product.id}
+                  className="py-3 flex items-center justify-between group hover:bg-[#FAF5EF] rounded-xl px-2 transition-colors cursor-pointer"
+                  onClick={() => {
+                    setIsSearchOpen(false);
+                    navigate('product-details', { product });
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-12 h-12 rounded-lg object-cover border border-[#E6D7C3]"
+                    />
+                    <div>
+                      <h4 className="text-sm font-bold text-[#2B1509] group-hover:text-[#8B3A13] transition-colors">
+                        {product.name}
+                      </h4>
+                      <span className="text-xs text-[#8B3A13] font-semibold">
+                        ₹{weightObj.price} / {weightObj.label}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product, weightObj, 1);
+                      }}
+                      className="px-3 py-1.5 text-xs font-semibold bg-[#FAF5EF] text-[#8B3A13] hover:bg-[#8B3A13] hover:text-white rounded-lg transition-colors flex items-center gap-1 border border-[#E6D7C3]"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>+ Add</span>
+                    </button>
+                    <ArrowRight className="w-4 h-4 text-[#8C7A6B] group-hover:text-[#8B3A13] transition-colors" />
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(product, product.weights[0], 1);
-                    }}
-                    className="px-3 py-1.5 text-xs font-semibold bg-[#FAF5EF] text-[#8B3A13] hover:bg-[#8B3A13] hover:text-white rounded-lg transition-colors flex items-center gap-1 border border-[#E6D7C3]"
-                  >
-                    <ShoppingBag className="w-3.5 h-3.5" />
-                    <span>+ Add</span>
-                  </button>
-                  <ArrowRight className="w-4 h-4 text-[#8C7A6B] group-hover:text-[#8B3A13] transition-colors" />
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 

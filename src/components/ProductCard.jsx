@@ -4,21 +4,30 @@ import { Heart, Star, ShoppingBag, Check } from 'lucide-react';
 
 export default function ProductCard({ product }) {
   const { addToCart, wishlist, toggleWishlist, navigate } = useCart();
-  const [selectedWeight, setSelectedWeight] = useState(product.weights[0]);
+  
+  if (!product) return null;
+
+  const defaultWeight = (product.weights && product.weights[0]) 
+    ? product.weights[0] 
+    : { label: '250g', price: Number(product.price) || 350, originalPrice: Math.round((Number(product.price) || 350) * 1.2) };
+
+  const [selectedWeight, setSelectedWeight] = useState(defaultWeight);
+  const activeWeight = selectedWeight || defaultWeight;
+  const weightsList = Array.isArray(product.weights) && product.weights.length > 0 ? product.weights : [defaultWeight];
   const [added, setAdded] = useState(false);
 
   const isWishlisted = wishlist.includes(product.id);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    addToCart(product, selectedWeight, 1);
+    addToCart(product, activeWeight, 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
 
-  const discountPercent = Math.round(
-    ((selectedWeight.originalPrice - selectedWeight.price) / selectedWeight.originalPrice) * 100
-  );
+  const origP = Number(activeWeight.originalPrice) || Math.round((Number(activeWeight.price) || 350) * 1.2);
+  const curP = Number(activeWeight.price) || 350;
+  const discountPercent = origP > curP ? Math.round(((origP - curP) / origP) * 100) : 0;
 
   return (
     <div 
@@ -91,12 +100,12 @@ export default function ProductCard({ product }) {
             Select Pack Weight:
           </div>
           <div className="flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
-            {product.weights.map((w) => (
+            {weightsList.map((w) => (
               <button
                 key={w.label}
                 onClick={() => setSelectedWeight(w)}
                 className={`text-xs px-2.5 py-1 rounded-md font-semibold border transition-all ${
-                  selectedWeight.label === w.label
+                  activeWeight.label === w.label
                     ? 'bg-[#8B3A13] text-white border-[#8B3A13] shadow-sm'
                     : 'bg-[#FAF5EF] text-[#4A3525] border-[#E6D7C3] hover:border-[#8B3A13]'
                 }`}
@@ -112,10 +121,10 @@ export default function ProductCard({ product }) {
           <div className="flex flex-col">
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-black text-[#8B3A13]">
-                ₹{selectedWeight.price}
+                ₹{activeWeight.price}
               </span>
               <span className="text-xs text-[#8C7A6B] line-through">
-                ₹{selectedWeight.originalPrice}
+                ₹{activeWeight.originalPrice}
               </span>
             </div>
             <span className="text-[10px] text-green-700 font-bold">Inclusive of taxes</span>

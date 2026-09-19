@@ -19,12 +19,13 @@ export default function ShopPage() {
   });
 
   // Sorting
+  const getPrice = (item) => Number(item?.weights?.[0]?.price) || Number(item?.price) || 0;
   if (sortBy === 'price-low') {
-    filtered.sort((a, b) => a.weights[0].price - b.weights[0].price);
+    filtered.sort((a, b) => getPrice(a) - getPrice(b));
   } else if (sortBy === 'price-high') {
-    filtered.sort((a, b) => b.weights[0].price - a.weights[0].price);
+    filtered.sort((a, b) => getPrice(b) - getPrice(a));
   } else if (sortBy === 'rating') {
-    filtered.sort((a, b) => b.rating - a.rating);
+    filtered.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
   }
 
   return (
