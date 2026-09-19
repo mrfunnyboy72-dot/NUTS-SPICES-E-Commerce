@@ -1,14 +1,13 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { PRODUCTS, CATEGORIES } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { ArrowLeft } from 'lucide-react';
 
 export default function CategoryPage() {
-  const { selectedCategory, navigate } = useCart();
+  const { products, categories, selectedCategory, navigate } = useCart();
 
-  const currentCatObj = CATEGORIES.find(c => c.id === selectedCategory) || CATEGORIES[1];
-  const categoryProducts = PRODUCTS.filter(p => p.category === currentCatObj.id);
+  const currentCatObj = categories.find(c => c.id === selectedCategory) || categories[1] || categories[0];
+  const categoryProducts = products.filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => p.category === currentCatObj?.id);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">

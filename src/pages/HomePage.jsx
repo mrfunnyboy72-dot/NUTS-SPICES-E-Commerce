@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import { PRODUCTS, CATEGORIES } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { ArrowRight, Compass, Sparkles } from 'lucide-react';
 
@@ -11,7 +10,7 @@ const HERO_SLIDES = [
 ];
 
 export default function HomePage() {
-  const { navigate } = useCart();
+  const { navigate, products, categories } = useCart();
   const scrollRef = useRef(null);
 
   // 5 Seconds Automatic Image Slide Interval
@@ -30,8 +29,8 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  const featuredProducts = PRODUCTS.slice(0, 6);
-  const categoriesList = CATEGORIES.filter(c => c.id !== 'all');
+  const featuredProducts = products.filter(p => p.status !== 'Inactive' && p.active !== false).slice(0, 6);
+  const categoriesList = categories.filter(c => c.id !== 'all');
 
   return (
     <div className="space-[#2B1509] space-y-16 pb-16">

@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { PRODUCTS } from '../data/products';
 import { Search, X, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function SearchModal() {
-  const { isSearchOpen, setIsSearchOpen, navigate, addToCart } = useCart();
+  const { products, isSearchOpen, setIsSearchOpen, navigate, addToCart } = useCart();
   const [searchTerm, setSearchTerm] = useState('');
 
   if (!isSearchOpen) return null;
 
+  const activeProducts = products.filter(p => p.status !== 'Inactive' && p.active !== false);
+
   const filteredProducts = searchTerm.trim() === '' 
-    ? PRODUCTS.slice(0, 4) // default suggestions
-    : PRODUCTS.filter(p => 
+    ? activeProducts.slice(0, 4) // default suggestions
+    : activeProducts.filter(p => 
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        p.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+        (p.categoryName || p.category || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
 
   return (

@@ -160,6 +160,32 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('nuts_spices_admin_logged', JSON.stringify(isAdminLoggedIn));
   }, [isAdminLoggedIn]);
 
+  // Realtime multi-tab localStorage state synchronizer
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      try {
+        if (e.key === 'nuts_spices_products' && e.newValue) {
+          setProducts(JSON.parse(e.newValue));
+        } else if (e.key === 'nuts_spices_categories' && e.newValue) {
+          setCategories(JSON.parse(e.newValue));
+        } else if (e.key === 'nuts_spices_orders' && e.newValue) {
+          setOrders(JSON.parse(e.newValue));
+        } else if (e.key === 'nuts_spices_offers' && e.newValue) {
+          setOffers(JSON.parse(e.newValue));
+        } else if (e.key === 'nuts_spices_reviews' && e.newValue) {
+          setReviews(JSON.parse(e.newValue));
+        } else if (e.key === 'nuts_spices_store_settings' && e.newValue) {
+          setStoreSettings(JSON.parse(e.newValue));
+        }
+      } catch (err) {
+        console.error('Error syncing storage across tabs:', err);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // USER AUTH HANDLERS
   const registerUser = (userData) => {
     const newUser = {

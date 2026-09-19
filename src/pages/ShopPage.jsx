@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { PRODUCTS, CATEGORIES } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { Filter, SlidersHorizontal, Search } from 'lucide-react';
 
 export default function ShopPage() {
-  const { selectedCategory, setSelectedCategory } = useCart();
+  const { products, categories, selectedCategory, setSelectedCategory } = useCart();
   const [activeCategory, setActiveCategory] = useState(selectedCategory || 'all');
   const [sortBy, setSortBy] = useState('featured');
   const [searchFilter, setSearchFilter] = useState('');
 
   // Filtering
-  let filtered = PRODUCTS.filter(p => {
+  let filtered = products.filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
     const matchesCat = activeCategory === 'all' || p.category === activeCategory;
+    const catName = p.categoryName || p.category || '';
     const matchesSearch = p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                          p.categoryName.toLowerCase().includes(searchFilter.toLowerCase());
+                          catName.toLowerCase().includes(searchFilter.toLowerCase());
     return matchesCat && matchesSearch;
   });
 
@@ -49,7 +49,7 @@ export default function ShopPage() {
         
         {/* Category Pill Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
-          {CATEGORIES.map(cat => (
+          {categories.map(cat => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}

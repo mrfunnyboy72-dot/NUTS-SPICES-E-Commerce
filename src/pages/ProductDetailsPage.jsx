@@ -4,9 +4,9 @@ import { PRODUCTS } from '../data/products';
 import { ArrowLeft, Star, ShoppingBag, ShieldCheck, Truck, RefreshCw, Heart, Check, MessageSquare } from 'lucide-react';
 
 export default function ProductDetailsPage() {
-  const { selectedProduct, addToCart, wishlist, toggleWishlist, navigate } = useCart();
+  const { selectedProduct, products, addToCart, wishlist, toggleWishlist, navigate } = useCart();
   
-  const product = selectedProduct || PRODUCTS[0];
+  const product = selectedProduct || (products && products.find(p => p.status !== 'Inactive' && p.active !== false)) || (products && products[0]) || PRODUCTS[0];
   const [selectedWeight, setSelectedWeight] = useState(product.weights[0]);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);

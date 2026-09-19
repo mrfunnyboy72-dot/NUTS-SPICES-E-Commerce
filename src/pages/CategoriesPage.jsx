@@ -1,12 +1,11 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { CATEGORIES, PRODUCTS } from '../data/products';
 import { ArrowRight, Layers } from 'lucide-react';
 
 export default function CategoriesPage() {
-  const { navigate, products } = useCart();
+  const { navigate, products, categories } = useCart();
 
-  const categoriesList = CATEGORIES.filter(c => c.id !== 'all');
+  const categoriesList = categories.filter(c => c.id !== 'all');
 
   const categoryDetails = {
     'nuts': { tagline: 'Premium Jumbo & Roasted Nuts' },
