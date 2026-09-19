@@ -58,7 +58,7 @@ export default function AdminLogin() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold uppercase text-gray-600 mb-1.5 tracking-wider">
-              Admin Email
+              Email
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -67,7 +67,7 @@ export default function AdminLogin() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin702@admin.com"
+                placeholder="Enter Your Admin Email"
                 className="w-full bg-gray-50 border border-gray-200 focus:border-[#130924] rounded-2xl py-3 pl-10 pr-4 text-xs font-semibold text-gray-900 outline-none transition-colors"
               />
             </div>
@@ -84,7 +84,7 @@ export default function AdminLogin() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Enter password"
                 className="w-full bg-gray-50 border border-gray-200 focus:border-[#130924] rounded-2xl py-3 pl-10 pr-4 text-xs font-semibold text-gray-900 outline-none transition-colors"
               />
             </div>
