@@ -160,6 +160,8 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('nuts_spices_admin_logged', JSON.stringify(isAdminLoggedIn));
   }, [isAdminLoggedIn]);
 
+const CLOUD_DB_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a0bb391ebc49d7';
+
   // Realtime multi-tab localStorage state synchronizer
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -185,6 +187,73 @@ export const CartProvider = ({ children }) => {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  // Fetch Live Global Cloud DB Catalog on Mount
+  useEffect(() => {
+    const fetchCloudCatalog = async () => {
+      try {
+        const res = await fetch(CLOUD_DB_URL);
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.data) {
+            if (Array.isArray(json.data.products) && json.data.products.length > 0) {
+              setProducts(json.data.products);
+              localStorage.setItem('nuts_spices_products', JSON.stringify(json.data.products));
+            }
+            if (Array.isArray(json.data.categories) && json.data.categories.length > 0) {
+              setCategories(json.data.categories);
+              localStorage.setItem('nuts_spices_categories', JSON.stringify(json.data.categories));
+            }
+            if (Array.isArray(json.data.orders)) {
+              setOrders(json.data.orders);
+              localStorage.setItem('nuts_spices_orders', JSON.stringify(json.data.orders));
+            }
+            if (Array.isArray(json.data.offers)) {
+              setOffers(json.data.offers);
+              localStorage.setItem('nuts_spices_offers', JSON.stringify(json.data.offers));
+            }
+            if (Array.isArray(json.data.reviews)) {
+              setReviews(json.data.reviews);
+              localStorage.setItem('nuts_spices_reviews', JSON.stringify(json.data.reviews));
+            }
+            if (json.data.storeSettings) {
+              setStoreSettings(json.data.storeSettings);
+              localStorage.setItem('nuts_spices_store_settings', JSON.stringify(json.data.storeSettings));
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Cloud DB connection fallback to local storage:', err);
+      }
+    };
+
+    fetchCloudCatalog();
+  }, []);
+
+  // Helper to persist changes to Cloud DB globally
+  const syncToCloud = async (overrideData = {}) => {
+    try {
+      const payload = {
+        name: 'Nuts & Spices Store Catalog',
+        data: {
+          products: overrideData.products || products,
+          categories: overrideData.categories || categories,
+          orders: overrideData.orders || orders,
+          offers: overrideData.offers || offers,
+          reviews: overrideData.reviews || reviews,
+          storeSettings: overrideData.storeSettings || storeSettings
+        }
+      };
+
+      await fetch(CLOUD_DB_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.warn('Cloud DB sync warning:', err);
+    }
+  };
 
   // USER AUTH HANDLERS
   const registerUser = (userData) => {
@@ -408,41 +477,69 @@ export const CartProvider = ({ children }) => {
       status: 'Active',
       ...newProductData
     };
-    setProducts(prev => [productToAdd, ...prev]);
+    setProducts(prev => {
+      const updated = [productToAdd, ...prev];
+      syncToCloud({ products: updated });
+      return updated;
+    });
     return productToAdd;
   };
 
   const updateProduct = (productId, updatedFields) => {
-    setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...updatedFields } : p));
+    setProducts(prev => {
+      const updated = prev.map(p => p.id === productId ? { ...p, ...updatedFields } : p);
+      syncToCloud({ products: updated });
+      return updated;
+    });
   };
 
   const deleteProduct = (productId) => {
-    setProducts(prev => prev.filter(p => p.id !== productId));
+    setProducts(prev => {
+      const updated = prev.filter(p => p.id !== productId);
+      syncToCloud({ products: updated });
+      return updated;
+    });
   };
 
   const toggleProductStatus = (productId) => {
-    setProducts(prev => prev.map(p => {
-      if (p.id === productId) {
-        const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
-        return { ...p, status: newStatus, active: newStatus === 'Active' };
-      }
-      return p;
-    }));
+    setProducts(prev => {
+      const updated = prev.map(p => {
+        if (p.id === productId) {
+          const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
+          return { ...p, status: newStatus, active: newStatus === 'Active' };
+        }
+        return p;
+      });
+      syncToCloud({ products: updated });
+      return updated;
+    });
   };
 
   // ADMIN - CATEGORIES CRUD
   const addCategory = (categoryData) => {
     const newId = categoryData.id || `cat-${Date.now()}`;
     const newCategory = { id: newId, ...categoryData };
-    setCategories(prev => [...prev, newCategory]);
+    setCategories(prev => {
+      const updated = [...prev, newCategory];
+      syncToCloud({ categories: updated });
+      return updated;
+    });
   };
 
   const updateCategory = (categoryId, updatedFields) => {
-    setCategories(prev => prev.map(c => c.id === categoryId ? { ...c, ...updatedFields } : c));
+    setCategories(prev => {
+      const updated = prev.map(c => c.id === categoryId ? { ...c, ...updatedFields } : c);
+      syncToCloud({ categories: updated });
+      return updated;
+    });
   };
 
   const deleteCategory = (categoryId) => {
-    setCategories(prev => prev.filter(c => c.id !== categoryId));
+    setCategories(prev => {
+      const updated = prev.filter(c => c.id !== categoryId);
+      syncToCloud({ categories: updated });
+      return updated;
+    });
   };
 
   // ADMIN - ORDERS CRUD & CUSTOMER CHECKOUT CREATION
