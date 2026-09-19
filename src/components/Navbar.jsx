@@ -63,7 +63,19 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* 2. CENTER / RIGHT: LINKS & ACTION ICONS */}
+            {/* 2. CENTER: DARK BROWN SEARCH BUTTON */}
+            <div className="flex-1 flex items-center justify-center">
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="px-5 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-sm flex items-center gap-2 cursor-pointer border border-[#8B3A13]"
+                title="Search Products"
+              >
+                <Search className="w-4 h-4 text-white" />
+                <span>SEARCH</span>
+              </button>
+            </div>
+
+            {/* 3. RIGHT GROUP: LINKS & ACTION ICONS */}
             <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
               
               {/* Nav Links */}
@@ -104,16 +116,6 @@ export default function Navbar() {
                   CONTACT
                 </button>
               </nav>
-
-              {/* Dark Brown SEARCH Button with White Search Icon Inside */}
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className="px-4 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-sm flex items-center gap-1.5 cursor-pointer border border-[#8B3A13]"
-                title="Search Products"
-              >
-                <Search className="w-4 h-4 text-white" />
-                <span>SEARCH</span>
-              </button>
 
               {/* 1. Wishlist Heart Button (1st) */}
               <button
