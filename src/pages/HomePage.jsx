@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
