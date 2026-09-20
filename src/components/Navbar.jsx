@@ -63,15 +63,15 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* 2. CENTER: DARK BROWN SEARCH BUTTON (Sleek on Mobile, Wide on Desktop) */}
-            <div className="flex-1 flex items-center justify-center px-1 sm:px-2">
+            {/* 2. CENTER: DARK BROWN WIDE SEARCH BUTTON (Desktop & Tablet only) */}
+            <div className="hidden sm:flex flex-1 items-center justify-center px-2">
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="py-1.5 sm:py-2.5 px-3 sm:px-6 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-[11px] sm:text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 cursor-pointer border border-[#8B3A13] hover:scale-105 sm:w-60"
+                className="w-56 sm:w-64 py-2.5 px-6 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs rounded-full transition-all shrink-0 uppercase tracking-wider shadow-md flex items-center justify-center gap-2 cursor-pointer border border-[#8B3A13] hover:scale-105"
                 title="Search Products"
               >
-                <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
-                <span className="text-[10px] sm:text-xs tracking-wider">SEARCH</span>
+                <Search className="w-4 h-4 text-white" />
+                <span>SEARCH</span>
               </button>
             </div>
 
@@ -183,6 +183,22 @@ export default function Navbar() {
             </div>
 
           </div>
+        </div>
+
+        {/* Dedicated Mobile Search Bar Row (Mobile Phones only - Zero Overlap!) */}
+        <div className="block sm:hidden px-3 pb-2.5 pt-0.5">
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="w-full py-2 px-3.5 bg-white border border-[#E6D7C3] hover:border-[#8B3A13] rounded-full text-xs text-[#8C7A6B] flex items-center justify-between shadow-2xs transition-all cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-[#8B3A13] shrink-0" />
+              <span className="text-xs font-semibold text-gray-500">Search products, dry fruits, spices...</span>
+            </div>
+            <span className="text-[10px] bg-[#8B3A13] text-white px-2.5 py-1 rounded-full font-extrabold tracking-wider uppercase shrink-0">
+              SEARCH
+            </span>
+          </button>
         </div>
 
         {/* Mobile Menu Drawer */}
