@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCart } from '../../context/CartContext';
-import { Image as ImageIcon, Pencil, Trash2, Plus, X } from 'lucide-react';
+import { Image as ImageIcon, Pencil, Trash2, Plus, X, Upload } from 'lucide-react';
 
 export default function AdminCategories() {
   const { categories, addCategory, updateCategory, deleteCategory } = useCart();
@@ -10,18 +10,23 @@ export default function AdminCategories() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryName, setCategoryName] = useState('');
   const [iconLucideName, setIconLucideName] = useState('');
+  const [categoryImage, setCategoryImage] = useState('');
+
+  // Hidden File Input Ref for Device Image Picker
+  const [quickUploadCategoryId, setQuickUploadCategoryId] = useState(null);
+  const fileInputRef = useRef(null);
 
   const filteredCategories = categories.filter(c => c.id !== 'all');
 
   const handleOpenAdd = () => {
     if (isFormOpen && !editingCategory) {
-      // Toggle close if already adding
       setIsFormOpen(false);
       return;
     }
     setEditingCategory(null);
     setCategoryName('');
     setIconLucideName('');
+    setCategoryImage('');
     setIsFormOpen(true);
   };
 
@@ -29,6 +34,7 @@ export default function AdminCategories() {
     setEditingCategory(cat);
     setCategoryName(cat.name || '');
     setIconLucideName(cat.iconLucideName || cat.icon || '');
+    setCategoryImage(cat.image || '');
     setIsFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -38,16 +44,44 @@ export default function AdminCategories() {
     setEditingCategory(null);
     setCategoryName('');
     setIconLucideName('');
+    setCategoryImage('');
+  };
+
+  const handleQuickImageUpload = (catId) => {
+    setQuickUploadCategoryId(catId);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Img = reader.result;
+        if (quickUploadCategoryId) {
+          updateCategory(quickUploadCategoryId, { image: base64Img });
+          setQuickUploadCategoryId(null);
+        } else {
+          setCategoryImage(base64Img);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!categoryName.trim()) return;
 
+    const finalImage = categoryImage || (editingCategory ? editingCategory.image : 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600');
+
     if (editingCategory) {
       updateCategory(editingCategory.id, {
         name: categoryName.trim(),
-        iconLucideName: iconLucideName.trim()
+        iconLucideName: iconLucideName.trim(),
+        image: finalImage
       });
     } else {
       const generatedId = categoryName.trim().toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -56,7 +90,7 @@ export default function AdminCategories() {
         name: categoryName.trim(),
         iconLucideName: iconLucideName.trim() || 'Sparkles',
         icon: '🌰',
-        image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'
+        image: finalImage
       });
     }
 
@@ -71,6 +105,14 @@ export default function AdminCategories() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-sans">
+      {/* Hidden File Input for Device Image Selection */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+      />
       
       {/* HEADER ROW */}
       <div className="flex items-center justify-between gap-4">
@@ -134,6 +176,45 @@ export default function AdminCategories() {
 
             </div>
 
+            {/* Category Image URL & File Upload */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                Category Image (URL or Upload from Device)
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={categoryImage}
+                  onChange={(e) => setCategoryImage(e.target.value)}
+                  placeholder="https://images.unsplash.com/... or upload image"
+                  className="flex-1 bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-3 py-2 text-xs font-normal text-gray-800 outline-none transition-all placeholder:text-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuickUploadCategoryId(null);
+                    if (fileInputRef.current) fileInputRef.current.click();
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                >
+                  <Upload className="w-3.5 h-3.5 text-purple-600" />
+                  <span>Choose File</span>
+                </button>
+              </div>
+              {categoryImage && (
+                <div className="mt-2 flex items-center gap-2">
+                  <img src={categoryImage} alt="Preview" className="w-10 h-10 object-cover rounded-md border border-gray-200" />
+                  <button
+                    type="button"
+                    onClick={() => setCategoryImage('')}
+                    className="text-xs text-red-500 hover:text-red-700 font-medium cursor-pointer"
+                  >
+                    Remove Image
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Action Submit Button */}
             <div className="pt-2">
               <button
@@ -153,9 +234,9 @@ export default function AdminCategories() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50/40 text-gray-700 font-bold text-xs">
-                <th className="py-3.5 px-6 w-24">Icon</th>
+                <th className="py-3.5 px-6 w-24">Icon / Image</th>
                 <th className="py-3.5 px-6">Category Name</th>
-                <th className="py-3.5 px-6 text-right w-32">Actions</th>
+                <th className="py-3.5 px-6 text-right w-36">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 text-xs">
@@ -169,11 +250,11 @@ export default function AdminCategories() {
                 filteredCategories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-gray-50/50 transition-colors">
                     
-                    {/* Icon */}
+                    {/* Icon / Image */}
                     <td className="py-4 px-6">
-                      <div className="w-8 h-8 flex items-center justify-center text-gray-500">
+                      <div className="w-9 h-9 flex items-center justify-center text-gray-500 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
                         {cat.image ? (
-                          <img src={cat.image} alt={cat.name} className="w-7 h-7 object-cover rounded-md" />
+                          <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
                         ) : (
                           <ImageIcon className="w-5 h-5 text-gray-400 stroke-[1.5]" />
                         )}
@@ -188,6 +269,15 @@ export default function AdminCategories() {
                     {/* Actions */}
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        {/* Quick Upload Image Button */}
+                        <button
+                          onClick={() => handleQuickImageUpload(cat.id)}
+                          title="Upload/Change Category Image"
+                          className="p-1.5 bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 rounded-md transition-colors cursor-pointer"
+                        >
+                          <Upload className="w-4 h-4" />
+                        </button>
+
                         {/* Edit Notepad Icon Button */}
                         <button
                           onClick={() => handleOpenEdit(cat)}
