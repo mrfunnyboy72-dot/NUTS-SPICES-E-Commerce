@@ -100,7 +100,7 @@ export default function HomePage() {
 
       </section>
 
-      {/* 10 NEW CATEGORIES GRID WITH MATCHING IMAGES */}
+      {/* 5 CATEGORIES GRID WITH MATCHING IMAGES & VIEW ALL BUTTON */}
       <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="flex items-end justify-between border-b border-[#E6D7C3] pb-4">
           <div>
@@ -113,16 +113,17 @@ export default function HomePage() {
           </div>
 
           <button
-            onClick={() => navigate('shop', { category: 'all' })}
-            className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[#8B3A13] hover:underline"
+            onClick={() => navigate('categories')}
+            className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[#8B3A13] hover:underline cursor-pointer"
           >
-            <span>Browse Full Catalog</span>
+            <span>View All Categories</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
+        {/* Displaying ONLY Top 5 Categories */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-          {categoriesList.map(cat => (
+          {categoriesList.slice(0, 5).map(cat => (
             <div
               key={cat.id}
               onClick={() => navigate('category', { category: cat.id })}
@@ -131,7 +132,7 @@ export default function HomePage() {
               {/* Category Image Box */}
               <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
                 <img
-                  src={cat.image}
+                  src={cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'}
                   alt={cat.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -150,6 +151,17 @@ export default function HomePage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* View All Categories Button */}
+        <div className="pt-2 text-center">
+          <button
+            onClick={() => navigate('categories')}
+            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md hover:shadow-xl transition-all border border-[#D4AF37]/30 cursor-pointer group hover:scale-105"
+          >
+            <span>View All Categories</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#D4AF37]" />
+          </button>
         </div>
       </section>
 
