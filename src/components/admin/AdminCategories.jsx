@@ -3,7 +3,7 @@ import { useCart } from '../../context/CartContext';
 import { Image as ImageIcon, Pencil, Trash2, Plus, X, Upload, Eye, Package } from 'lucide-react';
 
 export default function AdminCategories() {
-  const { categories, products, addCategory, updateCategory, deleteCategory } = useCart();
+  const { categories, products, addCategory, updateCategory, deleteCategory, addProduct } = useCart();
   
   // Form state
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -14,6 +14,13 @@ export default function AdminCategories() {
 
   // View Category Products Modal State
   const [viewingCategory, setViewingCategory] = useState(null);
+  const [isAddingProdInCat, setIsAddingProdInCat] = useState(false);
+  const [newProdName, setNewProdName] = useState('');
+  const [newProdPrice, setNewProdPrice] = useState('');
+  const [newProdBadge, setNewProdBadge] = useState('Best Seller');
+  const [newProdImage, setNewProdImage] = useState('');
+  const [newProdDesc, setNewProdDesc] = useState('');
+  const prodFileInputRef = useRef(null);
 
   // Hidden File Input Ref for Device Image Picker
   const [quickUploadCategoryId, setQuickUploadCategoryId] = useState(null);
@@ -30,6 +37,35 @@ export default function AdminCategories() {
       const pCatName = (p.categoryName || '').toLowerCase();
       return pCat === cId || pCat === cName || pCatName === cName || pCatName === cId;
     });
+  };
+
+  const handleAddProductToCategory = (e) => {
+    e.preventDefault();
+    if (!newProdName.trim() || !newProdPrice || !viewingCategory) return;
+
+    const basePrice = Number(newProdPrice) || 290;
+    const finalImg = newProdImage.trim() || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800';
+
+    addProduct({
+      name: newProdName.trim(),
+      category: viewingCategory.id,
+      categoryName: viewingCategory.name,
+      price: basePrice,
+      badge: newProdBadge.trim() || 'Best Seller',
+      image: finalImg,
+      description: newProdDesc.trim() || `Authentic ${newProdName.trim()} packed for premium quality and freshness.`,
+      weights: [
+        { label: '250g', price: basePrice, originalPrice: Math.round(basePrice * 1.2) },
+        { label: '500g', price: Math.round(basePrice * 1.8), originalPrice: Math.round(basePrice * 2.1) },
+        { label: '1 kg', price: Math.round(basePrice * 3.4), originalPrice: Math.round(basePrice * 4.0) }
+      ]
+    });
+
+    setNewProdName('');
+    setNewProdPrice('');
+    setNewProdImage('');
+    setNewProdDesc('');
+    setIsAddingProdInCat(false);
   };
 
   const handleOpenAdd = () => {
@@ -338,9 +374,25 @@ export default function AdminCategories() {
                       {/* Actions */}
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {/* Add Product Directly to Category Button */}
+                          <button
+                            onClick={() => {
+                              setViewingCategory(cat);
+                              setIsAddingProdInCat(true);
+                            }}
+                            title="Add New Product to Category"
+                            className="p-1.5 bg-green-50 hover:bg-green-100 text-green-700 hover:text-green-800 rounded-md transition-colors cursor-pointer flex items-center gap-1 font-bold text-[11px] px-2 border border-green-200"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Add Product</span>
+                          </button>
+
                           {/* View Products Button */}
                           <button
-                            onClick={() => setViewingCategory(cat)}
+                            onClick={() => {
+                              setViewingCategory(cat);
+                              setIsAddingProdInCat(false);
+                            }}
                             title="View Products in Category"
                             className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 hover:text-emerald-700 rounded-md transition-colors cursor-pointer"
                           >
@@ -385,32 +437,180 @@ export default function AdminCategories() {
         </div>
       </div>
 
-      {/* VIEW CATEGORY PRODUCTS MODAL */}
+      {/* VIEW & ADD CATEGORY PRODUCTS MODAL */}
       {viewingCategory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
+          {/* Hidden File Input for Product Device Image Selection */}
+          <input
+            type="file"
+            accept="image/*"
+            ref={prodFileInputRef}
+            onChange={async (e) => {
+              const f = e.target.files && e.target.files[0];
+              if (f) {
+                const base64 = await compressImageFile(f);
+                if (base64) setNewProdImage(base64);
+              }
+              if (e.target) e.target.value = '';
+            }}
+            className="hidden"
+          />
+
+          <div className="bg-white border border-gray-200 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+            
+            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+                <div className="w-9 h-9 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 shrink-0">
                   <img src={viewingCategory.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'} alt={viewingCategory.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 uppercase">{viewingCategory.name}</h3>
-                  <p className="text-xs text-gray-500">{getCategoryProducts(viewingCategory).length} Products assigned to this category</p>
+                  <h3 className="text-base font-bold text-gray-900 uppercase tracking-tight">{viewingCategory.name}</h3>
+                  <p className="text-xs text-gray-500">{getCategoryProducts(viewingCategory).length} Items in this category</p>
                 </div>
               </div>
-              <button
-                onClick={() => setViewingCategory(null)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsAddingProdInCat(!isAddingProdInCat)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    isAddingProdInCat 
+                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+                      : 'bg-[#dc2626] hover:bg-[#b91c1c] text-white shadow-xs'
+                  }`}
+                >
+                  {isAddingProdInCat ? (
+                    <span>Cancel</span>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 text-white" />
+                      <span>Add Product</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setViewingCategory(null);
+                    setIsAddingProdInCat(false);
+                  }}
+                  className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
+            {/* Expandable Add Product Form */}
+            {isAddingProdInCat && (
+              <form onSubmit={handleAddProductToCategory} className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-150 shrink-0">
+                <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wider">
+                  Add New Product to "{viewingCategory.name}"
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1">Product Title *</label>
+                    <input
+                      type="text"
+                      required
+                      value={newProdName}
+                      onChange={(e) => setNewProdName(e.target.value)}
+                      placeholder="e.g. Royal Kashmiri Saffron"
+                      className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1">Price ₹ (250g) *</label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      value={newProdPrice}
+                      onChange={(e) => setNewProdPrice(e.target.value)}
+                      placeholder="e.g. 450"
+                      className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1">Badge Tag</label>
+                    <input
+                      type="text"
+                      value={newProdBadge}
+                      onChange={(e) => setNewProdBadge(e.target.value)}
+                      placeholder="Best Seller / Premium"
+                      className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-700 mb-1">Product Image</label>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="url"
+                        value={newProdImage}
+                        onChange={(e) => setNewProdImage(e.target.value)}
+                        placeholder="Image URL or upload"
+                        className="flex-1 bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (prodFileInputRef.current) prodFileInputRef.current.click();
+                        }}
+                        className="px-2.5 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-lg font-bold text-[11px] cursor-pointer shrink-0"
+                      >
+                        Upload
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Short Description</label>
+                  <input
+                    type="text"
+                    value={newProdDesc}
+                    onChange={(e) => setNewProdDesc(e.target.value)}
+                    placeholder="Short description of taste, origin, wellness..."
+                    className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-xs text-gray-800 outline-none"
+                  />
+                </div>
+
+                {newProdImage && (
+                  <div className="flex items-center gap-2 pt-1">
+                    <img src={newProdImage} alt="Preview" className="w-8 h-8 object-cover rounded-md border border-gray-200" />
+                    <span className="text-[11px] text-green-700 font-bold">Image Attached!</span>
+                  </div>
+                )}
+
+                <div className="pt-1 flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingProdInCat(false)}
+                    className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-lg cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold text-xs rounded-lg shadow-xs cursor-pointer"
+                  >
+                    Save & Add Product
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Product List Content */}
             <div className="flex-1 overflow-y-auto space-y-3 py-1 pr-1">
               {getCategoryProducts(viewingCategory).length === 0 ? (
                 <div className="py-8 text-center text-gray-400 text-xs font-medium">
-                  No products are currently assigned to "{viewingCategory.name}".
+                  No products are currently assigned to "{viewingCategory.name}". Click "+ Add Product" above to add one!
                 </div>
               ) : (
                 getCategoryProducts(viewingCategory).map(product => (
@@ -432,7 +632,10 @@ export default function AdminCategories() {
 
             <div className="pt-2 border-t border-gray-100">
               <button
-                onClick={() => setViewingCategory(null)}
+                onClick={() => {
+                  setViewingCategory(null);
+                  setIsAddingProdInCat(false);
+                }}
                 className="w-full py-2.5 bg-gray-900 hover:bg-black text-white font-bold rounded-xl text-xs cursor-pointer transition-all"
               >
                 Close Window
