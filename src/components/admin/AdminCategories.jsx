@@ -360,11 +360,20 @@ export default function AdminCategories() {
                         {cat.name}
                       </td>
 
-                      {/* Products Count */}
+                      {/* Products Count - Click to View & Add Products */}
                       <td className="py-4 px-6">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-800 rounded-full font-bold text-[11px] border border-amber-200/80">
+                        <button
+                          onClick={() => {
+                            setViewingCategory(cat);
+                            setIsAddingProdInCat(false);
+                          }}
+                          title="Click to view & add products in this category"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-full font-bold text-xs border border-amber-300/80 shadow-2xs transition-all cursor-pointer group hover:scale-105"
+                        >
+                          <Package className="w-3.5 h-3.5 text-amber-700 group-hover:scale-110 transition-transform" />
                           <span>{catProds.length} Products</span>
-                        </span>
+                          <Eye className="w-3.5 h-3.5 text-amber-700 opacity-60 group-hover:opacity-100" />
+                        </button>
                       </td>
 
                       {/* Actions */}
