@@ -10,9 +10,16 @@ const HERO_SLIDES = [
 ];
 
 export default function HomePage() {
-  const { navigate, products, categories } = useCart();
+  const { navigate, products, categories, selectedCategory } = useCart();
+  const [homeCategory, setHomeCategory] = useState(selectedCategory || 'all');
   const scrollRef = useRef(null);
   const catScrollRef = useRef(null);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      setHomeCategory(selectedCategory);
+    }
+  }, [selectedCategory]);
 
   const scrollCatLeft = () => {
     if (catScrollRef.current) {
@@ -42,8 +49,25 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  const featuredProducts = products.filter(p => p.status !== 'Inactive' && p.active !== false).slice(0, 6);
-  const categoriesList = categories.filter(c => c.id !== 'all');
+  const categoriesList = (categories || []).filter(c => c.id !== 'all');
+
+  const filteredHomeProducts = (products || []).filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
+    if (!homeCategory || homeCategory === 'all') return true;
+    const catObj = (categories || []).find(c => c.id === homeCategory);
+    const cId = homeCategory.toLowerCase();
+    const cName = catObj ? catObj.name.toLowerCase() : '';
+    const pCat = (p.category || '').toLowerCase();
+    const pCatName = (p.categoryName || '').toLowerCase();
+
+    return pCat === cId || 
+           pCat === cName || 
+           (cName && pCatName === cName) || 
+           pCatName === cId ||
+           (pCat && cId && (pCat.includes(cId) || cId.includes(pCat))) ||
+           (pCatName && cName && (pCatName.includes(cName) || cName.includes(pCatName)));
+  });
+
+  const activeCatObj = (categories || []).find(c => c.id === homeCategory) || { name: 'All Products' };
 
   return (
     <div className="space-[#2B1509] space-y-16 pb-16">
@@ -85,8 +109,12 @@ export default function HomePage() {
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
               <button
-                onClick={() => navigate('shop', { category: 'all' })}
-                className="px-8 py-4 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold rounded-2xl transition-all shadow-2xl hover:shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm tracking-wider uppercase group border border-[#D4AF37]/30"
+                onClick={() => {
+                  setHomeCategory('all');
+                  const el = document.getElementById('products-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-8 py-4 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold rounded-2xl transition-all shadow-2xl hover:shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm tracking-wider uppercase group border border-[#D4AF37]/30 cursor-pointer"
               >
                 <span>SHOP NOW</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -95,13 +123,9 @@ export default function HomePage() {
               <button
                 onClick={() => {
                   const el = document.getElementById('categories-section');
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth' });
-                  } else {
-                    navigate('shop', { category: 'all' });
-                  }
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-4 bg-white/15 hover:bg-white/25 text-white font-extrabold rounded-2xl backdrop-blur-md transition-all text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 border border-white/30 shadow-lg"
+                className="px-8 py-4 bg-white/15 hover:bg-white/25 text-white font-extrabold rounded-2xl backdrop-blur-md transition-all text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 border border-white/30 shadow-lg cursor-pointer"
               >
                 <Compass className="w-4 h-4" />
                 <span>EXPLORE CATEGORIES</span>
@@ -144,13 +168,14 @@ export default function HomePage() {
               </button>
             </div>
 
-            <button
-              onClick={() => navigate('categories')}
-              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[#8B3A13] hover:underline cursor-pointer ml-2"
-            >
-              <span>View All Categories</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            {homeCategory !== 'all' && (
+              <button
+                onClick={() => setHomeCategory('all')}
+                className="text-xs font-extrabold text-[#8B3A13] hover:underline cursor-pointer ml-2"
+              >
+                Reset to All Categories
+              </button>
+            )}
           </div>
         </div>
 
@@ -159,74 +184,98 @@ export default function HomePage() {
           ref={catScrollRef}
           className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 scroll-smooth scrollbar-none snap-x snap-mandatory"
         >
-          {categoriesList.map(cat => (
-            <div
-              key={cat.id}
-              onClick={() => navigate('category', { category: cat.id })}
-              className="w-40 sm:w-52 shrink-0 snap-start bg-white rounded-2xl border border-[#E6D7C3] hover:border-[#8B3A13] shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 group"
-            >
-              {/* Category Image Box */}
-              <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
-                <img
-                  src={cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'}
-                  alt={cat.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
+          {categoriesList.map(cat => {
+            const isSelected = homeCategory === cat.id;
+            return (
+              <div
+                key={cat.id}
+                onClick={() => {
+                  setHomeCategory(cat.id);
+                  const el = document.getElementById('products-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`w-40 sm:w-52 shrink-0 snap-start bg-white rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 group ${
+                  isSelected ? 'border-[#8B3A13] ring-2 ring-[#8B3A13]/30 shadow-lg' : 'border-[#E6D7C3] hover:border-[#8B3A13] shadow-sm'
+                }`}
+              >
+                {/* Category Image Box */}
+                <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
+                  <img
+                    src={cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'}
+                    alt={cat.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  {isSelected && (
+                    <span className="absolute top-2 right-2 bg-[#8B3A13] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-md">
+                      Selected
+                    </span>
+                  )}
+                </div>
 
-              {/* Category Info */}
-              <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-center space-y-2">
-                <h3 className="font-extrabold text-[#2B1509] text-xs sm:text-sm group-hover:text-[#8B3A13] transition-colors leading-snug line-clamp-1">
-                  {cat.name}
-                </h3>
-                
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B3A13] group-hover:underline flex items-center justify-center gap-1">
-                  <span>Explore Items</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                </span>
+                {/* Category Info */}
+                <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-center space-y-2">
+                  <h3 className={`font-extrabold text-xs sm:text-sm leading-snug line-clamp-1 transition-colors ${isSelected ? 'text-[#8B3A13]' : 'text-[#2B1509] group-hover:text-[#8B3A13]'}`}>
+                    {cat.name}
+                  </h3>
+                  
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B3A13] group-hover:underline flex items-center justify-center gap-1">
+                    <span>View Products</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* View All Categories Button */}
-        <div className="pt-2 text-center">
-          <button
-            onClick={() => navigate('categories')}
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md hover:shadow-xl transition-all border border-[#D4AF37]/30 cursor-pointer group hover:scale-105"
-          >
-            <span>View All Categories</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#D4AF37]" />
-          </button>
+            );
+          })}
         </div>
       </section>
 
-      {/* BEST SELLERS GRID */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex items-end justify-between">
+      {/* PRODUCTS SECTION ON HOMEPAGE */}
+      <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-24">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E6D7C3] pb-4">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#8B3A13]">
-              Handpicked Favorites
+              {homeCategory === 'all' ? 'Handpicked Favorites' : `Category: ${activeCatObj.name}`}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black font-serif text-[#2B1509] mt-1">
-              Trending Best Sellers
+              {homeCategory === 'all' ? 'Trending Best Sellers' : activeCatObj.name}
             </h2>
           </div>
 
-          <button
-            onClick={() => navigate('shop', { category: 'all' })}
-            className="flex items-center gap-1.5 text-xs font-bold text-[#8B3A13] hover:underline"
-          >
-            <span>View All Products</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          {/* Inline Category Pills Filter */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
+            {(categories || []).map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setHomeCategory(cat.id)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  homeCategory === cat.id
+                    ? 'bg-[#8B3A13] text-white shadow-md'
+                    : 'bg-white text-[#4A3525] border border-[#E6D7C3] hover:border-[#8B3A13]'
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {filteredHomeProducts.length === 0 ? (
+          <div className="bg-white rounded-3xl p-12 text-center border border-[#E6D7C3] space-y-3">
+            <p className="text-lg font-bold text-[#2B1509]">No products found in this category</p>
+            <button
+              onClick={() => setHomeCategory('all')}
+              className="px-5 py-2.5 bg-[#8B3A13] text-white font-bold text-xs rounded-xl cursor-pointer"
+            >
+              Show All Products
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredHomeProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* HOW ORDERING WORKS (WHATSAPP FLOW) */}
