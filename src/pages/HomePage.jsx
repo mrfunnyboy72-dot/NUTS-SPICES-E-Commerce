@@ -240,23 +240,6 @@ export default function HomePage() {
               {homeCategory === 'all' ? 'Trending Best Sellers' : activeCatObj.name}
             </h2>
           </div>
-
-          {/* Inline Category Pills Filter */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-            {(categories || []).map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setHomeCategory(cat.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                  homeCategory === cat.id
-                    ? 'bg-[#8B3A13] text-white shadow-md'
-                    : 'bg-white text-[#4A3525] border border-[#E6D7C3] hover:border-[#8B3A13]'
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
         </div>
 
         {filteredHomeProducts.length === 0 ? (
