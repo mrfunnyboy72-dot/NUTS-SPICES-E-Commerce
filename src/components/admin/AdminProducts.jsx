@@ -215,8 +215,6 @@ export default function AdminProducts() {
               <tr className="border-b border-gray-200/80 bg-gray-50/80 text-gray-600 font-bold uppercase text-[11px] tracking-wider">
                 <th className="py-4 px-4">Image</th>
                 <th className="py-4 px-4">Product Name</th>
-                <th className="py-4 px-4">Category</th>
-                <th className="py-4 px-4">MRP</th>
                 <th className="py-4 px-4">Selling Price</th>
                 <th className="py-4 px-4">Discount</th>
                 <th className="py-4 px-4 text-center">Visibility</th>
@@ -251,19 +249,7 @@ export default function AdminProducts() {
                       <div className="font-semibold text-gray-800 text-xs">{p.name}</div>
                     </td>
 
-                    {/* 3. Category */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="text-gray-500 font-semibold text-xs tracking-wider uppercase">
-                        {p.categoryName || p.category}
-                      </span>
-                    </td>
-
-                    {/* 4. MRP (Strikethrough) */}
-                    <td className="py-3.5 px-4 whitespace-nowrap font-serif text-gray-400 line-through">
-                      ₹{mrp}
-                    </td>
-
-                    {/* 5. Selling Price (Red Bold) */}
+                    {/* 3. Selling Price (Red Bold) */}
                     <td className="py-3.5 px-4 whitespace-nowrap font-serif text-red-600 font-extrabold text-sm">
                       ₹{sellingPrice}
                     </td>
