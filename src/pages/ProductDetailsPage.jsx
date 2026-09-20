@@ -7,25 +7,40 @@ export default function ProductDetailsPage() {
   const { selectedProduct, products, addToCart, wishlist, toggleWishlist, navigate } = useCart();
   
   const product = selectedProduct || (products && products.find(p => p.status !== 'Inactive' && p.active !== false)) || (products && products[0]) || PRODUCTS[0];
-  const [selectedWeight, setSelectedWeight] = useState(product.weights[0]);
+  
+  const defaultWeight = { label: '250g', price: Number(product?.price) || 290, originalPrice: Math.round((Number(product?.price) || 290) * 1.2) };
+  const safeWeights = (Array.isArray(product?.weights) && product.weights.length > 0) ? product.weights : [defaultWeight];
+
+  const [selectedWeight, setSelectedWeight] = useState(safeWeights[0] || defaultWeight);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const isWishlisted = wishlist.includes(product.id);
+  React.useEffect(() => {
+    if (product) {
+      const weights = (Array.isArray(product?.weights) && product.weights.length > 0) ? product.weights : [defaultWeight];
+      setSelectedWeight(weights[0] || defaultWeight);
+      setQuantity(1);
+    }
+  }, [product?.id]);
+
+  const activeWeight = selectedWeight || safeWeights[0] || defaultWeight;
+  const isWishlisted = product ? wishlist.includes(product.id) : false;
 
   const handleAddToCart = () => {
-    addToCart(product, selectedWeight, quantity);
+    addToCart(product, activeWeight, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
 
   const handleQuickCheckout = () => {
-    addToCart(product, selectedWeight, quantity);
+    addToCart(product, activeWeight, quantity);
     navigate('cart');
   };
 
-  const totalPrice = selectedWeight.price * quantity;
-  const originalTotalPrice = selectedWeight.originalPrice * quantity;
+  const curPrice = Number(activeWeight?.price) || Number(product?.price) || 290;
+  const origPrice = Number(activeWeight?.originalPrice) || Math.round(curPrice * 1.2);
+  const totalPrice = curPrice * quantity;
+  const originalTotalPrice = origPrice * quantity;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -110,12 +125,12 @@ export default function ProductDetailsPage() {
                 Select Package Weight:
               </span>
               <div className="flex flex-wrap gap-2">
-                {product.weights.map((w) => (
+                {safeWeights.map((w) => (
                   <button
                     key={w.label}
                     onClick={() => setSelectedWeight(w)}
                     className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
-                      selectedWeight.label === w.label
+                      activeWeight.label === w.label
                         ? 'bg-[#8B3A13] text-white border-[#8B3A13] shadow-md'
                         : 'bg-[#FAF5EF] text-[#4A3525] border-[#E6D7C3] hover:border-[#8B3A13]'
                     }`}
