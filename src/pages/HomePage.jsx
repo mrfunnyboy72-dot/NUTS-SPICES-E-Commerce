@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
-import { ArrowRight, Compass, Sparkles } from 'lucide-react';
+import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
   { id: 1, image: '/images/hero1.png' },
@@ -12,6 +12,19 @@ const HERO_SLIDES = [
 export default function HomePage() {
   const { navigate, products, categories } = useCart();
   const scrollRef = useRef(null);
+  const catScrollRef = useRef(null);
+
+  const scrollCatLeft = () => {
+    if (catScrollRef.current) {
+      catScrollRef.current.scrollBy({ left: -260, behavior: 'smooth' });
+    }
+  };
+
+  const scrollCatRight = () => {
+    if (catScrollRef.current) {
+      catScrollRef.current.scrollBy({ left: 260, behavior: 'smooth' });
+    }
+  };
 
   // 5 Seconds Automatic Image Slide Interval
   useEffect(() => {
@@ -100,8 +113,8 @@ export default function HomePage() {
 
       </section>
 
-      {/* 5 CATEGORIES GRID WITH MATCHING IMAGES & VIEW ALL BUTTON */}
-      <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      {/* HORIZONTALLY SCROLLABLE SHOP BY CATEGORY ROW */}
+      <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex items-end justify-between border-b border-[#E6D7C3] pb-4">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#8B3A13]">
@@ -112,22 +125,45 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <button
-            onClick={() => navigate('categories')}
-            className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[#8B3A13] hover:underline cursor-pointer"
-          >
-            <span>View All Categories</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Scroll Left & Right Arrow Buttons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={scrollCatLeft}
+                className="p-2 rounded-full bg-white border border-[#E6D7C3] hover:border-[#8B3A13] text-[#8B3A13] hover:bg-[#FAF5EF] transition-all shadow-xs cursor-pointer"
+                title="Scroll Left"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={scrollCatRight}
+                className="p-2 rounded-full bg-white border border-[#E6D7C3] hover:border-[#8B3A13] text-[#8B3A13] hover:bg-[#FAF5EF] transition-all shadow-xs cursor-pointer"
+                title="Scroll Right"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <button
+              onClick={() => navigate('categories')}
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-[#8B3A13] hover:underline cursor-pointer ml-2"
+            >
+              <span>View All Categories</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        {/* Displaying ONLY Top 5 Categories */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-          {categoriesList.slice(0, 5).map(cat => (
+        {/* Scrollable Categories Track */}
+        <div
+          ref={catScrollRef}
+          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 scroll-smooth scrollbar-none snap-x snap-mandatory"
+        >
+          {categoriesList.map(cat => (
             <div
               key={cat.id}
               onClick={() => navigate('category', { category: cat.id })}
-              className="group bg-white rounded-2xl border border-[#E6D7C3] hover:border-[#8B3A13] shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1"
+              className="w-40 sm:w-52 shrink-0 snap-start bg-white rounded-2xl border border-[#E6D7C3] hover:border-[#8B3A13] shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 group"
             >
               {/* Category Image Box */}
               <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
@@ -139,8 +175,8 @@ export default function HomePage() {
               </div>
 
               {/* Category Info */}
-              <div className="p-4 flex-1 flex flex-col justify-between text-center space-y-2">
-                <h3 className="font-extrabold text-[#2B1509] text-xs sm:text-sm group-hover:text-[#8B3A13] transition-colors leading-snug">
+              <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-center space-y-2">
+                <h3 className="font-extrabold text-[#2B1509] text-xs sm:text-sm group-hover:text-[#8B3A13] transition-colors leading-snug line-clamp-1">
                   {cat.name}
                 </h3>
                 
