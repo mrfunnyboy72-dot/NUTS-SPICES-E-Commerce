@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { ShieldCheck, Lock, Mail, ArrowLeft, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Lock, Mail, AlertCircle } from 'lucide-react';
 
 export default function AdminLogin() {
   const { loginAdmin, navigate } = useCart();
@@ -26,15 +26,6 @@ export default function AdminLogin() {
 
       <div className="w-full max-w-md bg-white border border-gray-100 rounded-3xl shadow-2xl p-8 relative z-10 text-gray-800">
         
-        {/* Back to store button */}
-        <button
-          onClick={() => navigate('home')}
-          className="inline-flex items-center gap-2 text-xs font-extrabold text-gray-500 hover:text-gray-900 transition-colors cursor-pointer uppercase tracking-wider mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 text-amber-600" />
-          <span>Back to Gourmet Store</span>
-        </button>
-
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-[#130924] mx-auto mb-4 shadow-lg flex items-center justify-center border border-[#291749]">
