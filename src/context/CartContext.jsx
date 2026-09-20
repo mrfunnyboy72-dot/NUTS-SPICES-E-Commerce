@@ -192,53 +192,55 @@ export const CartProvider = ({ children }) => {
     localStorage.removeItem('nuts_spices_admin_logged');
   }, []);
 
-  // Persist States
+  // Persist States safely without crashing on QuotaExceeded Error
   useEffect(() => {
-    localStorage.setItem('nuts_spices_store_settings', JSON.stringify(storeSettings));
+    try { localStorage.setItem('nuts_spices_store_settings', JSON.stringify(storeSettings)); } catch (err) { console.warn('localStorage error:', err); }
   }, [storeSettings]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_products', JSON.stringify(products));
+    try { localStorage.setItem('nuts_spices_products', JSON.stringify(products)); } catch (err) { console.warn('localStorage error:', err); }
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_categories', JSON.stringify(categories));
+    try { localStorage.setItem('nuts_spices_categories', JSON.stringify(categories)); } catch (err) { console.warn('localStorage error:', err); }
   }, [categories]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_orders', JSON.stringify(orders));
+    try { localStorage.setItem('nuts_spices_orders', JSON.stringify(orders)); } catch (err) { console.warn('localStorage error:', err); }
   }, [orders]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_offers', JSON.stringify(offers));
+    try { localStorage.setItem('nuts_spices_offers', JSON.stringify(offers)); } catch (err) { console.warn('localStorage error:', err); }
   }, [offers]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_reviews', JSON.stringify(reviews));
+    try { localStorage.setItem('nuts_spices_reviews', JSON.stringify(reviews)); } catch (err) { console.warn('localStorage error:', err); }
   }, [reviews]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_cart', JSON.stringify(cart));
+    try { localStorage.setItem('nuts_spices_cart', JSON.stringify(cart)); } catch (err) { console.warn('localStorage error:', err); }
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_wishlist', JSON.stringify(wishlist));
+    try { localStorage.setItem('nuts_spices_wishlist', JSON.stringify(wishlist)); } catch (err) { console.warn('localStorage error:', err); }
   }, [wishlist]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_registered_users', JSON.stringify(registeredUsers));
+    try { localStorage.setItem('nuts_spices_registered_users', JSON.stringify(registeredUsers)); } catch (err) { console.warn('localStorage error:', err); }
   }, [registeredUsers]);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('nuts_spices_user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('nuts_spices_user');
-    }
+    try {
+      if (user) {
+        localStorage.setItem('nuts_spices_user', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('nuts_spices_user');
+      }
+    } catch (err) { console.warn('localStorage error:', err); }
   }, [user]);
 
   useEffect(() => {
-    localStorage.setItem('nuts_spices_admin_logged', JSON.stringify(isAdminLoggedIn));
+    try { localStorage.setItem('nuts_spices_admin_logged', JSON.stringify(isAdminLoggedIn)); } catch (err) { console.warn('localStorage error:', err); }
   }, [isAdminLoggedIn]);
 
   // Realtime multi-tab localStorage state synchronizer

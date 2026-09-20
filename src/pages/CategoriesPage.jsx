@@ -1,11 +1,12 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { PRODUCTS } from '../data/products';
 import { ArrowRight, Layers } from 'lucide-react';
 
 export default function CategoriesPage() {
   const { navigate, products, categories } = useCart();
 
-  const categoriesList = categories.filter(c => c.id !== 'all');
+  const categoriesList = categories ? categories.filter(c => c.id !== 'all') : [];
 
   const categoryDetails = {
     'nuts': { tagline: 'Premium Jumbo & Roasted Nuts' },
@@ -43,9 +44,10 @@ export default function CategoriesPage() {
       {/* Main Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {categoriesList.map((cat) => {
-          const allProds = products && products.length > 0 ? products : PRODUCTS;
+          const allProds = (products && products.length > 0) ? products : (PRODUCTS || []);
           const count = allProds.filter(p => p.category === cat.id).length;
           const info = categoryDetails[cat.id] || { tagline: 'Gourmet Selection' };
+          const catImg = cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600';
 
           return (
             <div
@@ -58,7 +60,7 @@ export default function CategoriesPage() {
                 {/* Category Header & Icon */}
                 <div className="flex items-center justify-between">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-md border border-[#E6D7C3] shrink-0 bg-[#FAF5EF]">
-                    <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={catImg} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <span className="text-xs font-extrabold text-[#2B1509] bg-[#FAF5EF] px-3.5 py-1.5 rounded-full border border-[#E6D7C3]">
                     {count} Products

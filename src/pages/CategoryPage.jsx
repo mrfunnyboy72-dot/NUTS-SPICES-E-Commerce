@@ -6,8 +6,13 @@ import { ArrowLeft } from 'lucide-react';
 export default function CategoryPage() {
   const { products, categories, selectedCategory, navigate } = useCart();
 
-  const currentCatObj = categories.find(c => c.id === selectedCategory) || categories[1] || categories[0];
-  const categoryProducts = products.filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => p.category === currentCatObj?.id);
+  const safeCategories = categories || [];
+  const currentCatObj = safeCategories.find(c => c.id === selectedCategory) || safeCategories[1] || safeCategories[0] || { id: 'all', name: 'Products', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600' };
+  const currentCatImg = currentCatObj.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600';
+
+  const categoryProducts = (products || [])
+    .filter(p => p.status !== 'Inactive' && p.active !== false)
+    .filter(p => p.category === currentCatObj?.id);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -25,7 +30,7 @@ export default function CategoryPage() {
         <div className="bg-[#8B3A13] text-white p-8 sm:p-12 rounded-3xl space-y-3 relative overflow-hidden border border-[#D4AF37]/30 shadow-xl">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#D4AF37] shrink-0 shadow-md">
-              <img src={currentCatObj.image} alt={currentCatObj.name} className="w-full h-full object-cover" />
+              <img src={currentCatImg} alt={currentCatObj.name} className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-widest block">
@@ -44,22 +49,25 @@ export default function CategoryPage() {
 
       {/* Sub-Category Navigation Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
-          <button
-            key={cat.id}
-            onClick={() => navigate('category', { category: cat.id })}
-            className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              currentCatObj.id === cat.id
-                ? 'bg-[#2B1509] text-white shadow-md'
-                : 'bg-white text-[#4A3525] border border-[#E6D7C3] hover:border-[#8B3A13]'
-            }`}
-          >
-            <span className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-white/40">
-              <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-            </span>
-            <span>{cat.name}</span>
-          </button>
-        ))}
+        {safeCategories.filter(c => c.id !== 'all').map(cat => {
+          const subImg = cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600';
+          return (
+            <button
+              key={cat.id}
+              onClick={() => navigate('category', { category: cat.id })}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                currentCatObj.id === cat.id
+                  ? 'bg-[#2B1509] text-white shadow-md'
+                  : 'bg-white text-[#4A3525] border border-[#E6D7C3] hover:border-[#8B3A13]'
+              }`}
+            >
+              <span className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-white/40">
+                <img src={subImg} alt={cat.name} className="w-full h-full object-cover" />
+              </span>
+              <span>{cat.name}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Products Grid */}
