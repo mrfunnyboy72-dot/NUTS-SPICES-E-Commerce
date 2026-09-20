@@ -9,6 +9,12 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState('featured');
   const [searchFilter, setSearchFilter] = useState('');
 
+  React.useEffect(() => {
+    if (selectedCategory) {
+      setActiveCategory(selectedCategory);
+    }
+  }, [selectedCategory]);
+
   // Filtering
   let filtered = products.filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
     const matchesCat = activeCategory === 'all' || p.category === activeCategory;

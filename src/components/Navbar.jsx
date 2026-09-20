@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Search, Heart, ShoppingBag, User, Menu, X, LayoutGrid, ChevronRight } from 'lucide-react';
-import { CATEGORIES } from '../data/products';
 
 export default function Navbar() {
-  const { activePage, navigate, cartItemCount, wishlist, setIsSearchOpen, setSearchQuery, user, openAuthModal } = useCart();
+  const { activePage, navigate, cartItemCount, wishlist, setIsSearchOpen, setSearchQuery, user, openAuthModal, categories } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
   const [navSearch, setNavSearch] = useState('');
 
-  const subCategories = CATEGORIES.filter(c => c.id !== 'all');
+  const safeCategories = categories || [];
+  const subCategories = safeCategories.filter(c => c.id !== 'all');
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
