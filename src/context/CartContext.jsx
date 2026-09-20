@@ -182,17 +182,15 @@ export const CartProvider = ({ children }) => {
     }
   });
 
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
-    try {
-      const saved = localStorage.getItem('nuts_spices_admin_logged');
-      return saved ? JSON.parse(saved) : false;
-    } catch {
-      return false;
-    }
-  });
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
+
+  // Clear admin session on startup so /admin always requires Login first
+  useEffect(() => {
+    localStorage.removeItem('nuts_spices_admin_logged');
+  }, []);
 
   // Persist States
   useEffect(() => {
