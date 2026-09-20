@@ -16,11 +16,31 @@ export default function ShopPage() {
   }, [selectedCategory]);
 
   // Filtering
-  let filtered = products.filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
-    const matchesCat = activeCategory === 'all' || p.category === activeCategory;
-    const catName = p.categoryName || p.category || '';
-    const matchesSearch = p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                          catName.toLowerCase().includes(searchFilter.toLowerCase());
+  let filtered = (products || []).filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
+    if (!activeCategory || activeCategory === 'all') {
+      const matchesSearch = !searchFilter.trim() || 
+                            p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                            (p.categoryName || '').toLowerCase().includes(searchFilter.toLowerCase());
+      return matchesSearch;
+    }
+
+    const catObj = (categories || []).find(c => c.id === activeCategory);
+    const cId = activeCategory.toLowerCase();
+    const cName = catObj ? catObj.name.toLowerCase() : '';
+    const pCat = (p.category || '').toLowerCase();
+    const pCatName = (p.categoryName || '').toLowerCase();
+
+    const matchesCat = pCat === cId || 
+                       pCat === cName || 
+                       (cName && pCatName === cName) || 
+                       pCatName === cId ||
+                       (pCat && cId && (pCat.includes(cId) || cId.includes(pCat))) ||
+                       (pCatName && cName && (pCatName.includes(cName) || cName.includes(pCatName)));
+
+    const matchesSearch = !searchFilter.trim() || 
+                          p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                          pCatName.includes(searchFilter.toLowerCase());
+
     return matchesCat && matchesSearch;
   });
 
