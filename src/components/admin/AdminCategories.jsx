@@ -362,43 +362,14 @@ export default function AdminCategories() {
 
                       {/* Products Count */}
                       <td className="py-4 px-6">
-                        <button
-                          onClick={() => setViewingCategory(cat)}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-full font-bold text-[11px] border border-amber-200/80 transition-colors cursor-pointer"
-                        >
-                          <Package className="w-3 h-3 text-amber-700" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-800 rounded-full font-bold text-[11px] border border-amber-200/80">
                           <span>{catProds.length} Products</span>
-                        </button>
+                        </span>
                       </td>
 
                       {/* Actions */}
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {/* Add Product Directly to Category Button */}
-                          <button
-                            onClick={() => {
-                              setViewingCategory(cat);
-                              setIsAddingProdInCat(true);
-                            }}
-                            title="Add New Product to Category"
-                            className="p-1.5 bg-green-50 hover:bg-green-100 text-green-700 hover:text-green-800 rounded-md transition-colors cursor-pointer flex items-center gap-1 font-bold text-[11px] px-2 border border-green-200"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                            <span>Add Product</span>
-                          </button>
-
-                          {/* View Products Button */}
-                          <button
-                            onClick={() => {
-                              setViewingCategory(cat);
-                              setIsAddingProdInCat(false);
-                            }}
-                            title="View Products in Category"
-                            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 hover:text-emerald-700 rounded-md transition-colors cursor-pointer"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-
                           {/* Quick Upload Image Button */}
                           <button
                             onClick={() => handleQuickImageUpload(cat.id)}
