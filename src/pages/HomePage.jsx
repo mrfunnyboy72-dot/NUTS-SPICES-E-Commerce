@@ -116,8 +116,7 @@ export default function HomePage() {
             <div
               key={cat.id}
               onClick={() => {
-                if (setSelectedCategory) setSelectedCategory(cat.id);
-                navigate('category');
+                navigate('category', { category: cat.id });
               }}
               className="group cursor-pointer flex flex-col items-center text-center space-y-3"
             >
