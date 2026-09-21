@@ -190,9 +190,8 @@ export default function HomePage() {
               <div
                 key={cat.id}
                 onClick={() => {
-                  setHomeCategory(cat.id);
-                  const el = document.getElementById('products-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  if (setSelectedCategory) setSelectedCategory(cat.id);
+                  navigate('category');
                 }}
                 className={`w-40 sm:w-52 shrink-0 snap-start bg-white rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 group ${
                   isSelected ? 'border-[#8B3A13] ring-2 ring-[#8B3A13]/30 shadow-lg' : 'border-[#E6D7C3] hover:border-[#8B3A13] shadow-sm'
