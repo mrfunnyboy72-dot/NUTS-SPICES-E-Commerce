@@ -10,7 +10,7 @@ const HERO_SLIDES = [
 ];
 
 export default function HomePage() {
-  const { navigate, products, categories, selectedCategory } = useCart();
+  const { navigate, products, categories, selectedCategory, setSelectedCategory } = useCart();
   const [homeCategory, setHomeCategory] = useState(selectedCategory || 'all');
   const scrollRef = useRef(null);
   const catScrollRef = useRef(null);
