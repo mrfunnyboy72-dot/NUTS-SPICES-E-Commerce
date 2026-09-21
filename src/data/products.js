@@ -1,5 +1,5 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
-export const CATALOG_VERSION = 'v8_1790015843088';
+export const CATALOG_VERSION = 'v8_1790015873419';
 
 export const CATEGORIES = [
   {
@@ -100,7 +100,10 @@ export const PRODUCTS = [
     ],
     "description": "Crispy and healthy assorted vegetable chips made with natural oil.",
     "origin": "India",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "vp-02",
@@ -125,7 +128,10 @@ export const PRODUCTS = [
     ],
     "description": "Dehydrated crispy fruit slices rich in natural flavors and vitamins.",
     "origin": "India",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "vp-03",
@@ -145,7 +151,10 @@ export const PRODUCTS = [
     ],
     "description": "Live active kefir starter grains for homemade probiotic rich kefir drink.",
     "origin": "Natural Culture",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "vp-04",
@@ -165,7 +174,10 @@ export const PRODUCTS = [
     ],
     "description": "Healthy live Kombucha SCOBY culture with starter tea.",
     "origin": "Natural Ferment",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-01",
@@ -190,7 +202,10 @@ export const PRODUCTS = [
     ],
     "description": "Crunchy California almonds packed with protein and Vitamin E.",
     "origin": "USA",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-02",
@@ -215,7 +230,10 @@ export const PRODUCTS = [
     ],
     "description": "Original Mamra Almonds rich in natural oils.",
     "origin": "Afghanistan",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-03",
@@ -240,7 +258,10 @@ export const PRODUCTS = [
     ],
     "description": "Grade W320 whole cashews, rich and creamy texture.",
     "origin": "India",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-04",
@@ -265,7 +286,10 @@ export const PRODUCTS = [
     ],
     "description": "Large size W240 whole jumbo cashews.",
     "origin": "India",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-05",
@@ -290,7 +314,10 @@ export const PRODUCTS = [
     ],
     "description": "Kashmiri walnut kernels rich in Omega 3 fatty acids.",
     "origin": "Kashmir",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-06",
@@ -315,7 +342,10 @@ export const PRODUCTS = [
     ],
     "description": "Handpicked extra light premium Kashmir walnuts.",
     "origin": "Kashmir",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-07",
@@ -340,7 +370,10 @@ export const PRODUCTS = [
     ],
     "description": "Whole roasted hazelnuts with crunchy flavor.",
     "origin": "Turkey",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-08",
@@ -365,7 +398,10 @@ export const PRODUCTS = [
     ],
     "description": "Raw Brazil nuts packed with essential antioxidants and minerals.",
     "origin": "Brazil",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-09",
@@ -390,7 +426,10 @@ export const PRODUCTS = [
     ],
     "description": "Lightly salted roasted California pistachios in shell.",
     "origin": "USA",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-10",
@@ -415,7 +454,10 @@ export const PRODUCTS = [
     ],
     "description": "Cleaned raw green pistachio kernels for baking and snacking.",
     "origin": "Iran",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-11",
@@ -440,7 +482,10 @@ export const PRODUCTS = [
     ],
     "description": "Black raisins with seeds, good for hemoglobin and stamina.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-12",
@@ -465,7 +510,10 @@ export const PRODUCTS = [
     ],
     "description": "Sun dried jumbo Afghan figs (Anjeer).",
     "origin": "Afghanistan",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-13",
@@ -490,7 +538,10 @@ export const PRODUCTS = [
     ],
     "description": "Soft dried Iranian figs.",
     "origin": "Iran",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-14",
@@ -515,7 +566,10 @@ export const PRODUCTS = [
     ],
     "description": "Dehydrated green Kiwi slices rich in Vitamin C.",
     "origin": "New Zealand",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-15",
@@ -540,7 +594,10 @@ export const PRODUCTS = [
     ],
     "description": "Dried whole strawberries loaded with antioxidants.",
     "origin": "India",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-16",
@@ -565,7 +622,10 @@ export const PRODUCTS = [
     ],
     "description": "Sliced dried cranberries with mild sweetness.",
     "origin": "USA",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-17",
@@ -590,7 +650,10 @@ export const PRODUCTS = [
     ],
     "description": "Sweetened dried red cherries.",
     "origin": "Turkey",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-18",
@@ -615,7 +678,10 @@ export const PRODUCTS = [
     ],
     "description": "Whole dried wild blueberries.",
     "origin": "Canada",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-19",
@@ -640,7 +706,10 @@ export const PRODUCTS = [
     ],
     "description": "Dehydrated ripe mango slices.",
     "origin": "India",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-20",
@@ -665,7 +734,10 @@ export const PRODUCTS = [
     ],
     "description": "Sweetened & salted dried Indian Gooseberry (Amla).",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ndf-21",
@@ -690,7 +762,10 @@ export const PRODUCTS = [
     ],
     "description": "Natural dried Turkish apricots.",
     "origin": "Turkey",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-01",
@@ -715,7 +790,10 @@ export const PRODUCTS = [
     ],
     "description": "Authentic dark Ajwa dates imported from Saudi Arabia.",
     "origin": "Saudi Arabia",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-02",
@@ -740,7 +818,10 @@ export const PRODUCTS = [
     ],
     "description": "Rich dark Safawi Kalima dates from Saudi Arabia.",
     "origin": "Saudi Arabia",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-03",
@@ -765,7 +846,10 @@ export const PRODUCTS = [
     ],
     "description": "Naturally soft and delicious Kaluttu dates from Iran.",
     "origin": "Iran",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-04",
@@ -790,7 +874,10 @@ export const PRODUCTS = [
     ],
     "description": "Melt-in-mouth soft Mazafati fresh dates imported from Iran.",
     "origin": "Iran",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-05",
@@ -815,7 +902,10 @@ export const PRODUCTS = [
     ],
     "description": "Traditional brown seeded dates from Iraq.",
     "origin": "Iraq",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-06",
@@ -840,7 +930,10 @@ export const PRODUCTS = [
     ],
     "description": "Quality brown dates for daily healthy snacking.",
     "origin": "Middle East",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-07",
@@ -865,7 +958,10 @@ export const PRODUCTS = [
     ],
     "description": "Pitted seedless brown dates from Iraq.",
     "origin": "Iraq",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "dt-08",
@@ -890,7 +986,10 @@ export const PRODUCTS = [
     ],
     "description": "Hard yellow dry dates (Chuara) for nutrition.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-01",
@@ -915,7 +1014,10 @@ export const PRODUCTS = [
     ],
     "description": "Plant-based biotin health drink mix for strong hair and glowing skin.",
     "origin": "India",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-02",
@@ -940,7 +1042,10 @@ export const PRODUCTS = [
     ],
     "description": "Traditional sprouted finger millet malt porridge mix.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-03",
@@ -965,7 +1070,10 @@ export const PRODUCTS = [
     ],
     "description": "Nutritious whole black gram (Ulundhu) kali mix.",
     "origin": "Tamil Nadu",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-04",
@@ -990,7 +1098,10 @@ export const PRODUCTS = [
     ],
     "description": "Multigrain Sathu Maavu blend with nuts and cardamom.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-05",
@@ -1015,7 +1126,10 @@ export const PRODUCTS = [
     ],
     "description": "Delicious cocoa chocolate malt drink for energy.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-06",
@@ -1035,7 +1149,10 @@ export const PRODUCTS = [
     ],
     "description": "Ganoderma Reishi Red Mushroom instant coffee blend.",
     "origin": "Malaysia",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-07",
@@ -1055,7 +1172,10 @@ export const PRODUCTS = [
     ],
     "description": "Herbal Red Mushroom Ganoderma infused black tea.",
     "origin": "Malaysia",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-08",
@@ -1075,7 +1195,10 @@ export const PRODUCTS = [
     ],
     "description": "Refreshingly sweet natural herb drink syrup.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-09",
@@ -1095,7 +1218,10 @@ export const PRODUCTS = [
     ],
     "description": "Sparkling fermented probiotic Kombucha beverage.",
     "origin": "Natural Ferment",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-10",
@@ -1115,7 +1241,10 @@ export const PRODUCTS = [
     ],
     "description": "Live cultured probiotic Kefir milk drink.",
     "origin": "Natural Ferment",
-    "shelfLife": "1 Month"
+    "shelfLife": "1 Month",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-11",
@@ -1135,7 +1264,10 @@ export const PRODUCTS = [
     ],
     "description": "Authentic Indian Sarsaparilla (Nannari) root syrup.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-12",
@@ -1155,7 +1287,10 @@ export const PRODUCTS = [
     ],
     "description": "Fragrant rose petal extract syrup for rose milk.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-13",
@@ -1175,7 +1310,10 @@ export const PRODUCTS = [
     ],
     "description": "Black plum (Jamun/Naval Pazham) fruit sharbath.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-14",
@@ -1200,7 +1338,10 @@ export const PRODUCTS = [
     ],
     "description": "Natural almond tree jelly gum body coolant.",
     "origin": "India",
-    "shelfLife": "18 Months"
+    "shelfLife": "18 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "mb-15",
@@ -1220,7 +1361,10 @@ export const PRODUCTS = [
     ],
     "description": "Pure seaweed gelatin strip for puddings and desserts.",
     "origin": "India",
-    "shelfLife": "24 Months"
+    "shelfLife": "24 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-01",
@@ -1245,7 +1389,10 @@ export const PRODUCTS = [
     ],
     "description": "Organic raw black chia seeds.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-02",
@@ -1270,7 +1417,10 @@ export const PRODUCTS = [
     ],
     "description": "AAA grade raw green pumpkin seed kernels.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-03",
@@ -1295,7 +1445,10 @@ export const PRODUCTS = [
     ],
     "description": "Cleaned raw white watermelon kernels.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-04",
@@ -1320,7 +1473,10 @@ export const PRODUCTS = [
     ],
     "description": "Raw brown roasted flax seeds (Alsi).",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-05",
@@ -1345,7 +1501,10 @@ export const PRODUCTS = [
     ],
     "description": "Dried cucumber seed kernels.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-06",
@@ -1370,7 +1529,10 @@ export const PRODUCTS = [
     ],
     "description": "Sweet basil seeds for FALOODA and body cooling drinks.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-07",
@@ -1395,7 +1557,10 @@ export const PRODUCTS = [
     ],
     "description": "Raw bold raw red peanuts.",
     "origin": "India",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sd-08",
@@ -1420,7 +1585,10 @@ export const PRODUCTS = [
     ],
     "description": "Garden cress (Halim / Saliya) seeds rich in iron.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hn-01",
@@ -1445,7 +1613,10 @@ export const PRODUCTS = [
     ],
     "description": "Raw wild forest honey extracted from deep natural forests.",
     "origin": "Western Ghats",
-    "shelfLife": "24 Months"
+    "shelfLife": "24 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hn-02",
@@ -1470,7 +1641,10 @@ export const PRODUCTS = [
     ],
     "description": "Unprocessed pure mountain flora honey.",
     "origin": "Himalayas",
-    "shelfLife": "24 Months"
+    "shelfLife": "24 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hn-03",
@@ -1495,7 +1669,10 @@ export const PRODUCTS = [
     ],
     "description": "Fresh Indian gooseberry soaked in pure honey.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hn-04",
@@ -1520,7 +1697,10 @@ export const PRODUCTS = [
     ],
     "description": "Premium almonds, cashews, walnuts, and pistachios immersed in pure honey.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-01",
@@ -1545,7 +1725,10 @@ export const PRODUCTS = [
     ],
     "description": "Heritage Black Kavuni rice rich in anthocyanin antioxidants.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-02",
@@ -1570,7 +1753,10 @@ export const PRODUCTS = [
     ],
     "description": "Traditional Red Rice for high energy and physical strength.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-03",
@@ -1595,7 +1781,10 @@ export const PRODUCTS = [
     ],
     "description": "Native unpolished wild traditional rice.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-04",
@@ -1620,7 +1809,10 @@ export const PRODUCTS = [
     ],
     "description": "Traditional pinkish red rice suitable for idli batter and porridge.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-05",
@@ -1645,7 +1837,10 @@ export const PRODUCTS = [
     ],
     "description": "Medicinal red rice for nerve health.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-06",
@@ -1670,7 +1865,10 @@ export const PRODUCTS = [
     ],
     "description": "Short grain red traditional rice.",
     "origin": "Tamil Nadu",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-07",
@@ -1695,7 +1893,10 @@ export const PRODUCTS = [
     ],
     "description": "High fiber Barnyard millet for healthy weight loss.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-08",
@@ -1720,7 +1921,10 @@ export const PRODUCTS = [
     ],
     "description": "Foxtail millet grains rich in protein and iron.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-09",
@@ -1745,7 +1949,10 @@ export const PRODUCTS = [
     ],
     "description": "Unpolished Kodo millet for diabetic care.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-10",
@@ -1770,7 +1977,10 @@ export const PRODUCTS = [
     ],
     "description": "Little millet for light digestable meals.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-11",
@@ -1795,7 +2005,10 @@ export const PRODUCTS = [
     ],
     "description": "Unpolished black gram dal with skin.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "rm-12",
@@ -1820,7 +2033,10 @@ export const PRODUCTS = [
     ],
     "description": "Cleaned whole finger millet grain.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-01",
@@ -1845,7 +2061,10 @@ export const PRODUCTS = [
     ],
     "description": "Bold Malabar black pepper seeds.",
     "origin": "Kerala",
-    "shelfLife": "18 Months"
+    "shelfLife": "18 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-02",
@@ -1870,7 +2089,10 @@ export const PRODUCTS = [
     ],
     "description": "Aromatic cumin seeds.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-03",
@@ -1895,7 +2117,10 @@ export const PRODUCTS = [
     ],
     "description": "Sweet green fennel seeds (Saunf).",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-04",
@@ -1920,7 +2145,10 @@ export const PRODUCTS = [
     ],
     "description": "Small black mustard seeds for tadka.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-05",
@@ -1945,7 +2173,10 @@ export const PRODUCTS = [
     ],
     "description": "Yellow fenugreek seeds.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-06",
@@ -1970,7 +2201,10 @@ export const PRODUCTS = [
     ],
     "description": "Standard flat cinnamon rolls.",
     "origin": "India",
-    "shelfLife": "18 Months"
+    "shelfLife": "18 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-07",
@@ -1995,7 +2229,10 @@ export const PRODUCTS = [
     ],
     "description": "True soft Ceylon Cinnamon sticks from Sri Lanka.",
     "origin": "Sri Lanka",
-    "shelfLife": "24 Months"
+    "shelfLife": "24 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-08",
@@ -2020,7 +2257,10 @@ export const PRODUCTS = [
     ],
     "description": "Whole head aromatic cloves (Kirambu).",
     "origin": "Zanzibar",
-    "shelfLife": "24 Months"
+    "shelfLife": "24 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-09",
@@ -2045,7 +2285,10 @@ export const PRODUCTS = [
     ],
     "description": "Whole 8-pointed star anise spice.",
     "origin": "India",
-    "shelfLife": "18 Months"
+    "shelfLife": "18 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-10",
@@ -2070,7 +2313,10 @@ export const PRODUCTS = [
     ],
     "description": "Carom seeds for digestion and tadka.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-11",
@@ -2095,7 +2341,10 @@ export const PRODUCTS = [
     ],
     "description": "Aromatic dill seeds (Sathkuppai).",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-12",
@@ -2120,7 +2369,10 @@ export const PRODUCTS = [
     ],
     "description": "Black seed (Nigella Sativa) kalonji.",
     "origin": "India",
-    "shelfLife": "18 Months"
+    "shelfLife": "18 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "ms-13",
@@ -2145,7 +2397,10 @@ export const PRODUCTS = [
     ],
     "description": "Dried Tejpatta bay leaves for biryani.",
     "origin": "India",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sp-01",
@@ -2170,7 +2425,10 @@ export const PRODUCTS = [
     ],
     "description": "Traditional Mudavattukal kizhangu soup mix for joint pain relief.",
     "origin": "Koli Hills",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sp-02",
@@ -2195,7 +2453,10 @@ export const PRODUCTS = [
     ],
     "description": "Balloon vine (Mudakathan) leaf herbal soup mix.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sp-03",
@@ -2220,7 +2481,10 @@ export const PRODUCTS = [
     ],
     "description": "Gotu Kola (Vallarai) brain boosting soup mix.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sp-04",
@@ -2245,7 +2509,10 @@ export const PRODUCTS = [
     ],
     "description": "Thai Nightshade (Thuthuvalai) herbal soup for respiratory care.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sp-05",
@@ -2270,7 +2537,10 @@ export const PRODUCTS = [
     ],
     "description": "Moringa drumstick leaf superfood soup powder.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "sp-06",
@@ -2295,7 +2565,10 @@ export const PRODUCTS = [
     ],
     "description": "Aavaram flower herbal soup for skin and diabetes care.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "wl-01",
@@ -2320,7 +2593,10 @@ export const PRODUCTS = [
     ],
     "description": "Black Kavuni rice instant health porridge mix for natural weight loss.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "wl-02",
@@ -2340,7 +2616,10 @@ export const PRODUCTS = [
     ],
     "description": "Probiotic kefir drink to burn belly fat and improve digestive health.",
     "origin": "Natural Ferment",
-    "shelfLife": "1 Month"
+    "shelfLife": "1 Month",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "wl-03",
@@ -2360,7 +2639,10 @@ export const PRODUCTS = [
     ],
     "description": "Kombucha organic tea SCOBY starter culture for weight loss detox.",
     "origin": "Natural Ferment",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "wl-04",
@@ -2380,7 +2662,10 @@ export const PRODUCTS = [
     ],
     "description": "Ganoderma Red Mushroom sugar-free black coffee for weight management.",
     "origin": "Malaysia",
-    "shelfLife": "12 Months"
+    "shelfLife": "12 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hb-01",
@@ -2405,7 +2690,10 @@ export const PRODUCTS = [
     ],
     "description": "100% Original Kashmiri Mongra Saffron threads.",
     "origin": "Pampore, Kashmir",
-    "shelfLife": "24 Months"
+    "shelfLife": "24 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hb-02",
@@ -2425,7 +2713,10 @@ export const PRODUCTS = [
     ],
     "description": "Live active probiotic herbal kefir grains.",
     "origin": "Natural Ferment",
-    "shelfLife": "6 Months"
+    "shelfLife": "6 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   },
   {
     "id": "hb-03",
@@ -2450,6 +2741,9 @@ export const PRODUCTS = [
     ],
     "description": "Spicy Mudavattukal herbal root idli podi mix.",
     "origin": "Tamil Nadu",
-    "shelfLife": "9 Months"
+    "shelfLife": "9 Months",
+    "price": 350,
+    "status": "Active",
+    "active": true
   }
 ];
