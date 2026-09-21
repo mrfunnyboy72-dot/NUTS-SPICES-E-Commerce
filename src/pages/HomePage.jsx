@@ -4,9 +4,9 @@ import ProductCard from '../components/ProductCard';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
-  { id: 1, image: '/images/hero1.png' },
-  { id: 2, image: '/images/hero2.jpg' },
-  { id: 3, image: '/images/hero3.jpg' }
+  { id: 1, image: '/images/hero_banner1.jpg' },
+  { id: 2, image: '/images/hero_banner2.jpg' },
+  { id: 3, image: '/images/hero_banner3.jpg' }
 ];
 
 export default function HomePage() {
@@ -72,67 +72,24 @@ export default function HomePage() {
   return (
     <div className="space-[#2B1509] space-y-16 pb-16">
       
-      {/* AUTOMATIC 5-SECOND SLIDING HERO BACKGROUND WITH FIXED OVERLAY CONTENT */}
-      <section className="relative mx-4 sm:mx-6 lg:mx-8 mt-6 rounded-3xl overflow-hidden shadow-2xl border border-[#8B3A13]/40 h-[500px] sm:h-[560px] lg:h-[620px]">
+      {/* AUTOMATIC 5-SECOND SLIDING HERO BANNER WITH BRIGHT HD UPLOADED IMAGES */}
+      <section className="relative mx-4 sm:mx-6 lg:mx-8 mt-6 rounded-3xl overflow-hidden shadow-2xl border border-[#8B3A13]/30 h-[380px] sm:h-[480px] lg:h-[560px]">
         
-        {/* SCROLLABLE BACKGROUND IMAGES TRACK */}
+        {/* SCROLLABLE BRIGHT HD BANNER IMAGES TRACK */}
         <div 
           ref={scrollRef}
-          className="w-full h-full flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none absolute inset-0"
+          className="w-full h-full flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none absolute inset-0 bg-[#FAF5EF]"
         >
           {HERO_SLIDES.map((slide) => (
-            <div key={slide.id} className="w-full h-full shrink-0 snap-center relative">
+            <div key={slide.id} className="w-full h-full shrink-0 snap-center relative overflow-hidden">
               <img
                 src={slide.image}
-                alt="Premium Nuts & Spices Background"
-                className="w-full h-full object-cover select-none"
+                alt="Nuts & Spices Premium Banner"
+                className="w-full h-full object-cover select-none brightness-110 contrast-105 saturate-105 filter transition-all duration-500"
                 draggable={false}
               />
             </div>
           ))}
-        </div>
-
-        {/* FIXED CONTENT OVERLAY - STAYS STATIONARY IN FOREGROUND */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30 flex items-center p-8 sm:p-14 lg:p-20 z-10 pointer-events-none">
-          <div className="max-w-2xl space-y-6 text-white pointer-events-auto">
-            
-            {/* Main Heading */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-serif tracking-tight leading-none text-white drop-shadow-lg">
-              Premium Nuts & Spices
-            </h1>
-
-            {/* Short Description */}
-            <p className="text-sm sm:text-lg text-[#E6D7C3] leading-relaxed drop-shadow-sm font-medium max-w-xl">
-              Discover premium nuts, dry fruits, seeds and authentic spices, carefully selected and packed for your everyday needs.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-4">
-              <button
-                onClick={() => {
-                  setHomeCategory('all');
-                  const el = document.getElementById('products-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="px-8 py-4 bg-[#8B3A13] hover:bg-[#6E2C00] text-white font-extrabold rounded-2xl transition-all shadow-2xl hover:shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm tracking-wider uppercase group border border-[#D4AF37]/30 cursor-pointer"
-              >
-                <span>SHOP NOW</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button
-                onClick={() => {
-                  const el = document.getElementById('categories-section');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="px-8 py-4 bg-white/15 hover:bg-white/25 text-white font-extrabold rounded-2xl backdrop-blur-md transition-all text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 border border-white/30 shadow-lg cursor-pointer"
-              >
-                <Compass className="w-4 h-4" />
-                <span>EXPLORE CATEGORIES</span>
-              </button>
-            </div>
-
-          </div>
         </div>
 
       </section>
