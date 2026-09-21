@@ -32,17 +32,15 @@ export default function ShopPage() {
     }
 
     const catObj = (categories || []).find(c => c.id === activeCategory);
-    const cId = activeCategory.toLowerCase();
-    const cName = catObj ? catObj.name.toLowerCase() : '';
-    const pCat = (p.category || '').toLowerCase();
-    const pCatName = (p.categoryName || '').toLowerCase();
+    const cId = (activeCategory || '').toLowerCase().trim();
+    const cName = catObj ? (catObj.name || '').toLowerCase().trim() : cId;
+    const pCat = (p.category || '').toLowerCase().trim();
+    const pCatName = (p.categoryName || '').toLowerCase().trim();
 
     const matchesCat = pCat === cId || 
                        pCat === cName || 
                        (cName && pCatName === cName) || 
-                       pCatName === cId ||
-                       (pCat && cId && (pCat.includes(cId) || cId.includes(pCat))) ||
-                       (pCatName && cName && (pCatName.includes(cName) || cName.includes(pCatName)));
+                       (cId && pCatName === cId);
 
     const matchesSearch = !searchFilter.trim() || 
                           p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
