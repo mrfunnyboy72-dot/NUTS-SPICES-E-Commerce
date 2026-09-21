@@ -137,94 +137,43 @@ export default function HomePage() {
 
       </section>
 
-      {/* HORIZONTALLY SCROLLABLE SHOP BY CATEGORY ROW */}
-      <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="flex items-end justify-between border-b border-[#E6D7C3] pb-4">
-          <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#8B3A13]">
-              Curated Selection
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black font-serif text-[#2B1509] mt-1">
-              Shop By Category
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Scroll Left & Right Arrow Buttons */}
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={scrollCatLeft}
-                className="p-2 rounded-full bg-white border border-[#E6D7C3] hover:border-[#8B3A13] text-[#8B3A13] hover:bg-[#FAF5EF] transition-all shadow-xs cursor-pointer"
-                title="Scroll Left"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={scrollCatRight}
-                className="p-2 rounded-full bg-white border border-[#E6D7C3] hover:border-[#8B3A13] text-[#8B3A13] hover:bg-[#FAF5EF] transition-all shadow-xs cursor-pointer"
-                title="Scroll Right"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {homeCategory !== 'all' && (
-              <button
-                onClick={() => setHomeCategory('all')}
-                className="text-xs font-extrabold text-[#8B3A13] hover:underline cursor-pointer ml-2"
-              >
-                Reset to All Categories
-              </button>
-            )}
-          </div>
+      {/* SHOP BY CATEGORY GRID SECTION (MATCHING USER REFERENCE DESIGN) */}
+      <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        {/* Section Subtitle & Heading */}
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <p className="text-xs sm:text-base font-serif italic text-[#4A3525] leading-relaxed">
+            Experience the finest selection of premium dates, exotic nuts, and artisanal wellness blends.
+          </p>
+          <div className="w-16 h-0.5 bg-[#8B3A13] mx-auto rounded-full" />
         </div>
 
-        {/* Scrollable Categories Track */}
-        <div
-          ref={catScrollRef}
-          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 scroll-smooth scrollbar-none snap-x snap-mandatory"
-        >
-          {categoriesList.map(cat => {
-            const isSelected = homeCategory === cat.id;
-            return (
-              <div
-                key={cat.id}
-                onClick={() => {
-                  if (setSelectedCategory) setSelectedCategory(cat.id);
-                  navigate('category');
-                }}
-                className={`w-40 sm:w-52 shrink-0 snap-start bg-white rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 group ${
-                  isSelected ? 'border-[#8B3A13] ring-2 ring-[#8B3A13]/30 shadow-lg' : 'border-[#E6D7C3] hover:border-[#8B3A13] shadow-sm'
-                }`}
-              >
-                {/* Category Image Box */}
-                <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
-                  <img
-                    src={cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'}
-                    alt={cat.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  {isSelected && (
-                    <span className="absolute top-2 right-2 bg-[#8B3A13] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-md">
-                      Selected
-                    </span>
-                  )}
-                </div>
-
-                {/* Category Info */}
-                <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-center space-y-2">
-                  <h3 className={`font-extrabold text-xs sm:text-sm leading-snug line-clamp-1 transition-colors ${isSelected ? 'text-[#8B3A13]' : 'text-[#2B1509] group-hover:text-[#8B3A13]'}`}>
-                    {cat.name}
-                  </h3>
-                  
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B3A13] group-hover:underline flex items-center justify-center gap-1">
-                    <span>View Products</span>
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                  </span>
-                </div>
+        {/* Categories Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8">
+          {categoriesList.map(cat => (
+            <div
+              key={cat.id}
+              onClick={() => {
+                if (setSelectedCategory) setSelectedCategory(cat.id);
+                navigate('category');
+              }}
+              className="group cursor-pointer flex flex-col items-center text-center space-y-3"
+            >
+              {/* Rounded Square Image Box */}
+              <div className="w-full aspect-square rounded-[28px] overflow-hidden bg-white shadow-md group-hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1.5 border border-[#E6D7C3]/60 relative">
+                <img
+                  src={cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600'}
+                  alt={cat.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
-            );
-          })}
+
+              {/* Bold Uppercase Category Name Below */}
+              <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#2B1509] group-hover:text-[#8B3A13] transition-colors leading-tight line-clamp-2 px-1 font-serif">
+                {cat.name}
+              </h3>
+            </div>
+          ))}
         </div>
       </section>
 
