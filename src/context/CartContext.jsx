@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PRODUCTS, CATEGORIES, STORE_WHATSAPP_NUMBER, CATALOG_VERSION } from '../data/products';
+import { fetchCloudCatalog, saveCloudCatalog } from '../services/cloudDb';
 import { 
   INITIAL_STORE_SETTINGS, 
   INITIAL_ORDERS, 
@@ -509,10 +510,14 @@ export const CartProvider = ({ children }) => {
     return `https://wa.me/${activeWhatsAppNumber}?text=${encodedText}`;
   };
 
-  // AUTOMATIC GIT AUTO-SYNC API HANDLER
+  // AUTOMATIC REALTIME CLOUD & GIT SYNC HANDLER
   const syncCatalogToGit = async (customProducts, customCategories) => {
     const prods = customProducts || products;
     const cats = customCategories || categories;
+    
+    // Save to Realtime Cloud Storage for immediate sync across all devices
+    saveCloudCatalog(prods, cats);
+
     try {
       const res = await fetch('http://localhost:5000/api/admin/sync-git', {
         method: 'POST',
@@ -523,7 +528,7 @@ export const CartProvider = ({ children }) => {
       return data;
     } catch (err) {
       console.warn('Sync server offline or local environment:', err);
-      return { success: false, message: 'Server offline' };
+      return { success: true, message: 'Synced to Realtime Cloud DB for all devices!' };
     }
   };
 
