@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
+import FeaturedTodaySection from '../components/FeaturedTodaySection';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
@@ -136,6 +137,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* FEATURED TODAY CAROUSEL SECTION (1 PRODUCT PER CATEGORY MATCHING USER REFERENCE SCREENSHOT) */}
+      <FeaturedTodaySection />
 
       {/* PRODUCTS SECTION ON HOMEPAGE */}
       <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-24">
