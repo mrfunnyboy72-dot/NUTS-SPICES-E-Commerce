@@ -1,21 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Search, Heart, ShoppingBag, User, Menu, X, LayoutGrid, ChevronRight } from 'lucide-react';
 
 export default function Navbar() {
-  const { activePage, navigate, cartItemCount, wishlist, setIsSearchOpen, setSearchQuery, user, categories } = useCart();
+  const { activePage, navigate, cartItemCount, wishlist, setIsSearchOpen, setSearchQuery, user, categories, products, setSelectedProduct } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
   const [navSearchInput, setNavSearchInput] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchContainerRef = useRef(null);
 
   const safeCategories = categories || [];
   const subCategories = safeCategories.filter(c => c.id !== 'all');
+
+  // Filter products for instant live search dropdown popup
+  const searchResults = (navSearchInput.trim().length > 0 && products) ? products.filter(p => {
+    if (p.status === 'Inactive' || p.active === false) return false;
+    const q = navSearchInput.toLowerCase().trim();
+    const nameMatch = (p.name || '').toLowerCase().includes(q);
+    const catMatch = (p.categoryName || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q);
+    const descMatch = (p.description || '').toLowerCase().includes(q);
+    return nameMatch || catMatch || descMatch;
+  }).slice(0, 6) : [];
+
+  // Close live search dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (navSearchInput.trim()) {
       setSearchQuery(navSearchInput);
       setIsSearchOpen(true);
+      setIsSearchFocused(false);
+      navigate('shop', { category: 'all' });
     } else {
       setIsSearchOpen(true);
     }
@@ -25,7 +50,7 @@ export default function Navbar() {
     <>
       <header className="sticky top-0 z-40 bg-[#F7F3E9] border-b border-[#E6D7C3] shadow-xs">
         
-        {/* TOP ANNOUNCEMENT BAR (MATCHING REFERENCE SCREENSHOT STRUCTURE WITH BRAND COLORS) */}
+        {/* TOP ANNOUNCEMENT BAR */}
         <div className="bg-[#2B1509] text-[#D4AF37] text-[10px] sm:text-[11px] font-extrabold py-2 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             
@@ -52,7 +77,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* MAIN HEADER ROW (MATCHING SCREENSHOT SEARCH BAR, ICONS & LOGO) */}
+        {/* MAIN HEADER ROW */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 sm:h-24 gap-4">
             
@@ -81,15 +106,19 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* 2. CENTER: PILL SEARCH BAR WITH SEARCH BUTTON INSIDE */}
-            <div className="hidden md:flex flex-1 max-w-xl mx-4">
+            {/* 2. CENTER: PILL SEARCH BAR WITH LIVE POPUP DROPDOWN (MATCHING SCREENSHOT) */}
+            <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-xl mx-4 relative">
               <form onSubmit={handleSearchSubmit} className="w-full relative flex items-center">
                 <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/60 shadow-sm p-1.5 focus-within:ring-2 focus-within:ring-[#8B3A13]/30">
                   <Search className="w-5 h-5 text-[#8C7A6B] ml-3 shrink-0" />
                   <input
                     type="text"
                     value={navSearchInput}
-                    onChange={(e) => setNavSearchInput(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onChange={(e) => {
+                      setNavSearchInput(e.target.value);
+                      setIsSearchFocused(true);
+                    }}
                     placeholder="Search..."
                     className="w-full bg-transparent px-3 py-1.5 text-xs sm:text-sm font-medium text-[#2B1509] focus:outline-none placeholder-[#8C7A6B]"
                   />
@@ -101,6 +130,74 @@ export default function Navbar() {
                   </button>
                 </div>
               </form>
+
+              {/* INSTANT LIVE SEARCH DROPDOWN RESULTS POPUP */}
+              {navSearchInput.trim().length > 0 && isSearchFocused && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-[#E6D7C3] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {searchResults.length > 0 ? (
+                    <div className="divide-y divide-[#E6D7C3]/40 max-h-[380px] overflow-y-auto">
+                      {searchResults.map((product) => {
+                        const mainPrice = product.weights?.[0]?.price || product.price || 0;
+                        return (
+                          <div
+                            key={product.id}
+                            onClick={() => {
+                              setIsSearchFocused(false);
+                              setNavSearchInput('');
+                              if (setSelectedProduct) setSelectedProduct(product);
+                              navigate('product-details');
+                            }}
+                            className="p-3 sm:p-4 flex items-center justify-between hover:bg-[#FAF5EF] transition-colors cursor-pointer group"
+                          >
+                            <div className="flex items-center gap-3.5 min-w-0">
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-12 h-12 rounded-xl object-cover border border-[#E6D7C3] shrink-0 group-hover:scale-105 transition-transform"
+                              />
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-xs sm:text-sm font-bold text-[#2B1509] group-hover:text-[#8B3A13] transition-colors truncate font-serif">
+                                  {product.name}
+                                </h4>
+                                <p className="text-[10px] font-bold text-[#8C7A6B] uppercase tracking-wider truncate mt-0.5">
+                                  {product.categoryName || product.category || 'Gourmet'}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="text-right shrink-0 pl-3">
+                              <span className="text-xs sm:text-sm font-extrabold text-[#8B3A13] font-mono">
+                                ₹{Number(mainPrice).toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {/* View all results footer link */}
+                      <div
+                        onClick={() => {
+                          setIsSearchFocused(false);
+                          setSearchQuery(navSearchInput);
+                          setIsSearchOpen(true);
+                          navigate('shop', { category: 'all' });
+                        }}
+                        className="p-3.5 bg-[#FAF5EF] text-center hover:bg-[#E6D7C3]/40 transition-colors cursor-pointer border-t border-[#E6D7C3]"
+                      >
+                        <span className="text-xs font-black text-[#8B3A13] hover:underline font-serif">
+                          View all results for "{navSearchInput}" →
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-6 text-center space-y-1.5">
+                      <p className="text-xs sm:text-sm font-bold text-[#2B1509]">No products found matching "{navSearchInput}"</p>
+                      <p className="text-[11px] text-[#8C7A6B]">Try searching for almonds, dates, cashew, spices, or honey.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
             </div>
 
             {/* 3. RIGHT: LINKS & ACTION ICONS */}
@@ -136,7 +233,7 @@ export default function Navbar() {
                 <User className="w-6 h-6" />
               </button>
 
-              {/* Wishlist Heart Icon with Solid Dark Circle Background */}
+              {/* Wishlist Heart Icon */}
               <button
                 onClick={() => navigate('shop', { category: 'all' })}
                 className="w-10 h-10 rounded-full bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] flex items-center justify-center relative transition-transform hover:scale-105 shadow-md cursor-pointer border border-[#D4AF37]/40"
@@ -176,15 +273,19 @@ export default function Navbar() {
 
           </div>
 
-          {/* Mobile Search Input Row */}
-          <div className="block md:hidden pb-3">
+          {/* Mobile Search Input Row with Live Dropdown */}
+          <div className="block md:hidden pb-3 relative">
             <form onSubmit={handleSearchSubmit} className="w-full">
               <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/50 shadow-sm p-1">
                 <Search className="w-4 h-4 text-[#8C7A6B] ml-2.5 shrink-0" />
                 <input
                   type="text"
                   value={navSearchInput}
-                  onChange={(e) => setNavSearchInput(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onChange={(e) => {
+                    setNavSearchInput(e.target.value);
+                    setIsSearchFocused(true);
+                  }}
                   placeholder="Search products..."
                   className="w-full bg-transparent px-2 py-1 text-xs text-[#2B1509] focus:outline-none"
                 />
@@ -196,6 +297,52 @@ export default function Navbar() {
                 </button>
               </div>
             </form>
+
+            {/* Mobile Live Dropdown Popup */}
+            {navSearchInput.trim().length > 0 && isSearchFocused && (
+              <div className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-2xl border border-[#E6D7C3] overflow-hidden z-50">
+                {searchResults.length > 0 ? (
+                  <div className="divide-y divide-[#E6D7C3]/40 max-h-[300px] overflow-y-auto">
+                    {searchResults.map((product) => {
+                      const mainPrice = product.weights?.[0]?.price || product.price || 0;
+                      return (
+                        <div
+                          key={product.id}
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            setNavSearchInput('');
+                            if (setSelectedProduct) setSelectedProduct(product);
+                            navigate('product-details');
+                          }}
+                          className="p-3 flex items-center justify-between hover:bg-[#FAF5EF]"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              className="w-10 h-10 rounded-lg object-cover border border-[#E6D7C3] shrink-0"
+                            />
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-[#2B1509] truncate">
+                                {product.name}
+                              </h4>
+                              <p className="text-[9px] font-semibold text-[#8C7A6B] uppercase">
+                                {product.categoryName || product.category || 'Gourmet'}
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-xs font-extrabold text-[#8B3A13] font-mono shrink-0 pl-2">
+                            ₹{Number(mainPrice).toFixed(2)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-xs text-[#2B1509]">No products found matching "{navSearchInput}"</div>
+                )}
+              </div>
+            )}
           </div>
 
         </div>
