@@ -206,24 +206,43 @@ export default function AdminCategories() {
       />
       
       {/* HEADER ROW */}
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Manage Categories
-        </h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            Manage Categories
+          </h1>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Upload images or edit category titles. Click "Copy Config for Git" to push changes to all devices.
+          </p>
+        </div>
 
-        <button
-          onClick={handleOpenAdd}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all border border-red-700/20"
-        >
-          {isFormOpen ? (
-            <span>Cancel</span>
-          ) : (
-            <>
-              <Plus className="w-4 h-4 text-white" />
-              <span>Add Category</span>
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              const categoryJson = JSON.stringify(categories, null, 2);
+              navigator.clipboard.writeText(categoryJson);
+              alert('Category Config copied to clipboard! Share or tell Antigravity to commit and push to Git.');
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs rounded-lg border border-amber-300/80 cursor-pointer transition-all"
+          >
+            <span>📋 Copy Config for Git</span>
+          </button>
+
+          <button
+            onClick={handleOpenAdd}
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold text-xs rounded-lg shadow-2xs cursor-pointer transition-all border border-red-700/20"
+          >
+            {isFormOpen ? (
+              <span>Cancel</span>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 text-white" />
+                <span>Add Category</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* EDIT / ADD CATEGORY FORM CARD (Matches Screenshot Exactly) */}
