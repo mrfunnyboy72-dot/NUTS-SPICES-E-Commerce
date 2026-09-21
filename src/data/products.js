@@ -1,19 +1,19 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
-export const CATALOG_VERSION = 'v5_2026_09_21_featured_bestseller';
+export const CATALOG_VERSION = 'v7_2026_09_21_cat_perfect_images';
 
 export const CATEGORIES = [
-  { id: 'all', name: 'All Products', icon: '✨', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600' },
-  { id: 'viral-product', name: 'VIRAL PRODUCT', icon: '🔥', image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&q=80&w=600' },
-  { id: 'nuts-dry-fruits', name: 'NUTS & DRY FRUITS', icon: '🌰', image: 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=600' },
-  { id: 'dates', name: 'DATES', icon: '🌴', image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600' },
-  { id: 'malt-beverages', name: 'MALT & BEVERAGES', icon: '☕', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600' },
-  { id: 'seeds-items', name: 'SEEDS ITEMS', icon: '🌱', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=600' },
-  { id: 'honey', name: 'HONEY', icon: '🍯', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=600' },
-  { id: 'rice-millet', name: 'RICE & MILLET', icon: '🌾', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=600' },
-  { id: 'masala', name: 'MASALA', icon: '🌶️', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600' },
-  { id: 'soup', name: 'SOUP', icon: '🥣', image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=600' },
-  { id: 'weight-loss', name: 'WEIGHT LOSS PRODUCT', icon: '⚖️', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600' },
-  { id: 'herbals', name: 'HERBALS', icon: '🌿', image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600' }
+  { id: 'all', name: 'All Products', icon: '✨', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800' },
+  { id: 'viral-product', name: 'VIRAL PRODUCT', icon: '🔥', image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&q=80&w=800' },
+  { id: 'nuts-dry-fruits', name: 'NUTS & DRY FRUITS', icon: '🌰', image: 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800' },
+  { id: 'dates', name: 'DATES', icon: '🌴', image: 'https://images.unsplash.com/photo-1598965675045-45c5e72c7d05?auto=format&fit=crop&q=80&w=800' },
+  { id: 'malt-beverages', name: 'MALT & BEVERAGES', icon: '☕', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=800' },
+  { id: 'seeds-items', name: 'SEEDS ITEMS', icon: '🌱', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=800' },
+  { id: 'honey', name: 'HONEY', icon: '🍯', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800' },
+  { id: 'rice-millet', name: 'RICE & MILLET', icon: '🌾', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=800' },
+  { id: 'masala', name: 'MASALA', icon: '🌶️', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800' },
+  { id: 'soup', name: 'SOUP', icon: '🥣', image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=800' },
+  { id: 'weight-loss', name: 'WEIGHT LOSS PRODUCT', icon: '⚖️', image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=800' },
+  { id: 'herbals', name: 'HERBALS', icon: '🌿', image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=800' }
 ];
 
 export const PRODUCTS = [
