@@ -148,6 +148,7 @@ export const CartProvider = ({ children }) => {
   const [adminTab, setAdminTab] = useState('dashboard'); // dashboard | products | categories | orders | customers | offers | reviews | settings
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
 
