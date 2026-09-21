@@ -56,26 +56,28 @@ export const CartProvider = ({ children }) => {
   // 2. PRODUCTS STATE (Admin Editable)
   const [products, setProducts] = useState(() => {
     try {
-      const saved = localStorage.getItem('nuts_spices_products');
+      const saved = localStorage.getItem('nuts_spices_products_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length >= PRODUCTS.length) {
           return sanitizeProductList(parsed);
         }
       }
     } catch {}
+    localStorage.setItem('nuts_spices_products_v3', JSON.stringify(PRODUCTS));
     return PRODUCTS;
   });
 
   // 3. CATEGORIES STATE (Admin Editable)
   const [categories, setCategories] = useState(() => {
     try {
-      const saved = localStorage.getItem('nuts_spices_categories');
+      const saved = localStorage.getItem('nuts_spices_categories_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= CATEGORIES.length) return parsed;
       }
     } catch {}
+    localStorage.setItem('nuts_spices_categories_v3', JSON.stringify(CATEGORIES));
     return CATEGORIES;
   });
 
@@ -198,11 +200,11 @@ export const CartProvider = ({ children }) => {
   }, [storeSettings]);
 
   useEffect(() => {
-    try { localStorage.setItem('nuts_spices_products', JSON.stringify(products)); } catch (err) { console.warn('localStorage error:', err); }
+    try { localStorage.setItem('nuts_spices_products_v3', JSON.stringify(products)); } catch (err) { console.warn('localStorage error:', err); }
   }, [products]);
 
   useEffect(() => {
-    try { localStorage.setItem('nuts_spices_categories', JSON.stringify(categories)); } catch (err) { console.warn('localStorage error:', err); }
+    try { localStorage.setItem('nuts_spices_categories_v3', JSON.stringify(categories)); } catch (err) { console.warn('localStorage error:', err); }
   }, [categories]);
 
   useEffect(() => {
