@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { PRODUCTS, CATEGORIES, STORE_WHATSAPP_NUMBER } from '../data/products';
+import { PRODUCTS, CATEGORIES, STORE_WHATSAPP_NUMBER, CATALOG_VERSION } from '../data/products';
 import { 
   INITIAL_STORE_SETTINGS, 
   INITIAL_ORDERS, 
@@ -56,16 +56,20 @@ export const CartProvider = ({ children }) => {
   // 2. PRODUCTS STATE (Admin Editable & Master Catalog Auto-Synced)
   const [products, setProducts] = useState(() => {
     try {
-      const saved = localStorage.getItem('nuts_spices_products');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= PRODUCTS.length) {
-          return sanitizeProductList(parsed);
+      const savedVer = localStorage.getItem('nuts_spices_catalog_ver');
+      if (savedVer === CATALOG_VERSION) {
+        const saved = localStorage.getItem('nuts_spices_products');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length >= PRODUCTS.length) {
+            return sanitizeProductList(parsed);
+          }
         }
       }
     } catch {}
     try {
       localStorage.setItem('nuts_spices_products', JSON.stringify(PRODUCTS));
+      localStorage.setItem('nuts_spices_catalog_ver', CATALOG_VERSION);
     } catch {}
     return PRODUCTS;
   });
@@ -73,17 +77,37 @@ export const CartProvider = ({ children }) => {
   // 3. CATEGORIES STATE (Admin Editable & Master Catalog Auto-Synced)
   const [categories, setCategories] = useState(() => {
     try {
-      const saved = localStorage.getItem('nuts_spices_categories');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= CATEGORIES.length) return parsed;
+      const savedVer = localStorage.getItem('nuts_spices_catalog_ver');
+      if (savedVer === CATALOG_VERSION) {
+        const saved = localStorage.getItem('nuts_spices_categories');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length >= CATEGORIES.length) return parsed;
+        }
       }
     } catch {}
     try {
       localStorage.setItem('nuts_spices_categories', JSON.stringify(CATEGORIES));
+      localStorage.setItem('nuts_spices_catalog_ver', CATALOG_VERSION);
     } catch {}
     return CATEGORIES;
   });
+
+  // Auto-sync outdated browser localStorage cache on app mount
+  useEffect(() => {
+    try {
+      const savedVer = localStorage.getItem('nuts_spices_catalog_ver');
+      if (savedVer !== CATALOG_VERSION) {
+        localStorage.setItem('nuts_spices_products', JSON.stringify(PRODUCTS));
+        localStorage.setItem('nuts_spices_categories', JSON.stringify(CATEGORIES));
+        localStorage.setItem('nuts_spices_catalog_ver', CATALOG_VERSION);
+        setProducts(PRODUCTS);
+        setCategories(CATEGORIES);
+      }
+    } catch (e) {
+      console.warn('Catalog version sync error:', e);
+    }
+  }, []);
 
   // 4. ORDERS STATE (Admin & Customer Live Sync)
   const [orders, setOrders] = useState(() => {

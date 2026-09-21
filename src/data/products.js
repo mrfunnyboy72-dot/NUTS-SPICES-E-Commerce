@@ -1,4 +1,5 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
+export const CATALOG_VERSION = 'v4_2026_09_21_master';
 
 export const CATEGORIES = [
   { id: 'all', name: 'All Products', icon: '✨', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600' },
