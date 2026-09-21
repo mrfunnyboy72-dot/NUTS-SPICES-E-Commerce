@@ -145,38 +145,6 @@ export default function HomePage() {
       {/* BEST SELLING PRODUCTS CAROUSEL SECTION (FRESH FROM HARVEST SUBTITLE, UNIQUE PRODUCTS PER CATEGORY) */}
       <BestSellingSection />
 
-      {/* PRODUCTS SECTION ON HOMEPAGE */}
-      <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-24">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E6D7C3] pb-4">
-          <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#8B3A13]">
-              {homeCategory === 'all' ? 'Handpicked Favorites' : `Category: ${activeCatObj.name}`}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black font-serif text-[#2B1509] mt-1">
-              {homeCategory === 'all' ? 'Trending Best Sellers' : activeCatObj.name}
-            </h2>
-          </div>
-        </div>
-
-        {filteredHomeProducts.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-[#E6D7C3] space-y-3">
-            <p className="text-lg font-bold text-[#2B1509]">No products found in this category</p>
-            <button
-              onClick={() => setHomeCategory('all')}
-              className="px-5 py-2.5 bg-[#8B3A13] text-white font-bold text-xs rounded-xl cursor-pointer"
-            >
-              Show All Products
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredHomeProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
-      </section>
-
       {/* HOW ORDERING WORKS (WHATSAPP FLOW) */}
       <section className="bg-[#F3E8DC] py-16 border-y border-[#E6D7C3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
