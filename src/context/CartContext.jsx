@@ -53,28 +53,34 @@ export const CartProvider = ({ children }) => {
     }).filter(Boolean);
   };
 
-  // 2. PRODUCTS STATE (Admin Editable)
+  // 2. PRODUCTS STATE (Admin Editable & Master Catalog Auto-Synced)
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('nuts_spices_products');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length >= PRODUCTS.length) {
           return sanitizeProductList(parsed);
         }
       }
     } catch {}
+    try {
+      localStorage.setItem('nuts_spices_products', JSON.stringify(PRODUCTS));
+    } catch {}
     return PRODUCTS;
   });
 
-  // 3. CATEGORIES STATE (Admin Editable)
+  // 3. CATEGORIES STATE (Admin Editable & Master Catalog Auto-Synced)
   const [categories, setCategories] = useState(() => {
     try {
       const saved = localStorage.getItem('nuts_spices_categories');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= CATEGORIES.length) return parsed;
       }
+    } catch {}
+    try {
+      localStorage.setItem('nuts_spices_categories', JSON.stringify(CATEGORIES));
     } catch {}
     return CATEGORIES;
   });
