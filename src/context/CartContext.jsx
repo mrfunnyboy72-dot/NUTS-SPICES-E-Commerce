@@ -53,6 +53,16 @@ export const CartProvider = ({ children }) => {
     }).filter(Boolean);
   };
 
+  // Auto-sync catalog version to clear old stale localStorage cache on returning devices
+  try {
+    const savedVersion = localStorage.getItem('nuts_spices_catalog_version');
+    if (savedVersion !== CATALOG_VERSION) {
+      localStorage.removeItem('nuts_spices_products');
+      localStorage.removeItem('nuts_spices_categories');
+      localStorage.setItem('nuts_spices_catalog_version', CATALOG_VERSION);
+    }
+  } catch {}
+
   // 2. PRODUCTS STATE (Admin Editable & Persisted in localStorage)
   const [products, setProducts] = useState(() => {
     try {
