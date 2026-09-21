@@ -146,7 +146,7 @@ export default function HomePage() {
       <BestSellingSection />
 
       {/* HOW ORDERING WORKS (WHATSAPP FLOW) */}
-      <section className="bg-[#F3E8DC] py-16 border-y border-[#E6D7C3]">
+      <section className="bg-white py-16 border-y border-[#E6D7C3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#8B3A13]">
@@ -171,7 +171,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-[#FAF5EF] p-6 rounded-2xl border border-[#E6D7C3] shadow-sm text-center space-y-3 relative">
+            <div className="bg-white p-6 rounded-2xl border border-[#E6D7C3] shadow-sm text-center space-y-3 relative">
               <div className="w-10 h-10 rounded-full bg-[#8B3A13] text-white font-bold flex items-center justify-center mx-auto text-sm">
                 2
               </div>
