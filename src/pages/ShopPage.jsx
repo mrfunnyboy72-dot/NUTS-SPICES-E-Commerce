@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
-import { Filter, SlidersHorizontal, Search } from 'lucide-react';
+import { Filter, SlidersHorizontal, Search, X } from 'lucide-react';
 
 export default function ShopPage() {
-  const { products, categories, selectedCategory, setSelectedCategory } = useCart();
+  const { products, categories, selectedCategory, setSelectedCategory, searchQuery, setSearchQuery } = useCart();
   const [activeCategory, setActiveCategory] = useState(selectedCategory || 'all');
   const [sortBy, setSortBy] = useState('featured');
-  const [searchFilter, setSearchFilter] = useState('');
+  const [searchFilter, setSearchFilter] = useState(searchQuery || '');
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (searchQuery !== undefined) {
+      setSearchFilter(searchQuery || '');
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
     if (selectedCategory) {
       setActiveCategory(selectedCategory);
     }
@@ -20,7 +26,8 @@ export default function ShopPage() {
     if (!activeCategory || activeCategory === 'all') {
       const matchesSearch = !searchFilter.trim() || 
                             p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                            (p.categoryName || '').toLowerCase().includes(searchFilter.toLowerCase());
+                            (p.categoryName || '').toLowerCase().includes(searchFilter.toLowerCase()) ||
+                            (p.description || '').toLowerCase().includes(searchFilter.toLowerCase());
       return matchesSearch;
     }
 
@@ -39,7 +46,8 @@ export default function ShopPage() {
 
     const matchesSearch = !searchFilter.trim() || 
                           p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                          pCatName.includes(searchFilter.toLowerCase());
+                          pCatName.includes(searchFilter.toLowerCase()) ||
+                          (p.description || '').toLowerCase().includes(searchFilter.toLowerCase());
 
     return matchesCat && matchesSearch;
   });
@@ -61,14 +69,31 @@ export default function ShopPage() {
       <div className="bg-[#2B1509] text-white p-8 sm:p-12 rounded-3xl space-y-3 relative overflow-hidden border border-[#8B3A13]">
         <div className="absolute right-0 top-0 w-64 h-64 bg-[#8B3A13]/30 rounded-full blur-2xl pointer-events-none" />
         <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-widest block">
-          Gourmet Pantry Collection
+          {searchFilter.trim() ? 'Search Results' : (activeCategory === 'all' ? 'Gourmet Pantry Collection' : 'Category Products')}
         </span>
         <h1 className="text-3xl sm:text-4xl font-black font-serif">
-          Shop All Products
+          {searchFilter.trim() ? `Search Results for "${searchFilter}"` : (activeCategory === 'all' ? 'Shop All Products' : (categories.find(c => c.id === activeCategory)?.name || 'Products'))}
         </h1>
         <p className="text-xs sm:text-sm text-[#E6D7C3] max-w-xl">
-          Browse our entire catalog of premium nuts, hand-picked dry fruits, single-origin spices, superfood seeds, and luxury gift hampers.
+          {searchFilter.trim()
+            ? `Showing all matching products for "${searchFilter}".`
+            : (activeCategory === 'all' 
+              ? 'Browse our entire catalog of premium nuts, hand-picked dry fruits, single-origin spices, superfood seeds, and luxury gift hampers.'
+              : `Explore all products in ${categories.find(c => c.id === activeCategory)?.name || 'this category'}.`)}
         </p>
+
+        {searchFilter.trim() && (
+          <button
+            onClick={() => {
+              setSearchFilter('');
+              if (setSearchQuery) setSearchQuery('');
+            }}
+            className="px-4 py-1.5 bg-[#D4AF37] text-[#2B1509] font-extrabold text-xs rounded-xl shadow-md hover:bg-white transition-all cursor-pointer inline-flex items-center gap-1.5 mt-2"
+          >
+            <span>Clear Search filter</span>
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Filter Controls & Search Bar */}
