@@ -45,7 +45,14 @@ export default function CategoriesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {categoriesList.map((cat) => {
           const allProds = (products && products.length > 0) ? products : (PRODUCTS || []);
-          const count = allProds.filter(p => p.category === cat.id).length;
+          const count = allProds.filter(p => {
+            if (p.status === 'Inactive' || p.active === false) return false;
+            const cId = (cat.id || '').toLowerCase().trim();
+            const cName = (cat.name || '').toLowerCase().trim();
+            const pCat = (p.category || '').toLowerCase().trim();
+            const pCatName = (p.categoryName || '').toLowerCase().trim();
+            return pCat === cId || pCat === cName || (cName && pCatName === cName) || (cId && pCatName === cId);
+          }).length;
           const info = categoryDetails[cat.id] || { tagline: 'Gourmet Selection' };
           const catImg = cat.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600';
 
