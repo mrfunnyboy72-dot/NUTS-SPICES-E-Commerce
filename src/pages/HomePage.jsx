@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import FeaturedTodaySection from '../components/FeaturedTodaySection';
+import BestSellingSection from '../components/BestSellingSection';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
@@ -140,6 +141,9 @@ export default function HomePage() {
 
       {/* FEATURED TODAY CAROUSEL SECTION (1 PRODUCT PER CATEGORY MATCHING USER REFERENCE SCREENSHOT) */}
       <FeaturedTodaySection />
+
+      {/* BEST SELLING PRODUCTS CAROUSEL SECTION (FRESH FROM HARVEST SUBTITLE, UNIQUE PRODUCTS PER CATEGORY) */}
+      <BestSellingSection />
 
       {/* PRODUCTS SECTION ON HOMEPAGE */}
       <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-24">
