@@ -53,42 +53,31 @@ export const CartProvider = ({ children }) => {
     }).filter(Boolean);
   };
 
-  // 2. PRODUCTS STATE (Master Catalog Always Fresh from Codebase + Admin Additions)
+  // 2. PRODUCTS STATE (Admin Editable & Persisted in localStorage)
   const [products, setProducts] = useState(() => {
     try {
-      const customAdminProds = localStorage.getItem('nuts_spices_admin_added_products');
-      if (customAdminProds) {
-        const parsed = JSON.parse(customAdminProds);
+      const saved = localStorage.getItem('nuts_spices_products');
+      if (saved) {
+        const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return sanitizeProductList([...parsed, ...PRODUCTS]);
+          return sanitizeProductList(parsed);
         }
       }
     } catch {}
     return PRODUCTS;
   });
 
-  // 3. CATEGORIES STATE (Master Categories Always Fresh from Codebase + Admin Additions)
+  // 3. CATEGORIES STATE (Admin Editable & Persisted in localStorage)
   const [categories, setCategories] = useState(() => {
     try {
-      const customAdminCats = localStorage.getItem('nuts_spices_admin_added_categories');
-      if (customAdminCats) {
-        const parsed = JSON.parse(customAdminCats);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return [...parsed, ...CATEGORIES];
-        }
+      const saved = localStorage.getItem('nuts_spices_categories');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {}
     return CATEGORIES;
   });
-
-  // Clear stale old browser localStorage cache on app mount to force fresh image loading across all devices
-  useEffect(() => {
-    try {
-      localStorage.removeItem('nuts_spices_products');
-      localStorage.removeItem('nuts_spices_categories');
-      localStorage.removeItem('nuts_spices_catalog_ver');
-    } catch {}
-  }, []);
 
   // 4. ORDERS STATE (Admin & Customer Live Sync)
   const [orders, setOrders] = useState(() => {
