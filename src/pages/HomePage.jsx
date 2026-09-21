@@ -138,14 +138,17 @@ export default function HomePage() {
       </section>
 
       {/* SHOP BY CATEGORY GRID SECTION (MATCHING USER REFERENCE DESIGN) */}
-      <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <section id="categories-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pt-4">
         
-        {/* Section Subtitle & Heading */}
+        {/* Section Heading & Subtitle */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <p className="text-xs sm:text-base font-serif italic text-[#4A3525] leading-relaxed">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif text-[#1E3A2B]">
+            Explore categories
+          </h2>
+          <div className="w-12 h-1 bg-[#1E3A2B] mx-auto rounded-full" />
+          <p className="text-xs sm:text-base font-serif italic text-[#4A3525] leading-relaxed pt-1">
             Experience the finest selection of premium dates, exotic nuts, and artisanal wellness blends.
           </p>
-          <div className="w-16 h-0.5 bg-[#8B3A13] mx-auto rounded-full" />
         </div>
 
         {/* Categories Grid */}
