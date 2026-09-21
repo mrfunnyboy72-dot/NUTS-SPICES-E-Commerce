@@ -100,10 +100,10 @@ export default function HomePage() {
         
         {/* Section Heading & Subtitle */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif text-[#1E3A2B]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif text-[#2B1509]">
             Explore categories
           </h2>
-          <div className="w-12 h-1 bg-[#1E3A2B] mx-auto rounded-full" />
+          <div className="w-12 h-1 bg-[#8B3A13] mx-auto rounded-full" />
           <p className="text-xs sm:text-base font-serif italic text-[#4A3525] leading-relaxed pt-1">
             Experience the finest selection of premium dates, exotic nuts, and artisanal wellness blends.
           </p>
