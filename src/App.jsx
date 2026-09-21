@@ -63,7 +63,7 @@ function MainContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF5EF] overflow-x-hidden w-full max-w-full">
+    <div className="min-h-screen flex flex-col bg-white overflow-x-hidden w-full max-w-full">
       <Navbar />
       <main className="flex-1">
         {renderPage()}

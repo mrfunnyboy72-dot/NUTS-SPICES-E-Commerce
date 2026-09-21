@@ -80,7 +80,7 @@ export default function HomePage() {
         {/* SCROLLABLE BRIGHT HD BANNER IMAGES TRACK */}
         <div 
           ref={scrollRef}
-          className="w-full h-full flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none absolute inset-0 bg-[#FAF5EF]"
+          className="w-full h-full flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none absolute inset-0 bg-white"
         >
           {HERO_SLIDES.map((slide) => (
             <div key={slide.id} className="w-full h-full shrink-0 snap-center relative overflow-hidden">
