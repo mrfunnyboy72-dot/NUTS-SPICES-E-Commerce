@@ -509,6 +509,24 @@ export const CartProvider = ({ children }) => {
     return `https://wa.me/${activeWhatsAppNumber}?text=${encodedText}`;
   };
 
+  // AUTOMATIC GIT AUTO-SYNC API HANDLER
+  const syncCatalogToGit = async (customProducts, customCategories) => {
+    const prods = customProducts || products;
+    const cats = customCategories || categories;
+    try {
+      const res = await fetch('http://localhost:5000/api/admin/sync-git', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products: prods, categories: cats })
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.warn('Sync server offline or local environment:', err);
+      return { success: false, message: 'Server offline' };
+    }
+  };
+
   // ADMIN - PRODUCT CRUD
   const addProduct = (newProductData) => {
     const newId = `prod-${Date.now()}`;
@@ -520,41 +538,69 @@ export const CartProvider = ({ children }) => {
       status: 'Active',
       ...newProductData
     };
-    setProducts(prev => [productToAdd, ...prev]);
+    setProducts(prev => {
+      const updated = [productToAdd, ...prev];
+      syncCatalogToGit(updated, categories);
+      return updated;
+    });
     return productToAdd;
   };
 
   const updateProduct = (productId, updatedFields) => {
-    setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...updatedFields } : p));
+    setProducts(prev => {
+      const updated = prev.map(p => p.id === productId ? { ...p, ...updatedFields } : p);
+      syncCatalogToGit(updated, categories);
+      return updated;
+    });
   };
 
   const deleteProduct = (productId) => {
-    setProducts(prev => prev.filter(p => p.id !== productId));
+    setProducts(prev => {
+      const updated = prev.filter(p => p.id !== productId);
+      syncCatalogToGit(updated, categories);
+      return updated;
+    });
   };
 
   const toggleProductStatus = (productId) => {
-    setProducts(prev => prev.map(p => {
-      if (p.id === productId) {
-        const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
-        return { ...p, status: newStatus, active: newStatus === 'Active' };
-      }
-      return p;
-    }));
+    setProducts(prev => {
+      const updated = prev.map(p => {
+        if (p.id === productId) {
+          const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
+          return { ...p, status: newStatus, active: newStatus === 'Active' };
+        }
+        return p;
+      });
+      syncCatalogToGit(updated, categories);
+      return updated;
+    });
   };
 
   // ADMIN - CATEGORIES CRUD
   const addCategory = (categoryData) => {
     const newId = categoryData.id || `cat-${Date.now()}`;
     const newCategory = { id: newId, ...categoryData };
-    setCategories(prev => [...prev, newCategory]);
+    setCategories(prev => {
+      const updated = [...prev, newCategory];
+      syncCatalogToGit(products, updated);
+      return updated;
+    });
   };
 
   const updateCategory = (categoryId, updatedFields) => {
-    setCategories(prev => prev.map(c => c.id === categoryId ? { ...c, ...updatedFields } : c));
+    setCategories(prev => {
+      const updated = prev.map(c => c.id === categoryId ? { ...c, ...updatedFields } : c);
+      syncCatalogToGit(products, updated);
+      return updated;
+    });
   };
 
   const deleteCategory = (categoryId) => {
-    setCategories(prev => prev.filter(c => c.id !== categoryId));
+    setCategories(prev => {
+      const updated = prev.filter(c => c.id !== categoryId);
+      syncCatalogToGit(products, updated);
+      return updated;
+    });
   };
 
   // ADMIN - ORDERS CRUD & CUSTOMER CHECKOUT CREATION
@@ -704,6 +750,7 @@ export const CartProvider = ({ children }) => {
         logoutAdmin,
 
         // Admin Product Actions
+        syncCatalogToGit,
         addProduct,
         updateProduct,
         deleteProduct,

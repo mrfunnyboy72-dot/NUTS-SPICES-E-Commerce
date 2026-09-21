@@ -188,13 +188,45 @@ export default function AdminPage() {
             </span>
           </div>
 
-          <button
-            onClick={() => navigate('home')}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-extrabold rounded-full border border-amber-200 transition-all cursor-pointer"
-          >
-            <Store className="w-4 h-4 text-amber-600" />
-            <span>Back to Storefront</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Live Git Auto-Sync Button */}
+            <button
+              onClick={async () => {
+                const btn = document.getElementById('git-sync-btn');
+                if (btn) btn.innerText = '⏳ Syncing Git...';
+                try {
+                  const res = await fetch('http://localhost:5000/api/admin/sync-git', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ products, categories })
+                  });
+                  const data = await res.json();
+                  if (data && data.success) {
+                    if (btn) btn.innerText = '✅ Saved & Pushed to GitHub!';
+                    setTimeout(() => { if (btn) btn.innerText = '⚡ Push to Git & All Devices'; }, 3500);
+                  } else {
+                    if (btn) btn.innerText = '⚡ Push to Git & All Devices';
+                    alert('Saved locally! Run node server for auto git push.');
+                  }
+                } catch {
+                  if (btn) btn.innerText = '⚡ Push to Git & All Devices';
+                  alert('State saved locally! Automatic Git Push active on http://localhost:5000 backend.');
+                }
+              }}
+              id="git-sync-btn"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#8B3A13] hover:bg-[#6E2C00] text-white text-xs font-black rounded-full shadow-sm cursor-pointer transition-all active:scale-95"
+            >
+              <span>⚡ Push to Git & All Devices</span>
+            </button>
+
+            <button
+              onClick={() => navigate('home')}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-extrabold rounded-full border border-amber-200 transition-all cursor-pointer"
+            >
+              <Store className="w-4 h-4 text-amber-600" />
+              <span>Back to Storefront</span>
+            </button>
+          </div>
         </header>
 
         {/* Main Content Area */}
