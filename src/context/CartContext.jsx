@@ -53,60 +53,41 @@ export const CartProvider = ({ children }) => {
     }).filter(Boolean);
   };
 
-  // 2. PRODUCTS STATE (Admin Editable & Master Catalog Auto-Synced)
+  // 2. PRODUCTS STATE (Master Catalog Always Fresh from Codebase + Admin Additions)
   const [products, setProducts] = useState(() => {
     try {
-      const savedVer = localStorage.getItem('nuts_spices_catalog_ver');
-      if (savedVer === CATALOG_VERSION) {
-        const saved = localStorage.getItem('nuts_spices_products');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length >= PRODUCTS.length) {
-            return sanitizeProductList(parsed);
-          }
+      const customAdminProds = localStorage.getItem('nuts_spices_admin_added_products');
+      if (customAdminProds) {
+        const parsed = JSON.parse(customAdminProds);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return sanitizeProductList([...parsed, ...PRODUCTS]);
         }
       }
-    } catch {}
-    try {
-      localStorage.setItem('nuts_spices_products', JSON.stringify(PRODUCTS));
-      localStorage.setItem('nuts_spices_catalog_ver', CATALOG_VERSION);
     } catch {}
     return PRODUCTS;
   });
 
-  // 3. CATEGORIES STATE (Admin Editable & Master Catalog Auto-Synced)
+  // 3. CATEGORIES STATE (Master Categories Always Fresh from Codebase + Admin Additions)
   const [categories, setCategories] = useState(() => {
     try {
-      const savedVer = localStorage.getItem('nuts_spices_catalog_ver');
-      if (savedVer === CATALOG_VERSION) {
-        const saved = localStorage.getItem('nuts_spices_categories');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length >= CATEGORIES.length) return parsed;
+      const customAdminCats = localStorage.getItem('nuts_spices_admin_added_categories');
+      if (customAdminCats) {
+        const parsed = JSON.parse(customAdminCats);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return [...parsed, ...CATEGORIES];
         }
       }
-    } catch {}
-    try {
-      localStorage.setItem('nuts_spices_categories', JSON.stringify(CATEGORIES));
-      localStorage.setItem('nuts_spices_catalog_ver', CATALOG_VERSION);
     } catch {}
     return CATEGORIES;
   });
 
-  // Auto-sync outdated browser localStorage cache on app mount
+  // Clear stale old browser localStorage cache on app mount to force fresh image loading across all devices
   useEffect(() => {
     try {
-      const savedVer = localStorage.getItem('nuts_spices_catalog_ver');
-      if (savedVer !== CATALOG_VERSION) {
-        localStorage.setItem('nuts_spices_products', JSON.stringify(PRODUCTS));
-        localStorage.setItem('nuts_spices_categories', JSON.stringify(CATEGORIES));
-        localStorage.setItem('nuts_spices_catalog_ver', CATALOG_VERSION);
-        setProducts(PRODUCTS);
-        setCategories(CATEGORIES);
-      }
-    } catch (e) {
-      console.warn('Catalog version sync error:', e);
-    }
+      localStorage.removeItem('nuts_spices_products');
+      localStorage.removeItem('nuts_spices_categories');
+      localStorage.removeItem('nuts_spices_catalog_ver');
+    } catch {}
   }, []);
 
   // 4. ORDERS STATE (Admin & Customer Live Sync)
