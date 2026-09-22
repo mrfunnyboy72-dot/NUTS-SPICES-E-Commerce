@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { Heart, Star, ShoppingBag, Check } from 'lucide-react';
+import { Heart, Star, ShoppingBag, Check, ChevronDown } from 'lucide-react';
 
 export default function ProductCard({ product }) {
   const { addToCart, wishlist, toggleWishlist, navigate } = useCart();
@@ -32,9 +32,9 @@ export default function ProductCard({ product }) {
   return (
     <div 
       onClick={() => navigate('product-details', { product })}
-      className="group bg-white rounded-2xl border border-[#E6D7C3] hover:border-[#8B3A13]/40 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1"
+      className="group bg-white rounded-2xl sm:rounded-3xl border border-[#E6D7C3] hover:border-[#0F382C]/40 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 relative"
     >
-      {/* Product Image & Badges */}
+      {/* Product Image & Stacked Badges */}
       <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
         <img
           src={product.image}
@@ -42,115 +42,104 @@ export default function ProductCard({ product }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
 
-        {/* Badge */}
-        {product.badge && (
-          <span className="absolute top-3 left-3 bg-[#8B3A13] text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md">
-            {product.badge}
+        {/* Stacked Badges Top Left (Matching User Reference Image) */}
+        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+          {/* Gold FEATURED Badge */}
+          <span className="bg-[#D4AF37] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md shadow-xs text-center border border-white/20">
+            {product.badge || 'FEATURED'}
           </span>
-        )}
 
-        {/* Wishlist Button */}
+          {/* Red Discount OFF Ribbon Badge */}
+          {discountPercent > 0 && (
+            <span className="bg-[#B22222] text-white text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md shadow-xs text-center">
+              {discountPercent}% OFF
+            </span>
+          )}
+        </div>
+
+        {/* Wishlist Heart Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist(product.id);
           }}
-          className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition-colors ${
+          className={`absolute top-2.5 right-2.5 p-1.5 sm:p-2 rounded-full backdrop-blur-md transition-colors z-10 ${
             isWishlisted 
               ? 'bg-red-50 text-red-500 shadow-md' 
-              : 'bg-white/80 text-[#8C7A6B] hover:text-red-500'
+              : 'bg-white/85 text-[#8C7A6B] hover:text-red-500 shadow-xs'
           }`}
           title="Add to Wishlist"
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
-
-        {/* Discount tag */}
-        {discountPercent > 0 && (
-          <span className="absolute bottom-3 left-3 bg-[#D4AF37] text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow">
-            SAVE {discountPercent}%
-          </span>
-        )}
       </div>
 
       {/* Card Details */}
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-3">
+        
+        {/* Title */}
         <div>
-          {/* Category & Rating */}
-          <div className="flex items-center justify-between text-xs text-[#8C7A6B] mb-1">
-            <span className="font-semibold uppercase tracking-wider text-[#8B3A13]">
-              {product.categoryName}
-            </span>
-            <div className="flex items-center gap-1 font-bold text-[#2B1509]">
-              <Star className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
-              <span>{product.rating}</span>
-              <span className="text-[#8C7A6B] font-normal">({product.reviews})</span>
-            </div>
-          </div>
-
-          {/* Product Name */}
-          <h3 className="font-bold text-[#2B1509] text-base group-hover:text-[#8B3A13] transition-colors line-clamp-2">
+          <h3 className="font-extrabold text-[#0F382C] text-sm sm:text-base font-serif group-hover:text-[#8B3A13] transition-colors line-clamp-2 leading-snug">
             {product.name}
           </h3>
         </div>
 
-        {/* Weight Picker Pills */}
-        <div>
-          <div className="text-[11px] font-bold text-[#8C7A6B] mb-1.5 uppercase tracking-wider">
-            Select Pack Weight:
-          </div>
-          <div className="flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+        {/* Weight Picker Select Dropdown (Matching Reference Screenshot) */}
+        <div onClick={(e) => e.stopPropagation()} className="relative">
+          <select
+            value={activeWeight.label}
+            onChange={(e) => {
+              const selected = weightsList.find(w => w.label === e.target.value);
+              if (selected) setSelectedWeight(selected);
+            }}
+            className="w-full bg-[#FAF5EF] border border-[#E6D7C3] rounded-xl text-xs font-extrabold text-[#0F382C] px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-[#0F382C] cursor-pointer shadow-2xs font-serif"
+          >
             {weightsList.map((w) => (
-              <button
-                key={w.label}
-                onClick={() => setSelectedWeight(w)}
-                className={`text-xs px-2.5 py-1 rounded-md font-semibold border transition-all ${
-                  activeWeight.label === w.label
-                    ? 'bg-[#8B3A13] text-white border-[#8B3A13] shadow-sm'
-                    : 'bg-[#FAF5EF] text-[#4A3525] border-[#E6D7C3] hover:border-[#8B3A13]'
-                }`}
-              >
+              <option key={w.label} value={w.label}>
                 {w.label}
-              </button>
+              </option>
             ))}
-          </div>
+          </select>
+          <ChevronDown className="w-4 h-4 text-[#0F382C] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
 
-        {/* Price & Add to Cart */}
-        <div className="pt-2 border-t border-[#FAF5EF] flex items-center justify-between">
+        {/* Price & Add to Cart Button */}
+        <div className="pt-2 border-t border-[#FAF5EF] space-y-2">
+          
+          {/* Struck-through Original & Bold Current Price */}
           <div className="flex flex-col">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-lg font-black text-[#8B3A13]">
-                ₹{activeWeight.price}
-              </span>
-              <span className="text-xs text-[#8C7A6B] line-through">
-                ₹{activeWeight.originalPrice}
-              </span>
-            </div>
-            <span className="text-[10px] text-green-700 font-bold">Inclusive of taxes</span>
+            <span className="text-[11px] text-[#8C7A6B] line-through font-serif leading-none">
+              ₹{origP}.00
+            </span>
+            <span className="text-base sm:text-lg font-black text-[#D4AF37] font-mono leading-tight mt-0.5">
+              ₹{curP}.00
+            </span>
           </div>
 
+          {/* Add to Cart Button (Solid Dark Green with Gold Text) */}
           <button
             onClick={handleAddToCart}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`w-full py-2.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md ${
               added 
-                ? 'bg-green-600 text-white' 
-                : 'bg-[#8B3A13] hover:bg-[#6E2C00] text-white shadow-md hover:shadow-lg'
+                ? 'bg-green-700 text-white' 
+                : 'bg-[#0F382C] hover:bg-[#07241C] text-[#D4AF37] border border-[#D4AF37]/30'
             }`}
           >
             {added ? (
               <>
-                <Check className="w-4 h-4" />
-                <span>Added!</span>
+                <Check className="w-4 h-4 text-white" />
+                <span>ADDED!</span>
               </>
             ) : (
               <>
-                <ShoppingBag className="w-4 h-4" />
-                <span>Add to Cart</span>
+                <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
+                <span>ADD TO CART</span>
               </>
             )}
           </button>
+
         </div>
+
       </div>
     </div>
   );

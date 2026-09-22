@@ -21,6 +21,8 @@ import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
 import AuthModal from './components/AuthModal';
 
+import MobileBottomNav from './components/MobileBottomNav';
+
 function MainContent() {
   const { activePage } = useCart();
 
@@ -65,12 +67,13 @@ function MainContent() {
   return (
     <div className="min-h-screen flex flex-col bg-white overflow-x-hidden w-full max-w-full">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 pb-16 md:pb-0">
         {renderPage()}
       </main>
       <SearchModal />
       <AuthModal />
       <Footer />
+      <MobileBottomNav />
     </div>
   );
 }

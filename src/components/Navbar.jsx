@@ -51,16 +51,16 @@ export default function Navbar() {
       <header className="sticky top-0 z-40 bg-[#F7F3E9] border-b border-[#E6D7C3] shadow-xs">
         
         {/* TOP ANNOUNCEMENT BAR */}
-        <div className="bg-[#2B1509] text-[#D4AF37] text-[10px] sm:text-[11px] font-extrabold py-2 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
+        <div className="bg-[#0F382C] text-[#D4AF37] text-[10px] sm:text-[11px] font-extrabold py-2 px-4 border-b border-[#D4AF37]/30 tracking-wider uppercase">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             
             {/* Left Ticker Announcements */}
             <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap text-center sm:text-left">
-              <span>WE DELIVER ACROSS INDIA</span>
-              <span className="text-[#8B3A13]">|</span>
-              <span className="text-white">ORDER ABOVE ₹3500 GET FREE SHIPPING</span>
-              <span className="text-[#8B3A13] hidden md:inline">|</span>
-              <span className="hidden md:inline">WE DELIVER ACROSS INDIA</span>
+              <span>ORDER ABOVE ₹3500 GET FREE SHIPPING</span>
+              <span className="text-[#D4AF37]">|</span>
+              <span className="text-white">WE DELIVER ACROSS INDIA</span>
+              <span className="text-[#D4AF37] hidden md:inline">|</span>
+              <span className="hidden md:inline">AUTHENTIC GOURMET SELECTION</span>
             </div>
 
             {/* Right Quick Links */}
