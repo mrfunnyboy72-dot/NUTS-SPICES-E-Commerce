@@ -50,8 +50,8 @@ export default function Navbar() {
     <>
       <header className="sticky top-0 z-40 bg-[#F7F3E9] border-b border-[#E6D7C3] shadow-xs">
         
-        {/* TOP ANNOUNCEMENT BAR (SHOW ONLY ON HOME PAGE) */}
-        {activePage === 'home' && (
+        {/* TOP ANNOUNCEMENT BAR (SHOW ON HOME & TOP LINK PAGES) */}
+        {['home', 'about', 'help', 'bulk-orders', 'contact'].includes(activePage) && (
           <div className="bg-[#2B1509] text-[#D4AF37] text-[12px] sm:text-[13px] font-extrabold py-2.5 sm:py-3 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
             <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
               
