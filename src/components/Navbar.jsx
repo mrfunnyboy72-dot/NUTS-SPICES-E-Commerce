@@ -270,10 +270,10 @@ export default function Navbar() {
                 <Search className="w-6 h-6" />
               </button>
 
-              {/* 3-LINE HAMBURGER MENU BUTTON (MATCHING USER REFERENCE SCREENSHOT) */}
+              {/* 3-LINE HAMBURGER MENU BUTTON (MOBILE ONLY - HIDDEN ON PC/LAPTOP) */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-1.5 text-[#D4AF37] hover:text-[#0F382C] transition-colors cursor-pointer"
+                className="md:hidden p-1.5 text-[#D4AF37] hover:text-[#0F382C] transition-colors cursor-pointer"
                 title="Menu"
               >
                 <Menu className="w-6 h-6 sm:w-7 sm:h-7" />
