@@ -99,8 +99,8 @@ export default function Navbar() {
                   <span className="text-lg sm:text-2xl font-black tracking-wider text-[#2B1509] font-serif uppercase">
                     HAJI
                   </span>
-                  <span className="text-xs font-bold text-[#D4AF37] tracking-widest uppercase font-serif hidden sm:inline">
-                    DATES N' NUTS
+                  <span className="text-[11px] sm:text-xs font-extrabold text-[#D4AF37] tracking-widest uppercase font-serif inline-block">
+                    NUTS & SPICES
                   </span>
                 </div>
               </button>
