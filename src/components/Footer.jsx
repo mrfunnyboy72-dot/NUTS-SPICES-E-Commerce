@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-black tracking-wider text-white font-serif">
-                NUTS & SPICES
+                HAJI NUTS & SPICES
               </span>
             </div>
             <p className="text-xs text-[#C4A484] leading-relaxed">
@@ -149,7 +149,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="pt-8 border-t border-[#4A3525] text-center text-xs text-[#8C7A6B]">
-          <p>© {new Date().getFullYear()} NUTS & SPICES Store MVP. All rights reserved. Order directly via WhatsApp.</p>
+          <p>© {new Date().getFullYear()} HAJI NUTS & SPICES. All rights reserved. Order directly via WhatsApp.</p>
         </div>
 
       </div>
