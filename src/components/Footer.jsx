@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-black tracking-wider text-white font-serif">
-                HAJI NUTS & SPICES
+                HAJI
               </span>
             </div>
             <p className="text-xs text-[#C4A484] leading-relaxed">

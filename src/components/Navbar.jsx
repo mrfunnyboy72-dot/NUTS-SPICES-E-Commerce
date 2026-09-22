@@ -97,7 +97,7 @@ export default function Navbar() {
               >
                 <div className="flex items-center gap-2">
                   <span className="text-lg sm:text-2xl font-black tracking-wider text-[#2B1509] font-serif uppercase">
-                    HAJI NUTS & SPICES
+                    HAJI
                   </span>
                   <span className="text-xs font-bold text-[#D4AF37] tracking-widest uppercase font-serif hidden sm:inline">
                     DATES N' NUTS
