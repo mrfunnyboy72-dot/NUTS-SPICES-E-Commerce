@@ -44,7 +44,7 @@ export default function MobileBottomNav() {
 
         {/* 2. SHOP */}
         <button
-          onClick={() => navigate('categories')}
+          onClick={() => navigate('shop', { category: 'all' })}
           className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer ${
             isShopActive ? 'text-[#0F382C] font-black' : 'text-[#8C7A6B] hover:text-[#0F382C]'
           }`}

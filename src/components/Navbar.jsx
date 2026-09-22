@@ -215,7 +215,7 @@ export default function Navbar() {
                 </button>
 
                 <button
-                  onClick={() => navigate('categories')}
+                  onClick={() => navigate('shop', { category: 'all' })}
                   className={`text-xs sm:text-sm font-extrabold uppercase tracking-widest transition-colors ${
                     activePage === 'categories' || activePage === 'shop' ? 'text-[#0F382C]' : 'text-[#2B1509] hover:text-[#0F382C]'
                   }`}
@@ -422,12 +422,12 @@ export default function Navbar() {
                 <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
               </button>
 
-              {/* All Categories & Shop Catalog */}
+              {/* All Products & Shop Catalog */}
               <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate('categories'); }}
+                onClick={() => { setIsMobileMenuOpen(false); navigate('shop', { category: 'all' }); }}
                 className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
               >
-                <span>All Categories & Shop</span>
+                <span>Shop All Products</span>
                 <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
               </button>
 
