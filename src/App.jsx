@@ -17,6 +17,8 @@ import OffersPage from './pages/OffersPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ContactPage from './pages/ContactPage';
 import WishlistPage from './pages/WishlistPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import BulkOrdersPage from './pages/BulkOrdersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
@@ -56,6 +58,10 @@ function MainContent() {
         return <OffersPage />;
       case 'about':
         return <AboutUsPage />;
+      case 'help':
+        return <HelpCenterPage />;
+      case 'bulk-orders':
+        return <BulkOrdersPage />;
       case 'contact':
         return <ContactPage />;
       case 'login':

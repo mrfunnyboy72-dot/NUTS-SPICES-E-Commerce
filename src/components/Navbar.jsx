@@ -50,32 +50,32 @@ export default function Navbar() {
     <>
       <header className="sticky top-0 z-40 bg-[#F7F3E9] border-b border-[#E6D7C3] shadow-xs">
         
-        {/* TOP ANNOUNCEMENT BAR */}
-        <div className="bg-[#2B1509] text-[#D4AF37] text-[10px] sm:text-[11px] font-extrabold py-2 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            
-            {/* Left Ticker Announcements */}
-            <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap text-center sm:text-left">
-              <span>ORDER ABOVE ₹3500 GET FREE SHIPPING</span>
-              <span className="text-[#D4AF37]">|</span>
-              <span className="text-white">WE DELIVER ACROSS INDIA</span>
-              <span className="text-[#D4AF37] hidden md:inline">|</span>
-              <span className="hidden md:inline">AUTHENTIC GOURMET SELECTION</span>
-            </div>
+        {/* TOP ANNOUNCEMENT BAR (SHOW ONLY ON HOME PAGE) */}
+        {activePage === 'home' && (
+          <div className="bg-[#2B1509] text-[#D4AF37] text-[10px] sm:text-[11px] font-extrabold py-2 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+              
+              {/* Left TV News Right-to-Left Scrolling Ticker */}
+              <div className="flex-1 w-full sm:w-auto overflow-hidden">
+                <marquee behavior="scroll" direction="left" scrollamount="5" className="font-extrabold text-[#D4AF37] tracking-wider text-[11px] block">
+                  ORDER ABOVE ₹3500 GET FREE SHIPPING &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; WE DELIVER ACROSS INDIA &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; AUTHENTIC GOURMET SELECTION &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ORDER ABOVE ₹3500 GET FREE SHIPPING &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; WE DELIVER ACROSS INDIA
+                </marquee>
+              </div>
 
-            {/* Right Quick Links */}
-            <div className="hidden lg:flex items-center gap-4 shrink-0 text-[#E6D7C3]">
-              <button onClick={() => navigate('about')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">OUR STORY</button>
-              <span className="text-[#8B3A13]">|</span>
-              <button onClick={() => navigate('contact')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">HELP CENTER</button>
-              <span className="text-[#8B3A13]">|</span>
-              <button onClick={() => navigate('contact')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">BULK ORDERS</button>
-              <span className="text-[#8B3A13]">|</span>
-              <button onClick={() => navigate('contact')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">CONTACT US</button>
-            </div>
+              {/* Right Quick Links to Dedicated Pages */}
+              <div className="hidden lg:flex items-center gap-4 shrink-0 text-[#E6D7C3]">
+                <button onClick={() => navigate('about')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">OUR STORY</button>
+                <span className="text-[#8B3A13]">|</span>
+                <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">HELP CENTER</button>
+                <span className="text-[#8B3A13]">|</span>
+                <button onClick={() => navigate('bulk-orders')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">BULK ORDERS</button>
+                <span className="text-[#8B3A13]">|</span>
+                <button onClick={() => navigate('contact')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">CONTACT US</button>
+              </div>
 
+            </div>
           </div>
-        </div>
+        )}
 
         {/* MAIN HEADER ROW */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -397,7 +397,7 @@ export default function Navbar() {
 
               {/* Help Center */}
               <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate('contact'); }}
+                onClick={() => { setIsMobileMenuOpen(false); navigate('help'); }}
                 className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#2B1509] hover:text-[#8B3A13] transition-colors group cursor-pointer"
               >
                 <span>Help Center</span>
@@ -406,7 +406,7 @@ export default function Navbar() {
 
               {/* Bulk Order */}
               <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate('contact'); }}
+                onClick={() => { setIsMobileMenuOpen(false); navigate('bulk-orders'); }}
                 className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#2B1509] hover:text-[#8B3A13] transition-colors group cursor-pointer"
               >
                 <span>Bulk Order</span>

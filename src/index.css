@@ -67,3 +67,15 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #8B3A13;
 }
+
+/* TV News Ticker Right-to-Left Marquee */
+@keyframes news-ticker {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-news-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  animation: news-ticker 18s linear infinite;
+}
