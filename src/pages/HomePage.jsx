@@ -74,8 +74,8 @@ export default function HomePage() {
   return (
     <div className="space-[#2B1509] space-y-16 pb-16">
       
-      {/* AUTOMATIC 5-SECOND SLIDING HERO BANNER WITH BRIGHT HD UPLOADED IMAGES */}
-      <section className="relative mx-4 sm:mx-6 lg:mx-8 mt-6 rounded-3xl overflow-hidden shadow-2xl border border-[#8B3A13]/30 h-[380px] sm:h-[480px] lg:h-[560px]">
+      {/* AUTOMATIC 5-SECOND SLIDING HERO BANNER WITH REDUCED HEIGHT & FULL WIDTH (MARGIN 0, PADDING 0) */}
+      <section className="relative w-full m-0 p-0 overflow-hidden shadow-md h-[180px] sm:h-[280px] md:h-[340px] lg:h-[400px]">
         
         {/* SCROLLABLE BRIGHT HD BANNER IMAGES TRACK */}
         <div 
@@ -87,7 +87,7 @@ export default function HomePage() {
               <img
                 src={slide.image}
                 alt="Nuts & Spices Premium Banner"
-                className="w-full h-full object-cover select-none brightness-110 contrast-105 saturate-105 filter transition-all duration-500"
+                className="w-full h-full object-cover select-none brightness-105 contrast-105 filter transition-all duration-500"
                 draggable={false}
               />
             </div>
