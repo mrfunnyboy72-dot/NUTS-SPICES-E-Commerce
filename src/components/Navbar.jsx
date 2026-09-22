@@ -79,13 +79,13 @@ export default function Navbar() {
 
         {/* MAIN HEADER ROW */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 sm:h-24 gap-4">
+          <div className="flex items-center justify-between h-20 sm:h-24 gap-2 sm:gap-4">
             
             {/* 1. LEFT: CATEGORY DRAWER ICON & BRAND LOGO */}
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button
                 onClick={() => setIsCategoryDrawerOpen(true)}
-                className="p-2 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
+                className="p-1.5 text-[#D4AF37] hover:text-[#0F382C] transition-colors cursor-pointer"
                 title="Browse Categories"
               >
                 <LayoutGrid className="w-6 h-6 sm:w-7 sm:h-7" />
@@ -96,7 +96,7 @@ export default function Navbar() {
                 className="flex flex-col text-left focus:outline-none cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl font-black tracking-wider text-[#2B1509] font-serif uppercase">
+                  <span className="text-lg sm:text-2xl font-black tracking-wider text-[#0F382C] font-serif uppercase">
                     NUTS & SPICES
                   </span>
                   <span className="text-xs font-bold text-[#D4AF37] tracking-widest uppercase font-serif hidden sm:inline">
@@ -106,10 +106,10 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* 2. CENTER: PILL SEARCH BAR WITH LIVE POPUP DROPDOWN (MATCHING SCREENSHOT) */}
+            {/* 2. CENTER: PILL SEARCH BAR WITH LIVE POPUP DROPDOWN (DESKTOP) */}
             <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-xl mx-4 relative">
               <form onSubmit={handleSearchSubmit} className="w-full relative flex items-center">
-                <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/60 shadow-sm p-1.5 focus-within:ring-2 focus-within:ring-[#8B3A13]/30">
+                <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/60 shadow-sm p-1.5 focus-within:ring-2 focus-within:ring-[#0F382C]/30">
                   <Search className="w-5 h-5 text-[#8C7A6B] ml-3 shrink-0" />
                   <input
                     type="text"
@@ -124,7 +124,7 @@ export default function Navbar() {
                   />
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] font-extrabold text-xs rounded-full transition-all tracking-wider uppercase shrink-0 shadow-md cursor-pointer border border-[#D4AF37]/30"
+                    className="px-6 py-2 bg-[#0F382C] hover:bg-[#07241C] text-[#D4AF37] font-extrabold text-xs rounded-full transition-all tracking-wider uppercase shrink-0 shadow-md cursor-pointer border border-[#D4AF37]/30"
                   >
                     Search
                   </button>
@@ -156,7 +156,7 @@ export default function Navbar() {
                                 className="w-12 h-12 rounded-xl object-cover border border-[#E6D7C3] shrink-0 group-hover:scale-105 transition-transform"
                               />
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-xs sm:text-sm font-bold text-[#2B1509] group-hover:text-[#8B3A13] transition-colors truncate font-serif">
+                                <h4 className="text-xs sm:text-sm font-bold text-[#2B1509] group-hover:text-[#0F382C] transition-colors truncate font-serif">
                                   {product.name}
                                 </h4>
                                 <p className="text-[10px] font-bold text-[#8C7A6B] uppercase tracking-wider truncate mt-0.5">
@@ -166,7 +166,7 @@ export default function Navbar() {
                             </div>
 
                             <div className="text-right shrink-0 pl-3">
-                              <span className="text-xs sm:text-sm font-extrabold text-[#8B3A13] font-mono">
+                              <span className="text-xs sm:text-sm font-extrabold text-[#0F382C] font-mono">
                                 ₹{Number(mainPrice).toFixed(2)}
                               </span>
                             </div>
@@ -184,7 +184,7 @@ export default function Navbar() {
                         }}
                         className="p-3.5 bg-[#FAF5EF] text-center hover:bg-[#E6D7C3]/40 transition-colors cursor-pointer border-t border-[#E6D7C3]"
                       >
-                        <span className="text-xs font-black text-[#8B3A13] hover:underline font-serif">
+                        <span className="text-xs font-black text-[#0F382C] hover:underline font-serif">
                           View all results for "{navSearchInput}" →
                         </span>
                       </div>
@@ -200,24 +200,24 @@ export default function Navbar() {
 
             </div>
 
-            {/* 3. RIGHT: LINKS & ACTION ICONS */}
-            <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+            {/* 3. RIGHT: LINKS, SEARCH ICON & 3-LINE HAMBURGER MENU TOGGLE */}
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               
-              {/* Navigation Links */}
+              {/* Desktop Navigation Links */}
               <nav className="hidden lg:flex items-center gap-6">
                 <button
                   onClick={() => navigate('home')}
                   className={`text-xs sm:text-sm font-extrabold uppercase tracking-widest transition-colors ${
-                    activePage === 'home' ? 'text-[#8B3A13]' : 'text-[#2B1509] hover:text-[#8B3A13]'
+                    activePage === 'home' ? 'text-[#0F382C]' : 'text-[#2B1509] hover:text-[#0F382C]'
                   }`}
                 >
                   HOME
                 </button>
 
                 <button
-                  onClick={() => navigate('shop', { category: 'all' })}
+                  onClick={() => navigate('categories')}
                   className={`text-xs sm:text-sm font-extrabold uppercase tracking-widest transition-colors ${
-                    activePage === 'shop' ? 'text-[#8B3A13]' : 'text-[#2B1509] hover:text-[#8B3A13]'
+                    activePage === 'categories' || activePage === 'shop' ? 'text-[#0F382C]' : 'text-[#2B1509] hover:text-[#0F382C]'
                   }`}
                 >
                   SHOP
@@ -227,19 +227,19 @@ export default function Navbar() {
               {/* User Profile Icon */}
               <button
                 onClick={() => navigate(user ? 'profile' : 'login')}
-                className="p-1.5 text-[#2B1509] hover:text-[#8B3A13] transition-colors cursor-pointer"
+                className="hidden sm:block p-1.5 text-[#2B1509] hover:text-[#0F382C] transition-colors cursor-pointer"
                 title={user ? user.name : "Login / Account"}
               >
-                <User className="w-6 h-6" />
+                <User className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
               {/* Wishlist Heart Icon */}
               <button
                 onClick={() => navigate('shop', { category: 'all' })}
-                className="w-10 h-10 rounded-full bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] flex items-center justify-center relative transition-transform hover:scale-105 shadow-md cursor-pointer border border-[#D4AF37]/40"
+                className="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0F382C] hover:bg-[#07241C] text-[#D4AF37] items-center justify-center relative transition-transform hover:scale-105 shadow-md cursor-pointer border border-[#D4AF37]/40"
                 title="Wishlist"
               >
-                <Heart className="w-5 h-5 fill-none" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-none" />
                 {wishlist.length > 0 && (
                   <span className="absolute -top-1 -right-1 bg-[#D4AF37] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">
                     {wishlist.length}
@@ -250,23 +250,33 @@ export default function Navbar() {
               {/* Cart Shopping Bag Icon */}
               <button
                 onClick={() => navigate('cart')}
-                className="p-1.5 text-[#D4AF37] hover:text-[#8B3A13] transition-colors relative cursor-pointer"
+                className="p-1.5 text-[#D4AF37] hover:text-[#0F382C] transition-colors relative cursor-pointer"
                 title="Shopping Cart"
               >
                 <ShoppingBag className="w-6 h-6" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#8B3A13] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-[#0F382C] text-[#D4AF37] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {cartItemCount}
                   </span>
                 )}
               </button>
 
-              {/* Mobile Hamburger Toggle */}
+              {/* Search Icon Button (Mobile Header) */}
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-1.5 text-[#2B1509] hover:text-[#8B3A13]"
+                onClick={() => setIsSearchOpen(true)}
+                className="md:hidden p-1.5 text-[#D4AF37] hover:text-[#0F382C] transition-colors cursor-pointer"
+                title="Search"
               >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                <Search className="w-6 h-6" />
+              </button>
+
+              {/* 3-LINE HAMBURGER MENU BUTTON (MATCHING USER REFERENCE SCREENSHOT) */}
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="p-1.5 text-[#D4AF37] hover:text-[#0F382C] transition-colors cursor-pointer"
+                title="Menu"
+              >
+                <Menu className="w-6 h-6 sm:w-7 sm:h-7" />
               </button>
 
             </div>
@@ -291,7 +301,7 @@ export default function Navbar() {
                 />
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#8B3A13] text-[#D4AF37] font-bold text-[10px] rounded-full tracking-wider uppercase shrink-0"
+                  className="px-4 py-1.5 bg-[#0F382C] text-[#D4AF37] font-bold text-[10px] rounded-full tracking-wider uppercase shrink-0"
                 >
                   Search
                 </button>
@@ -331,7 +341,7 @@ export default function Navbar() {
                               </p>
                             </div>
                           </div>
-                          <span className="text-xs font-extrabold text-[#8B3A13] font-mono shrink-0 pl-2">
+                          <span className="text-xs font-extrabold text-[#0F382C] font-mono shrink-0 pl-2">
                             ₹{Number(mainPrice).toFixed(2)}
                           </span>
                         </div>
@@ -346,37 +356,108 @@ export default function Navbar() {
           </div>
 
         </div>
-
-        {/* Mobile Menu Drawer */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-white border-b border-[#E6D7C3] px-4 pt-3 pb-6 space-y-3">
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); navigate('home'); }}
-              className="block w-full text-left px-3 py-2 text-sm font-bold uppercase text-[#2B1509] hover:bg-[#FAF5EF] rounded-lg"
-            >
-              HOME
-            </button>
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); navigate('shop', { category: 'all' }); }}
-              className="block w-full text-left px-3 py-2 text-sm font-bold uppercase text-[#2B1509] hover:bg-[#FAF5EF] rounded-lg"
-            >
-              SHOP
-            </button>
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); navigate('about'); }}
-              className="block w-full text-left px-3 py-2 text-sm font-bold uppercase text-[#2B1509] hover:bg-[#FAF5EF] rounded-lg"
-            >
-              OUR STORY
-            </button>
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); navigate('contact'); }}
-              className="block w-full text-left px-3 py-2 text-sm font-bold uppercase text-[#2B1509] hover:bg-[#FAF5EF] rounded-lg"
-            >
-              CONTACT US
-            </button>
-          </div>
-        )}
       </header>
+
+      {/* 3-LINE HAMBURGER RIGHT SIDE DRAWER OVERLAY (MATCHING USER REFERENCE SCREENSHOT 2) */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end h-screen w-screen overflow-hidden">
+          {/* Dark Backdrop Overlay */}
+          <div 
+            className="fixed inset-0 bg-black/60 transition-opacity animate-in fade-in duration-300"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+
+          {/* Right-sliding Side Drawer Panel */}
+          <div className="relative w-80 max-w-[85vw] bg-[#FAF5EF] h-screen shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-300 border-l border-[#E6D7C3]">
+            
+            {/* Drawer Header (Menú + Gold X Icon) */}
+            <div className="p-6 border-b border-[#E6D7C3]/60 flex items-center justify-between shrink-0 bg-[#FAF5EF]">
+              <h2 className="text-2xl font-black font-serif text-[#0F382C]">
+                Menú
+              </h2>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-1 text-[#D4AF37] hover:text-[#0F382C] rounded-lg transition-colors cursor-pointer"
+              >
+                <X className="w-7 h-7" />
+              </button>
+            </div>
+
+            {/* Menu Items List (Matching Reference Screenshot 2) */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-[#E6D7C3]/60">
+              
+              {/* Our Story */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('about'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span>Our Story</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Help Center */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('contact'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span>Help Center</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Bulk Order */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('contact'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span>Bulk Order</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Contact Us */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('contact'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span>Contact Us</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* All Categories & Shop Catalog */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('categories'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span>All Categories & Shop</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Exclusive Offers */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('offers'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span>Exclusive Offers</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+            </div>
+
+            {/* Drawer Footer */}
+            <div className="p-6 bg-[#E6D7C3]/30 border-t border-[#E6D7C3] shrink-0 text-center space-y-2">
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('admin'); }}
+                className="text-xs font-extrabold text-[#0F382C] hover:underline cursor-pointer block w-full"
+              >
+                Admin Portal Login →
+              </button>
+              <p className="text-[10px] font-semibold text-[#8C7A6B]">
+                © NUTS & SPICES - Gourmet Selection
+              </p>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* FULL HEIGHT LEFT SIDE CATEGORY DRAWER OVERLAY */}
       {isCategoryDrawerOpen && (
@@ -392,7 +473,7 @@ export default function Navbar() {
             
             {/* Drawer Header */}
             <div className="p-5 border-b border-[#E6D7C3] flex items-center justify-between bg-[#FAF5EF] shrink-0">
-              <h2 className="text-xl font-extrabold font-serif tracking-wider text-[#8B3A13] uppercase">
+              <h2 className="text-xl font-extrabold font-serif tracking-wider text-[#0F382C] uppercase">
                 CATEGORIES
               </h2>
               <button
@@ -412,17 +493,17 @@ export default function Navbar() {
                     setIsCategoryDrawerOpen(false);
                     navigate('category', { category: cat.id });
                   }}
-                  className="w-full text-left px-5 py-3.5 text-xs font-bold text-[#8B3A13] hover:bg-[#FAF5EF] flex items-center justify-between group transition-colors cursor-pointer"
+                  className="w-full text-left px-5 py-3.5 text-xs font-bold text-[#0F382C] hover:bg-[#FAF5EF] flex items-center justify-between group transition-colors cursor-pointer"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-full overflow-hidden border border-[#E6D7C3] group-hover:border-[#8B3A13] shadow-xs shrink-0 transition-all bg-[#FAF5EF]">
+                    <span className="w-8 h-8 rounded-full overflow-hidden border border-[#E6D7C3] group-hover:border-[#0F382C] shadow-xs shrink-0 transition-all bg-[#FAF5EF]">
                       <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                     </span>
-                    <span className="text-xs sm:text-sm font-bold text-[#8B3A13] group-hover:text-[#6E2C00]">
+                    <span className="text-xs sm:text-sm font-bold text-[#0F382C] group-hover:text-[#07241C]">
                       {cat.name}
                     </span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-[#8C7A6B] group-hover:text-[#8B3A13] group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="w-4 h-4 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
                 </button>
               ))}
             </div>
@@ -434,7 +515,7 @@ export default function Navbar() {
                   setIsCategoryDrawerOpen(false);
                   navigate('shop', { category: 'all' });
                 }}
-                className="text-xs font-extrabold text-[#8B3A13] hover:underline cursor-pointer"
+                className="text-xs font-extrabold text-[#0F382C] hover:underline cursor-pointer"
               >
                 View Full Shop Catalog →
               </button>
