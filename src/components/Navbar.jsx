@@ -52,18 +52,18 @@ export default function Navbar() {
         
         {/* TOP ANNOUNCEMENT BAR (SHOW ONLY ON HOME PAGE) */}
         {activePage === 'home' && (
-          <div className="bg-[#2B1509] text-[#D4AF37] text-[10px] sm:text-[11px] font-extrabold py-2 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="bg-[#2B1509] text-[#D4AF37] text-[12px] sm:text-[13px] font-extrabold py-2.5 sm:py-3 px-4 border-b border-[#8B3A13]/40 tracking-wider uppercase">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
               
               {/* Left TV News Right-to-Left Scrolling Ticker */}
-              <div className="flex-1 w-full sm:w-auto overflow-hidden">
-                <marquee behavior="scroll" direction="left" scrollamount="5" className="font-extrabold text-[#D4AF37] tracking-wider text-[11px] block">
+              <div className="flex-1 w-full sm:w-auto overflow-hidden flex items-center">
+                <marquee behavior="scroll" direction="left" scrollamount="5" className="font-extrabold text-[#D4AF37] tracking-wider text-[12px] sm:text-[13px] leading-relaxed block my-auto">
                   ORDER ABOVE ₹3500 GET FREE SHIPPING &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; WE DELIVER ACROSS INDIA &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; AUTHENTIC GOURMET SELECTION &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ORDER ABOVE ₹3500 GET FREE SHIPPING &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; WE DELIVER ACROSS INDIA
                 </marquee>
               </div>
 
               {/* Right Quick Links to Dedicated Pages */}
-              <div className="hidden lg:flex items-center gap-4 shrink-0 text-[#E6D7C3]">
+              <div className="hidden lg:flex items-center gap-4 shrink-0 text-[#E6D7C3] text-[12px] sm:text-[13px]">
                 <button onClick={() => navigate('about')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">OUR STORY</button>
                 <span className="text-[#8B3A13]">|</span>
                 <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">HELP CENTER</button>
