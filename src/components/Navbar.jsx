@@ -235,9 +235,9 @@ export default function Navbar() {
 
               {/* Wishlist Heart Icon */}
               <button
-                onClick={() => navigate('shop', { category: 'all' })}
+                onClick={() => navigate('wishlist')}
                 className="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0F382C] hover:bg-[#07241C] text-[#D4AF37] items-center justify-center relative transition-transform hover:scale-105 shadow-md cursor-pointer border border-[#D4AF37]/40"
-                title="Wishlist"
+                title="My Wishlist"
               >
                 <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-none" />
                 {wishlist.length > 0 && (
@@ -428,6 +428,22 @@ export default function Navbar() {
                 className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
               >
                 <span>Shop All Products</span>
+                <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* My Wishlist */}
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('wishlist'); }}
+                className="w-full text-left py-4 flex items-center justify-between text-base font-extrabold font-serif text-[#0F382C] hover:text-[#8B3A13] transition-colors group cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <span>My Wishlist</span>
+                  {wishlist.length > 0 && (
+                    <span className="bg-[#D4AF37] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </span>
                 <ChevronRight className="w-5 h-5 text-[#8C7A6B] group-hover:text-[#0F382C] group-hover:translate-x-1 transition-transform" />
               </button>
 

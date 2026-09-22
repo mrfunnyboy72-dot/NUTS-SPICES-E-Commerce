@@ -16,6 +16,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import OffersPage from './pages/OffersPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ContactPage from './pages/ContactPage';
+import WishlistPage from './pages/WishlistPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
@@ -45,6 +46,8 @@ function MainContent() {
         return <ProductDetailsPage />;
       case 'cart':
         return <CartPage />;
+      case 'wishlist':
+        return <WishlistPage />;
       case 'checkout':
         return <CheckoutPage />;
       case 'order-success':
