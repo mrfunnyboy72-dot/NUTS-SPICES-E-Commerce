@@ -15,7 +15,7 @@ export default function WishlistPage() {
     <div className="bg-white min-h-screen pb-16 space-y-8">
       
       {/* PAGE HEADER BANNER */}
-      <section className="relative bg-[#0F382C] text-white pt-10 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-xl border-b border-[#D4AF37]/30">
+      <section className="relative bg-[#2B1509] text-white pt-10 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-xl border-b border-[#8B3A13]/40">
         
         {/* Subtle Decorative Glow Effects */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4AF37]/15 rounded-full blur-3xl pointer-events-none" />
@@ -72,12 +72,12 @@ export default function WishlistPage() {
         {wishlistProducts.length > 0 ? (
           <div className="space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-[#E6D7C3]">
-              <h2 className="text-lg font-black font-serif text-[#0F382C]">
+              <h2 className="text-lg font-black font-serif text-[#2B1509]">
                 Saved Products ({wishlistProducts.length})
               </h2>
               <button
                 onClick={() => navigate('shop', { category: 'all' })}
-                className="text-xs font-extrabold text-[#0F382C] hover:underline cursor-pointer"
+                className="text-xs font-extrabold text-[#8B3A13] hover:underline cursor-pointer"
               >
                 + Add More Products
               </button>
@@ -97,7 +97,7 @@ export default function WishlistPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-2xl font-black font-serif text-[#0F382C]">
+              <h3 className="text-2xl font-black font-serif text-[#2B1509]">
                 Your Wishlist is Empty
               </h3>
               <p className="text-xs sm:text-sm text-[#8C7A6B] max-w-md mx-auto leading-relaxed">
@@ -107,7 +107,7 @@ export default function WishlistPage() {
 
             <button
               onClick={() => navigate('shop', { category: 'all' })}
-              className="px-8 py-3 rounded-full bg-[#0F382C] text-[#D4AF37] text-xs font-black uppercase tracking-wider hover:bg-[#07241C] transition-all shadow-md inline-flex items-center gap-2 cursor-pointer border border-[#D4AF37]/30"
+              className="px-8 py-3 rounded-full bg-[#8B3A13] text-[#D4AF37] text-xs font-black uppercase tracking-wider hover:bg-[#6E2C00] transition-all shadow-md inline-flex items-center gap-2 cursor-pointer border border-[#D4AF37]/30"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Explore Products</span>

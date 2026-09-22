@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { Home, LayoutGrid, ShoppingBag, Headphones, User } from 'lucide-react';
 
 export default function MobileBottomNav() {
-  const { activePage, navigate, cartItemCount, user, getWhatsAppUrl, activeWhatsAppNumber } = useCart();
+  const { activePage, navigate, cartItemCount, user, activeWhatsAppNumber } = useCart();
 
   // Don't show bottom bar in admin mode
   if (activePage === 'admin') return null;
@@ -28,12 +28,12 @@ export default function MobileBottomNav() {
         <button
           onClick={() => navigate('home')}
           className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer ${
-            isHomeActive ? 'text-[#0F382C] font-black' : 'text-[#8C7A6B] hover:text-[#0F382C]'
+            isHomeActive ? 'text-[#8B3A13] font-black' : 'text-[#8C7A6B] hover:text-[#8B3A13]'
           }`}
         >
           <div className="relative">
             {isHomeActive && (
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#0F382C] rounded-full" />
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#8B3A13] rounded-full" />
             )}
             <Home className={`w-5 h-5 ${isHomeActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
           </div>
@@ -46,12 +46,12 @@ export default function MobileBottomNav() {
         <button
           onClick={() => navigate('shop', { category: 'all' })}
           className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer ${
-            isShopActive ? 'text-[#0F382C] font-black' : 'text-[#8C7A6B] hover:text-[#0F382C]'
+            isShopActive ? 'text-[#8B3A13] font-black' : 'text-[#8C7A6B] hover:text-[#8B3A13]'
           }`}
         >
           <div className="relative">
             {isShopActive && (
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#0F382C] rounded-full" />
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#8B3A13] rounded-full" />
             )}
             <LayoutGrid className={`w-5 h-5 ${isShopActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
           </div>
@@ -64,16 +64,16 @@ export default function MobileBottomNav() {
         <button
           onClick={() => navigate('cart')}
           className={`flex flex-col items-center justify-center py-1 transition-all relative cursor-pointer ${
-            isCartActive ? 'text-[#0F382C] font-black' : 'text-[#8C7A6B] hover:text-[#0F382C]'
+            isCartActive ? 'text-[#8B3A13] font-black' : 'text-[#8C7A6B] hover:text-[#8B3A13]'
           }`}
         >
           <div className="relative">
             {isCartActive && (
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#0F382C] rounded-full" />
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#8B3A13] rounded-full" />
             )}
             <ShoppingBag className={`w-5 h-5 ${isCartActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
             {cartItemCount > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-[#0F382C] text-[#D4AF37] text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+              <span className="absolute -top-1.5 -right-2 bg-[#8B3A13] text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                 {cartItemCount}
               </span>
             )}
@@ -87,12 +87,12 @@ export default function MobileBottomNav() {
         <button
           onClick={handleSupportClick}
           className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer ${
-            isSupportActive ? 'text-[#0F382C] font-black' : 'text-[#8C7A6B] hover:text-[#0F382C]'
+            isSupportActive ? 'text-[#8B3A13] font-black' : 'text-[#8C7A6B] hover:text-[#8B3A13]'
           }`}
         >
           <div className="relative">
             {isSupportActive && (
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#0F382C] rounded-full" />
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#8B3A13] rounded-full" />
             )}
             <Headphones className={`w-5 h-5 ${isSupportActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
           </div>
@@ -105,12 +105,12 @@ export default function MobileBottomNav() {
         <button
           onClick={() => navigate(user ? 'profile' : 'login')}
           className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer ${
-            isProfileActive ? 'text-[#0F382C] font-black' : 'text-[#8C7A6B] hover:text-[#0F382C]'
+            isProfileActive ? 'text-[#8B3A13] font-black' : 'text-[#8C7A6B] hover:text-[#8B3A13]'
           }`}
         >
           <div className="relative">
             {isProfileActive && (
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#0F382C] rounded-full" />
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#8B3A13] rounded-full" />
             )}
             <User className={`w-5 h-5 ${isProfileActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
           </div>

@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
   return (
     <div 
       onClick={() => navigate('product-details', { product })}
-      className="group bg-white rounded-2xl sm:rounded-3xl border border-[#E6D7C3] hover:border-[#0F382C]/40 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 relative"
+      className="group bg-white rounded-2xl sm:rounded-3xl border border-[#E6D7C3] hover:border-[#8B3A13]/40 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1 relative"
     >
       {/* Product Image & Stacked Badges */}
       <div className="relative aspect-square overflow-hidden bg-[#FAF5EF]">
@@ -42,7 +42,7 @@ export default function ProductCard({ product }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
 
-        {/* Stacked Badges Top Left (Matching User Reference Image) */}
+        {/* Stacked Badges Top Left */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
           {/* Gold FEATURED Badge */}
           <span className="bg-[#D4AF37] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md shadow-xs text-center border border-white/20">
@@ -79,12 +79,12 @@ export default function ProductCard({ product }) {
         
         {/* Title */}
         <div>
-          <h3 className="font-extrabold text-[#0F382C] text-sm sm:text-base font-serif group-hover:text-[#8B3A13] transition-colors line-clamp-2 leading-snug">
+          <h3 className="font-extrabold text-[#2B1509] text-sm sm:text-base font-serif group-hover:text-[#8B3A13] transition-colors line-clamp-2 leading-snug">
             {product.name}
           </h3>
         </div>
 
-        {/* Weight Picker Select Dropdown (Matching Reference Screenshot) */}
+        {/* Weight Picker Select Dropdown */}
         <div onClick={(e) => e.stopPropagation()} className="relative">
           <select
             value={activeWeight.label}
@@ -92,7 +92,7 @@ export default function ProductCard({ product }) {
               const selected = weightsList.find(w => w.label === e.target.value);
               if (selected) setSelectedWeight(selected);
             }}
-            className="w-full bg-[#FAF5EF] border border-[#E6D7C3] rounded-xl text-xs font-extrabold text-[#0F382C] px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-[#0F382C] cursor-pointer shadow-2xs font-serif"
+            className="w-full bg-[#FAF5EF] border border-[#E6D7C3] rounded-xl text-xs font-extrabold text-[#2B1509] px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-[#8B3A13] cursor-pointer shadow-2xs font-serif"
           >
             {weightsList.map((w) => (
               <option key={w.label} value={w.label}>
@@ -100,7 +100,7 @@ export default function ProductCard({ product }) {
               </option>
             ))}
           </select>
-          <ChevronDown className="w-4 h-4 text-[#0F382C] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <ChevronDown className="w-4 h-4 text-[#8B3A13] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
 
         {/* Price & Add to Cart Button */}
@@ -111,18 +111,18 @@ export default function ProductCard({ product }) {
             <span className="text-[11px] text-[#8C7A6B] line-through font-serif leading-none">
               ₹{origP}.00
             </span>
-            <span className="text-base sm:text-lg font-black text-[#D4AF37] font-mono leading-tight mt-0.5">
+            <span className="text-base sm:text-lg font-black text-[#8B3A13] font-mono leading-tight mt-0.5">
               ₹{curP}.00
             </span>
           </div>
 
-          {/* Add to Cart Button (Solid Dark Green with Gold Text) */}
+          {/* Add to Cart Button (Solid Brand Brown #8B3A13 with Gold/White Text) */}
           <button
             onClick={handleAddToCart}
             className={`w-full py-2.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md ${
               added 
                 ? 'bg-green-700 text-white' 
-                : 'bg-[#0F382C] hover:bg-[#07241C] text-[#D4AF37] border border-[#D4AF37]/30'
+                : 'bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] border border-[#D4AF37]/30'
             }`}
           >
             {added ? (
