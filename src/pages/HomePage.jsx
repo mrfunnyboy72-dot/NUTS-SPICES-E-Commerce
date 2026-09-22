@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import FeaturedTodaySection from '../components/FeaturedTodaySection';
 import BestSellingSection from '../components/BestSellingSection';
+import ComboOfferBanner from '../components/ComboOfferBanner';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
@@ -143,6 +144,9 @@ export default function HomePage() {
 
       {/* BEST SELLING PRODUCTS CAROUSEL SECTION (FRESH FROM HARVEST SUBTITLE, UNIQUE PRODUCTS PER CATEGORY) */}
       <BestSellingSection />
+
+      {/* EXCLUSIVE COMBO OFFER PROMO BANNER SECTION */}
+      <ComboOfferBanner />
 
       {/* HOW ORDERING WORKS (WHATSAPP FLOW) */}
       <section className="bg-white py-16 border-y border-[#E6D7C3]">
