@@ -113,7 +113,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-[#C4A484] font-medium">
               <li>
-                <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Shipping Policy</button>
+                <button onClick={() => navigate('shipping-policy')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Shipping Policy</button>
               </li>
               <li>
                 <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Returns & Refunds</button>
