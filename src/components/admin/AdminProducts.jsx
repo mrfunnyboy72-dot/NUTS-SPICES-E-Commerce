@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useCart } from '../../context/CartContext';
+import { useCart, isProductActive } from '../../context/CartContext';
 import { 
   Package, Plus, Search, Edit, Trash2, X, Upload 
 } from 'lucide-react';
@@ -241,7 +241,7 @@ export default function AdminProducts() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredProducts.map((p) => {
-                const isInactive = p.status === 'Inactive' || p.active === false;
+                const isInactive = !isProductActive(p);
                 
                 const sellingPrice = p.weights && p.weights[0] ? p.weights[0].price : p.price || 0;
                 const mrp = p.weights && p.weights[0] && p.weights[0].originalPrice 
