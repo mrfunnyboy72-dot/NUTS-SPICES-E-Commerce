@@ -305,7 +305,7 @@ export const CartProvider = ({ children }) => {
     };
 
     loadCloudData();
-    const interval = setInterval(loadCloudData, 10000); // 10s live polling for all devices
+    const interval = setInterval(loadCloudData, 3000); // 3s live polling for instant multi-device sync
     return () => {
       isMounted = false;
       clearInterval(interval);

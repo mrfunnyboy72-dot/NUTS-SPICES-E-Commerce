@@ -35,6 +35,33 @@ app.get('/api', (req, res) => {
   });
 });
 
+// In-Memory Master Catalog cache for fast real-time Edge/Vercel Sync
+let inMemoryCatalog = {
+  products: null,
+  categories: null,
+  updatedAt: null
+};
+
+app.get('/api/catalog', (req, res) => {
+  res.json({
+    success: true,
+    products: inMemoryCatalog.products,
+    categories: inMemoryCatalog.categories,
+    updatedAt: inMemoryCatalog.updatedAt || new Date().toISOString()
+  });
+});
+
+app.post('/api/catalog', (req, res) => {
+  const { products, categories } = req.body || {};
+  if (Array.isArray(products) && Array.isArray(categories)) {
+    inMemoryCatalog.products = products;
+    inMemoryCatalog.categories = categories;
+    inMemoryCatalog.updatedAt = new Date().toISOString();
+    return res.json({ success: true, message: 'Catalog updated across all devices successfully' });
+  }
+  return res.status(400).json({ success: false, message: 'Invalid payload' });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
