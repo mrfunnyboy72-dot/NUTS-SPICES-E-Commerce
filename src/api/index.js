@@ -27,13 +27,9 @@ export const apiFetch = async (endpoint, options = {}) => {
   }
 };
 
-// API Functions
-export const registerUserApi = (userData) => apiFetch('/auth/register', { method: 'POST', body: JSON.stringify(userData) });
-export const loginUserApi = (credentials) => apiFetch('/auth/login', { method: 'POST', body: JSON.stringify(credentials) });
-export const createOrderApi = (orderPayload) => apiFetch('/orders', { method: 'POST', body: JSON.stringify(orderPayload) });
-export const fetchOrdersApi = () => apiFetch('/orders');
-export const updateOrderStatusApi = (orderId, status) => apiFetch(`/orders/${orderId}/status`, { method: 'PUT', body: JSON.stringify({ status }) });
+// Export sub-module API functions
 export const fetchAdminStatsApi = () => apiFetch('/admin/dashboard/stats');
-export const createProductApi = (prodData) => apiFetch('/products', { method: 'POST', body: JSON.stringify(prodData) });
-export const updateProductApi = (prodId, prodData) => apiFetch(`/products/${prodId}`, { method: 'PUT', body: JSON.stringify(prodData) });
-export const deleteProductApi = (prodId) => apiFetch(`/products/${prodId}`, { method: 'DELETE' });
+export * from './authApi.js';
+export * from './productApi.js';
+export * from './categoryApi.js';
+export * from './orderApi.js';
