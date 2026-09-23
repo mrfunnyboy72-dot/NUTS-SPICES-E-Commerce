@@ -49,31 +49,51 @@ let inMemoryCatalog = {
 };
 
 app.get('/api/catalog', async (req, res) => {
+  let products = inMemoryCatalog.products || PRODUCTS;
+  let categories = inMemoryCatalog.categories || CATEGORIES;
+  let updatedAt = inMemoryCatalog.updatedAt || new Date().toISOString();
+
   try {
     const rows = await queryDb("SELECT setting_value FROM settings WHERE setting_key = 'master_catalog_json'");
     if (rows && rows.length > 0 && rows[0].setting_value) {
       const parsed = JSON.parse(rows[0].setting_value);
       if (parsed && Array.isArray(parsed.products) && Array.isArray(parsed.categories)) {
-        inMemoryCatalog.products = parsed.products;
-        inMemoryCatalog.categories = parsed.categories;
-        inMemoryCatalog.updatedAt = parsed.updatedAt || new Date().toISOString();
-        return res.json({
-          success: true,
-          products: parsed.products,
-          categories: parsed.categories,
-          updatedAt: inMemoryCatalog.updatedAt
-        });
+        products = parsed.products;
+        categories = parsed.categories;
+        updatedAt = parsed.updatedAt || updatedAt;
       }
+    }
+
+    // Also query TiDB categories table directly and merge any newly added categories
+    const dbCats = await queryDb("SELECT * FROM categories");
+    if (dbCats && Array.isArray(dbCats) && dbCats.length > 0) {
+      const existingIds = new Set(categories.map(c => c.id));
+      dbCats.forEach(dbC => {
+        if (!existingIds.has(dbC.id)) {
+          categories.push({
+            id: dbC.id,
+            name: dbC.name,
+            icon: '🌰',
+            image: dbC.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600',
+            description: dbC.description || ''
+          });
+          existingIds.add(dbC.id);
+        }
+      });
     }
   } catch (err) {
     console.warn('DB catalog fetch note:', err.message);
   }
 
+  inMemoryCatalog.products = products;
+  inMemoryCatalog.categories = categories;
+  inMemoryCatalog.updatedAt = updatedAt;
+
   res.json({
     success: true,
-    products: inMemoryCatalog.products || PRODUCTS,
-    categories: inMemoryCatalog.categories || CATEGORIES,
-    updatedAt: inMemoryCatalog.updatedAt || new Date().toISOString()
+    products,
+    categories,
+    updatedAt
   });
 });
 
