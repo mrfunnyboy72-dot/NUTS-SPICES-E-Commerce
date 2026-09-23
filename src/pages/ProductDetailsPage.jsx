@@ -38,7 +38,7 @@ export default function ProductDetailsPage() {
   };
 
   const curPrice = Number(activeWeight?.price) || Number(product?.price) || 290;
-  const origPrice = Number(activeWeight?.originalPrice) || Math.round(curPrice * 1.2);
+  const origPrice = Number(activeWeight?.originalPrice) || ((product?.discountPercent > 0) ? Math.round(curPrice / ((100 - product.discountPercent) / 100)) : curPrice);
   const totalPrice = curPrice * quantity;
   const originalTotalPrice = origPrice * quantity;
 

@@ -71,12 +71,25 @@ export default function AdminProducts() {
       ? product.weights.map(w => ({ label: w.label || '250g', price: Number(w.price) || 250 }))
       : [{ label: '250g', price: Number(product.price) || 250 }];
 
+    let initialDiscount = 0;
+    if (product.discountPercent !== undefined && product.discountPercent !== null) {
+      initialDiscount = Number(product.discountPercent);
+    } else if (product.discount) {
+      initialDiscount = parseInt(product.discount) || 0;
+    } else if (Array.isArray(product.weights) && product.weights[0]) {
+      const orig = Number(product.weights[0].originalPrice);
+      const cur = Number(product.weights[0].price);
+      if (orig > cur) {
+        initialDiscount = Math.round(((orig - cur) / orig) * 100);
+      }
+    }
+
     setFormData({
       name: product.name || '',
       category: product.category || 'nuts-dry-fruits',
       description: product.description || '',
       image: product.image || '',
-      discountPercent: product.discountPercent || 10,
+      discountPercent: initialDiscount,
       weightOptions: existingWeights,
       stock: product.stock !== undefined ? product.stock : 45,
       ingredients: product.ingredients || '100% Natural',
@@ -110,13 +123,14 @@ export default function AdminProducts() {
   const handleSubmitForm = (e) => {
     e.preventDefault();
 
-    const discountFactor = (100 - (Number(formData.discountPercent) || 0)) / 100;
+    const discountPct = Math.max(0, Math.min(90, Number(formData.discountPercent) || 0));
+    const discountFactor = discountPct > 0 ? (100 - discountPct) / 100 : 1;
 
     const weights = formData.weightOptions.map(w => {
       const p = Number(w.price) || 100;
-      const original = Math.round(p / discountFactor);
+      const original = discountPct > 0 ? Math.round(p / discountFactor) : p;
       return {
-        label: w.label.trim() || '250g',
+        label: (w.label || '250g').trim(),
         price: p,
         originalPrice: original
       };
@@ -134,8 +148,9 @@ export default function AdminProducts() {
       description: formData.description,
       image: editingProduct ? (editingProduct.image || formData.image) : formData.image,
       price: basePrice,
-      discountPercent: Number(formData.discountPercent),
-      weights: weights.length > 0 ? weights : [{ label: '250g', price: basePrice, originalPrice: Math.round(basePrice * 1.2) }],
+      discountPercent: discountPct,
+      discount: discountPct > 0 ? `${discountPct}% OFF` : '',
+      weights: weights.length > 0 ? weights : [{ label: '250g', price: basePrice, originalPrice: basePrice }],
       stock: Number(formData.stock),
       ingredients: formData.ingredients,
       origin: formData.origin,
@@ -231,9 +246,11 @@ export default function AdminProducts() {
                 const sellingPrice = p.weights && p.weights[0] ? p.weights[0].price : p.price || 0;
                 const mrp = p.weights && p.weights[0] && p.weights[0].originalPrice 
                   ? p.weights[0].originalPrice 
-                  : Math.round(sellingPrice * 1.25);
+                  : sellingPrice;
                 
-                const discountPct = p.discountPercent || (mrp > sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 10);
+                const discountPct = (p.discountPercent !== undefined && p.discountPercent !== null)
+                  ? Number(p.discountPercent)
+                  : (p.discount ? parseInt(p.discount) : (mrp > sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0));
 
                 return (
                   <tr key={p.id} className={`hover:bg-gray-50/60 transition-colors ${isInactive ? 'opacity-60' : ''}`}>
@@ -270,7 +287,7 @@ export default function AdminProducts() {
 
                     {/* 4. Discount */}
                     <td className="py-3.5 px-4 font-semibold text-gray-700">
-                      {discountPct}% OFF
+                      {discountPct > 0 ? `${discountPct}% OFF` : 'No Discount'}
                     </td>
 
                     {/* 5. Visibility Status Toggle */}

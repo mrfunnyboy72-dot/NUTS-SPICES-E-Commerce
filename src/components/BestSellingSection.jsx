@@ -16,9 +16,11 @@ function BestSellerCard({ product }) {
   const weightsList = Array.isArray(product.weights) && product.weights.length > 0 ? product.weights : [defaultWeight];
   const [added, setAdded] = useState(false);
 
-  const origP = Number(activeWeight.originalPrice) || Math.round((Number(activeWeight.price) || 350) * 1.2);
   const curP = Number(activeWeight.price) || 350;
-  const discountPercent = origP > curP ? Math.round(((origP - curP) / origP) * 100) : 15;
+  const origP = Number(activeWeight.originalPrice) || ((product.discountPercent > 0) ? Math.round(curP / ((100 - product.discountPercent) / 100)) : curP);
+  const discountPercent = (product.discountPercent !== undefined && product.discountPercent !== null) 
+    ? Number(product.discountPercent) 
+    : (origP > curP ? Math.round(((origP - curP) / origP) * 100) : 0);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();

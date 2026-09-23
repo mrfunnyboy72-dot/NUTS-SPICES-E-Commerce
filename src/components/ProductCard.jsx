@@ -25,9 +25,11 @@ export default function ProductCard({ product }) {
     setTimeout(() => setAdded(false), 1500);
   };
 
-  const origP = Number(activeWeight.originalPrice) || Math.round((Number(activeWeight.price) || 350) * 1.2);
   const curP = Number(activeWeight.price) || 350;
-  const discountPercent = origP > curP ? Math.round(((origP - curP) / origP) * 100) : 0;
+  const origP = Number(activeWeight.originalPrice) || ((product.discountPercent > 0) ? Math.round(curP / ((100 - product.discountPercent) / 100)) : curP);
+  const discountPercent = (product.discountPercent !== undefined && product.discountPercent !== null) 
+    ? Number(product.discountPercent) 
+    : (origP > curP ? Math.round(((origP - curP) / origP) * 100) : 0);
 
   return (
     <div 
