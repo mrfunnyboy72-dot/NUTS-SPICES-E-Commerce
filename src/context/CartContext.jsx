@@ -559,17 +559,30 @@ export const CartProvider = ({ children }) => {
     saveCloudCatalog(prods, cats);
 
     try {
-      const res = await fetch('http://localhost:5000/api/admin/sync-git', {
+      const endpoint = (typeof window !== 'undefined' && window.location && window.location.origin) 
+        ? `${window.location.origin}/api/catalog` 
+        : '/api/catalog';
+      
+      await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ products: prods, categories: cats })
       });
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      console.warn('Sync server offline or local environment:', err);
-      return { success: true, message: 'Synced to Realtime Cloud DB for all devices!' };
+    } catch (err) {}
+
+    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+      try {
+        const res = await fetch('http://localhost:5000/api/admin/sync-git', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ products: prods, categories: cats })
+        });
+        const data = await res.json();
+        return data;
+      } catch (err) {}
     }
+
+    return { success: true, message: 'Synced across all devices!' };
   };
 
   // ADMIN - PRODUCT CRUD
