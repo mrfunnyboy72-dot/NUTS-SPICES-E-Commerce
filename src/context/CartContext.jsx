@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PRODUCTS, CATEGORIES, STORE_WHATSAPP_NUMBER, CATALOG_VERSION } from '../data/products';
 import { fetchCloudCatalog, saveCloudCatalog } from '../services/cloudDb';
+import { createProduct as createProductApi, updateProduct as updateProductApi, deleteProduct as deleteProductApi } from '../api/productApi';
+import { createCategory as createCategoryApi, updateCategory as updateCategoryApi, deleteCategory as deleteCategoryApi } from '../api/categoryApi';
 import { 
   INITIAL_STORE_SETTINGS, 
   INITIAL_ORDERS, 
@@ -594,6 +596,7 @@ export const CartProvider = ({ children }) => {
       rating: 5.0,
       reviews: 0,
       status: 'Active',
+      active: true,
       ...newProductData
     };
     setProducts(prev => {
@@ -601,6 +604,7 @@ export const CartProvider = ({ children }) => {
       syncCatalogToGit(updated, categories);
       return updated;
     });
+    createProductApi(productToAdd).catch(() => {});
     return productToAdd;
   };
 
@@ -610,6 +614,7 @@ export const CartProvider = ({ children }) => {
       syncCatalogToGit(updated, categories);
       return updated;
     });
+    updateProductApi(productId, updatedFields).catch(() => {});
   };
 
   const deleteProduct = (productId) => {
@@ -618,6 +623,7 @@ export const CartProvider = ({ children }) => {
       syncCatalogToGit(updated, categories);
       return updated;
     });
+    deleteProductApi(productId).catch(() => {});
   };
 
   const toggleProductStatus = (productId) => {
@@ -626,7 +632,9 @@ export const CartProvider = ({ children }) => {
         if (p.id === productId) {
           const currentlyActive = isProductActive(p);
           const newStatus = currentlyActive ? 'Inactive' : 'Active';
-          return { ...p, status: newStatus, active: newStatus === 'Active' };
+          const updatedP = { ...p, status: newStatus, active: newStatus === 'Active' };
+          updateProductApi(productId, updatedP).catch(() => {});
+          return updatedP;
         }
         return p;
       });
@@ -644,6 +652,7 @@ export const CartProvider = ({ children }) => {
       syncCatalogToGit(products, updated);
       return updated;
     });
+    createCategoryApi(newCategory).catch(() => {});
   };
 
   const updateCategory = (categoryId, updatedFields) => {
@@ -652,6 +661,7 @@ export const CartProvider = ({ children }) => {
       syncCatalogToGit(products, updated);
       return updated;
     });
+    updateCategoryApi(categoryId, updatedFields).catch(() => {});
   };
 
   const deleteCategory = (categoryId) => {
@@ -660,6 +670,7 @@ export const CartProvider = ({ children }) => {
       syncCatalogToGit(products, updated);
       return updated;
     });
+    deleteCategoryApi(categoryId).catch(() => {});
   };
 
   // ADMIN - ORDERS CRUD & CUSTOMER CHECKOUT CREATION
