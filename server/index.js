@@ -6,6 +6,8 @@ import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import { initializeDatabase } from './scripts/initDb.js';
+import { queryDb } from './config/db.js';
+import { CATEGORIES, PRODUCTS } from '../src/data/products.js';
 
 dotenv.config();
 
@@ -45,21 +47,53 @@ let inMemoryCatalog = {
   updatedAt: null
 };
 
-app.get('/api/catalog', (req, res) => {
+app.get('/api/catalog', async (req, res) => {
+  try {
+    const rows = await queryDb("SELECT setting_value FROM settings WHERE setting_key = 'master_catalog_json'");
+    if (rows && rows.length > 0 && rows[0].setting_value) {
+      const parsed = JSON.parse(rows[0].setting_value);
+      if (parsed && Array.isArray(parsed.products) && Array.isArray(parsed.categories)) {
+        inMemoryCatalog.products = parsed.products;
+        inMemoryCatalog.categories = parsed.categories;
+        inMemoryCatalog.updatedAt = parsed.updatedAt || new Date().toISOString();
+        return res.json({
+          success: true,
+          products: parsed.products,
+          categories: parsed.categories,
+          updatedAt: inMemoryCatalog.updatedAt
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('DB catalog fetch note:', err.message);
+  }
+
   res.json({
     success: true,
-    products: inMemoryCatalog.products,
-    categories: inMemoryCatalog.categories,
+    products: inMemoryCatalog.products || PRODUCTS,
+    categories: inMemoryCatalog.categories || CATEGORIES,
     updatedAt: inMemoryCatalog.updatedAt || new Date().toISOString()
   });
 });
 
-app.post('/api/catalog', (req, res) => {
+app.post('/api/catalog', async (req, res) => {
   const { products, categories } = req.body || {};
   if (Array.isArray(products) && Array.isArray(categories)) {
+    const updatedAt = new Date().toISOString();
     inMemoryCatalog.products = products;
     inMemoryCatalog.categories = categories;
-    inMemoryCatalog.updatedAt = new Date().toISOString();
+    inMemoryCatalog.updatedAt = updatedAt;
+
+    try {
+      const catalogJson = JSON.stringify({ products, categories, updatedAt });
+      await queryDb(
+        "INSERT INTO settings (setting_key, setting_value) VALUES ('master_catalog_json', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
+        [catalogJson, catalogJson]
+      );
+    } catch (err) {
+      console.warn('DB catalog save note:', err.message);
+    }
+
     return res.json({ success: true, message: 'Catalog updated across all devices successfully' });
   }
   return res.status(400).json({ success: false, message: 'Invalid payload' });
