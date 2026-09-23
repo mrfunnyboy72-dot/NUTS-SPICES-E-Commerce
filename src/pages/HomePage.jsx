@@ -8,9 +8,9 @@ import TestimonialsSection from '../components/TestimonialsSection';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
-  { id: 1, image: '/images/hero_banner1.jpg' },
-  { id: 2, image: '/images/hero_banner2.jpg' },
-  { id: 3, image: '/images/hero_banner3.jpg' }
+  { id: 1, image: '/images/hero1.png' },
+  { id: 2, image: '/images/hero2.jpg' },
+  { id: 3, image: '/images/hero3.jpg' }
 ];
 
 export default function HomePage() {
