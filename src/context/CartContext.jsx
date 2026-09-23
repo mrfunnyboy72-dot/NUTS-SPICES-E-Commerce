@@ -317,10 +317,12 @@ export const CartProvider = ({ children }) => {
     };
 
     loadCloudData();
-    const interval = setInterval(loadCloudData, 3000); // 3s live polling for instant multi-device sync
+    const interval = setInterval(loadCloudData, 2000);
+    window.addEventListener('focus', loadCloudData);
     return () => {
       isMounted = false;
       clearInterval(interval);
+      window.removeEventListener('focus', loadCloudData);
     };
   }, []);
 

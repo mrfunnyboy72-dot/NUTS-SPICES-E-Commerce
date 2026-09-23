@@ -13,12 +13,16 @@ export async function fetchCloudCatalog() {
     const primaryUrl = getApiCatalogUrl();
     const res = await fetch(primaryUrl, {
       method: 'GET',
-      headers: { 'Accept': 'application/json' }
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store'
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && Array.isArray(data.products) && data.products.length > 0 && Array.isArray(data.categories) && data.categories.length > 0) {
-        return { products: data.products, categories: data.categories };
+      if (data && (Array.isArray(data.products) || Array.isArray(data.categories))) {
+        return { 
+          products: Array.isArray(data.products) && data.products.length > 0 ? data.products : null, 
+          categories: Array.isArray(data.categories) && data.categories.length > 0 ? data.categories : null 
+        };
       }
     }
   } catch (err) {
@@ -34,11 +38,11 @@ export async function saveCloudCatalog(products, categories) {
     const primaryUrl = getApiCatalogUrl();
     
     // 1. Save to primary Vercel API endpoint
-    fetch(primaryUrl, {
+    await fetch(primaryUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(() => {});
+    });
 
     // 2. Save to local node server if running on localhost
     if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
