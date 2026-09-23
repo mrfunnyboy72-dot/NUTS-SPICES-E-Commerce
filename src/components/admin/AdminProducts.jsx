@@ -146,7 +146,7 @@ export default function AdminProducts() {
       category: formData.category,
       categoryName: categoryName,
       description: formData.description,
-      image: editingProduct ? (editingProduct.image || formData.image) : formData.image,
+      image: formData.image || (editingProduct ? editingProduct.image : 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800'),
       price: basePrice,
       discountPercent: discountPct,
       discount: discountPct > 0 ? `${discountPct}% OFF` : '',
