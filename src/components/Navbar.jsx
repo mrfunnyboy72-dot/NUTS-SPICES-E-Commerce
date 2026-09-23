@@ -48,7 +48,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#F7F3E9] border-b border-[#E6D7C3] shadow-xs">
+      <header className="sticky top-0 z-50 bg-[#F7F3E9] border-b border-[#E6D7C3] shadow-md transition-all">
         
         {/* TOP ANNOUNCEMENT BAR (SHOW ON HOME & TOP LINK PAGES) */}
         {['home', 'about', 'help', 'bulk-orders', 'contact', 'shipping-policy', 'returns-refunds', 'privacy-policy', 'faqs'].includes(activePage) && (
