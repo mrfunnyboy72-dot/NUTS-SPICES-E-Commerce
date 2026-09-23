@@ -116,23 +116,35 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, stock, badge } = req.body;
+    const { name, category, categoryName, badge, price, image, description, origin, shelfLife, stock, status, active, weights } = req.body;
 
-    await queryDb('UPDATE products SET name = ?, stock = ?, badge = ? WHERE id = ?', [name, stock, badge, id]);
+    const weightsJson = weights ? JSON.stringify(weights) : (price ? JSON.stringify([{ label: 'Standard', price: Number(price) }]) : null);
+    const activeVal = (status === 'Active' || active === true || active === 'true') ? 'active' : 'inactive';
 
-    const item = memoryStore.products.find(p => p.id === id);
-    if (item) {
-      if (name) item.name = name;
-      if (stock !== undefined) item.stock = stock;
-      if (badge) item.badge = badge;
-    }
+    await queryDb(
+      `UPDATE products SET 
+        name = COALESCE(?, name), 
+        category_id = COALESCE(?, category_id), 
+        category_name = COALESCE(?, category_name), 
+        badge = COALESCE(?, badge), 
+        image = COALESCE(?, image), 
+        weights_json = COALESCE(?, weights_json), 
+        description = COALESCE(?, description), 
+        origin = COALESCE(?, origin), 
+        shelf_life = COALESCE(?, shelf_life), 
+        stock = COALESCE(?, stock), 
+        status = COALESCE(?, status) 
+       WHERE id = ?`,
+      [name, category, categoryName, badge, image, weightsJson, description, origin, shelfLife, stock, activeVal, id]
+    );
 
     res.json({
       success: true,
-      message: 'Product updated successfully!'
+      message: 'Product updated successfully in TiDB!'
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to update product.' });
+    console.error('Update Product Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to update product in database.' });
   }
 };
 
