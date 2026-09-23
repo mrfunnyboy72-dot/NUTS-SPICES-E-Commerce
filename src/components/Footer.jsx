@@ -122,7 +122,7 @@ export default function Footer() {
                 <button onClick={() => navigate('privacy-policy')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Privacy Policy</button>
               </li>
               <li>
-                <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">FAQs</button>
+                <button onClick={() => navigate('faqs')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">FAQs</button>
               </li>
             </ul>
           </div>
