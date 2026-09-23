@@ -1,22 +1,10 @@
 import React from 'react';
-import { useCart } from '../context/CartContext';
-import { ChevronRight } from 'lucide-react';
 
 export default function ShippingPolicyPage() {
-  const { navigate } = useCart();
 
   return (
     <div className="bg-[#FAF5EF] min-h-screen py-10 sm:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        
-        {/* BREADCRUMB */}
-        <nav aria-label="Breadcrumb" className="flex items-center justify-center gap-2 text-xs sm:text-sm text-[#8C7A6B]">
-          <button onClick={() => navigate('home')} className="hover:text-[#8B3A13] transition-colors cursor-pointer font-serif">
-            Home
-          </button>
-          <ChevronRight className="w-3.5 h-3.5 text-[#D4AF37]" />
-          <span className="font-bold text-[#2B1509] font-serif">Shipping Policy</span>
-        </nav>
 
         {/* CENTERED PAGE HEADER MATCHING USER REFERENCE SCREENSHOT */}
         <div className="text-center space-y-3">
