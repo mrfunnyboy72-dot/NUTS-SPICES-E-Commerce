@@ -4,6 +4,7 @@ import ProductCard from '../components/ProductCard';
 import FeaturedTodaySection from '../components/FeaturedTodaySection';
 import BestSellingSection from '../components/BestSellingSection';
 import ComboOfferBanner from '../components/ComboOfferBanner';
+import TestimonialsSection from '../components/TestimonialsSection';
 import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
@@ -148,64 +149,8 @@ export default function HomePage() {
       {/* EXCLUSIVE COMBO OFFER PROMO BANNER SECTION */}
       <ComboOfferBanner />
 
-      {/* HOW ORDERING WORKS (WHATSAPP FLOW) */}
-      <section className="bg-white py-16 border-y border-[#E6D7C3]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#8B3A13]">
-              Simple & Hassle-Free
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black font-serif text-[#2B1509]">
-              How WhatsApp Ordering Works
-            </h2>
-            <p className="text-xs sm:text-sm text-[#4A3525]">
-              No credit cards or complex payment gateways needed! Follow these easy steps to place your order.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-[#E6D7C3] shadow-sm text-center space-y-3 relative">
-              <div className="w-10 h-10 rounded-full bg-[#8B3A13] text-white font-bold flex items-center justify-center mx-auto text-sm">
-                1
-              </div>
-              <h3 className="font-bold text-[#2B1509] text-base">Browse & Select</h3>
-              <p className="text-xs text-[#8C7A6B]">
-                Choose your favorite nuts, dry fruits, spices, seeds, or gift hampers with your desired pack weight.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-[#E6D7C3] shadow-sm text-center space-y-3 relative">
-              <div className="w-10 h-10 rounded-full bg-[#8B3A13] text-white font-bold flex items-center justify-center mx-auto text-sm">
-                2
-              </div>
-              <h3 className="font-bold text-[#2B1509] text-base">Review Cart</h3>
-              <p className="text-xs text-[#8C7A6B]">
-                Check your chosen quantities and subtotal price in your shopping cart.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-[#E6D7C3] shadow-sm text-center space-y-3 relative">
-              <div className="w-10 h-10 rounded-full bg-[#8B3A13] text-white font-bold flex items-center justify-center mx-auto text-sm">
-                3
-              </div>
-              <h3 className="font-bold text-[#2B1509] text-base">Enter Delivery Info</h3>
-              <p className="text-xs text-[#8C7A6B]">
-                Provide your name, contact phone number, and delivery address in our clean checkout form.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-[#25D366] shadow-md text-center space-y-3 relative">
-              <div className="w-10 h-10 rounded-full bg-[#25D366] text-white font-bold flex items-center justify-center mx-auto text-sm">
-                4
-              </div>
-              <h3 className="font-bold text-[#2B1509] text-base">Send via WhatsApp</h3>
-              <p className="text-xs text-[#8C7A6B]">
-                Click "Place Order" to automatically send the formatted order payload directly to our WhatsApp support!
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* CUSTOMER REVIEWS / TESTIMONIALS SECTION (OUR HAPPY HARVEST TRIBE) */}
+      <TestimonialsSection />
 
     </div>
   );
