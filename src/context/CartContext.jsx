@@ -39,6 +39,8 @@ export const CartProvider = ({ children }) => {
           }))
         : defaultWeights;
 
+      const isInactive = (p.status && String(p.status).toLowerCase() === 'inactive') || p.active === false;
+
       return {
         ...p,
         id: p.id || `prod-${Math.random()}`,
@@ -48,8 +50,8 @@ export const CartProvider = ({ children }) => {
         image: p.image || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
         price: basePrice,
         weights: validWeights,
-        status: p.status || 'Active',
-        active: p.active !== false
+        status: isInactive ? 'Inactive' : 'Active',
+        active: !isInactive
       };
     }).filter(Boolean);
   };
@@ -280,6 +282,34 @@ export const CartProvider = ({ children }) => {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Realtime Cloud Catalog Sync for ALL devices (Phones, Laptops, Browsers)
+  useEffect(() => {
+    let isMounted = true;
+    const loadCloudData = async () => {
+      try {
+        const cloudData = await fetchCloudCatalog();
+        if (cloudData && Array.isArray(cloudData.products) && cloudData.products.length > 0 && isMounted) {
+          const sanitized = sanitizeProductList(cloudData.products);
+          setProducts(sanitized);
+          try { localStorage.setItem('nuts_spices_products', JSON.stringify(sanitized)); } catch {}
+        }
+        if (cloudData && Array.isArray(cloudData.categories) && cloudData.categories.length > 0 && isMounted) {
+          setCategories(cloudData.categories);
+          try { localStorage.setItem('nuts_spices_categories', JSON.stringify(cloudData.categories)); } catch {}
+        }
+      } catch (err) {
+        console.warn('Cloud catalog fetch error:', err);
+      }
+    };
+
+    loadCloudData();
+    const interval = setInterval(loadCloudData, 10000); // 10s live polling for all devices
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   // Helper to reset store state to default seed data
@@ -571,7 +601,8 @@ export const CartProvider = ({ children }) => {
     setProducts(prev => {
       const updated = prev.map(p => {
         if (p.id === productId) {
-          const newStatus = (p.status === 'Inactive' || p.active === false) ? 'Active' : 'Inactive';
+          const isCurrentlyInactive = (p.status && String(p.status).toLowerCase() === 'inactive') || p.active === false;
+          const newStatus = isCurrentlyInactive ? 'Active' : 'Inactive';
           return { ...p, status: newStatus, active: newStatus === 'Active' };
         }
         return p;

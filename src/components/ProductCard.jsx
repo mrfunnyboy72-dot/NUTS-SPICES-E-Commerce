@@ -6,6 +6,7 @@ export default function ProductCard({ product }) {
   const { addToCart, wishlist, toggleWishlist, navigate } = useCart();
   
   if (!product) return null;
+  if ((product.status && String(product.status).toLowerCase() === 'inactive') || product.active === false) return null;
 
   const defaultWeight = (product.weights && product.weights[0]) 
     ? product.weights[0] 
