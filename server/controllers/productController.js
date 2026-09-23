@@ -1,5 +1,6 @@
 import { queryDb, memoryStore } from '../config/db.js';
 import { CATEGORIES, PRODUCTS } from '../../src/data/products.js';
+import { syncServerCatalog, inMemoryCatalog } from '../index.js';
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -75,15 +76,23 @@ export const getAllCategories = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, category, categoryName, badge, price, image, description, origin, shelfLife, stock } = req.body;
+    const { id, name, category, categoryName, badge, price, image, weights, description, origin, shelfLife, stock, status } = req.body;
     
-    const newId = `prod_${Date.now()}`;
-    const weightsJson = JSON.stringify([{ label: 'Standard', price: Number(price) || 290 }]);
+    const newId = id || req.body.id || `prod_${Date.now()}`;
+    const parsedWeights = Array.isArray(weights) && weights.length > 0
+      ? weights
+      : [{ label: 'Standard', price: Number(price) || 290, originalPrice: Math.round((Number(price) || 290) * 1.2) }];
+    const weightsJson = JSON.stringify(parsedWeights);
+    const prodStatus = status || 'Active';
 
     await queryDb(
-      `INSERT INTO products (id, name, category_id, category_name, badge, image, weights_json, description, origin, shelf_life, stock)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [newId, name, category, categoryName || category, badge || 'Fresh', image, weightsJson, description, origin || 'India', shelfLife || '6 Months', Number(stock) || 100]
+      `INSERT INTO products (id, name, category_id, category_name, badge, image, weights_json, description, origin, shelf_life, stock, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE name = ?, category_id = ?, category_name = ?, badge = ?, image = ?, weights_json = ?, description = ?, origin = ?, shelf_life = ?, stock = ?, status = ?`,
+      [
+        newId, name, category, categoryName || category, badge || 'Fresh', image, weightsJson, description || '', origin || 'India', shelfLife || '6 Months', Number(stock) || 100, prodStatus,
+        name, category, categoryName || category, badge || 'Fresh', image, weightsJson, description || '', origin || 'India', shelfLife || '6 Months', Number(stock) || 100, prodStatus
+      ]
     );
 
     const createdProduct = {
@@ -93,14 +102,25 @@ export const createProduct = async (req, res) => {
       categoryName: categoryName || category,
       badge: badge || 'Fresh',
       image,
-      weights: [{ label: 'Standard', price: Number(price) || 290 }],
-      description,
+      price: parsedWeights[0].price,
+      weights: parsedWeights,
+      description: description || '',
       origin: origin || 'India',
       shelfLife: shelfLife || '6 Months',
-      stock: Number(stock) || 100
+      stock: Number(stock) || 100,
+      status: prodStatus,
+      active: prodStatus === 'Active'
     };
 
-    memoryStore.products.unshift(createdProduct);
+    const curProds = inMemoryCatalog.products || PRODUCTS;
+    const existingIdx = curProds.findIndex(p => p.id === newId);
+    let updatedProds = [];
+    if (existingIdx >= 0) {
+      updatedProds = curProds.map((p, i) => i === existingIdx ? { ...p, ...createdProduct } : p);
+    } else {
+      updatedProds = [createdProduct, ...curProds];
+    }
+    await syncServerCatalog(updatedProds, inMemoryCatalog.categories);
 
     res.status(201).json({
       success: true,
@@ -119,7 +139,7 @@ export const updateProduct = async (req, res) => {
     const { name, category, categoryName, badge, price, image, description, origin, shelfLife, stock, status, active, weights } = req.body;
 
     const weightsJson = weights ? JSON.stringify(weights) : (price ? JSON.stringify([{ label: 'Standard', price: Number(price) }]) : null);
-    const activeVal = (status === 'Active' || active === true || active === 'true') ? 'active' : 'inactive';
+    const activeVal = status ? status : ((active === true || active === 'true' || active === 'Active') ? 'Active' : 'Inactive');
 
     await queryDb(
       `UPDATE products SET 
@@ -138,9 +158,33 @@ export const updateProduct = async (req, res) => {
       [name, category, categoryName, badge, image, weightsJson, description, origin, shelfLife, stock, activeVal, id]
     );
 
+    const curProds = inMemoryCatalog.products || PRODUCTS;
+    const updatedProds = curProds.map(p => {
+      if (p.id === id) {
+        const newStatus = activeVal || p.status;
+        return {
+          ...p,
+          ...(name && { name }),
+          ...(category && { category }),
+          ...(categoryName && { categoryName }),
+          ...(badge && { badge }),
+          ...(image && { image }),
+          ...(description && { description }),
+          ...(origin && { origin }),
+          ...(shelfLife && { shelfLife }),
+          ...(stock !== undefined && { stock: Number(stock) }),
+          ...(weights && { weights, price: weights[0] ? weights[0].price : p.price }),
+          status: newStatus,
+          active: newStatus === 'Active'
+        };
+      }
+      return p;
+    });
+    await syncServerCatalog(updatedProds, inMemoryCatalog.categories);
+
     res.json({
       success: true,
-      message: 'Product updated successfully in TiDB!'
+      message: 'Product updated successfully!'
     });
   } catch (error) {
     console.error('Update Product Error:', error);
@@ -152,7 +196,10 @@ export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     await queryDb('DELETE FROM products WHERE id = ?', [id]);
-    memoryStore.products = memoryStore.products.filter(p => p.id !== id);
+    
+    const curProds = inMemoryCatalog.products || PRODUCTS;
+    const updatedProds = curProds.filter(p => p.id !== id);
+    await syncServerCatalog(updatedProds, inMemoryCatalog.categories);
 
     res.json({
       success: true,

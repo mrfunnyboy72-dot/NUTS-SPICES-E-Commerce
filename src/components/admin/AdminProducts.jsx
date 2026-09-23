@@ -101,6 +101,44 @@ export default function AdminProducts() {
     setIsModalOpen(true);
   };
 
+  const compressImageFile = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 600;
+          const MAX_HEIGHT = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = Math.round(width);
+          canvas.height = Math.round(height);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.onerror = () => resolve(e.target.result);
+      };
+      reader.onerror = () => resolve('');
+    });
+  };
+
   const handleQuickImageUpload = (productId) => {
     setQuickUploadProductId(productId);
     if (fileInputRef.current) {
@@ -108,16 +146,24 @@ export default function AdminProducts() {
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files && e.target.files[0];
-    if (file && quickUploadProductId) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateProduct(quickUploadProductId, { image: reader.result });
-        setQuickUploadProductId(null);
-      };
-      reader.readAsDataURL(file);
+    if (file) {
+      try {
+        const compressedBase64 = await compressImageFile(file);
+        if (compressedBase64) {
+          if (quickUploadProductId) {
+            updateProduct(quickUploadProductId, { image: compressedBase64 });
+            setQuickUploadProductId(null);
+          } else {
+            setFormData(prev => ({ ...prev, image: compressedBase64 }));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to process product image:', err);
+      }
     }
+    if (e.target) e.target.value = '';
   };
 
   const handleSubmitForm = (e) => {

@@ -302,14 +302,26 @@ export const CartProvider = ({ children }) => {
     const loadCloudData = async () => {
       try {
         const cloudData = await fetchCloudCatalog();
-        if (cloudData && Array.isArray(cloudData.products) && cloudData.products.length > 0 && isMounted) {
-          const sanitized = sanitizeProductList(cloudData.products);
-          setProducts(sanitized);
-          try { localStorage.setItem('nuts_spices_products', JSON.stringify(sanitized)); } catch {}
-        }
-        if (cloudData && Array.isArray(cloudData.categories) && cloudData.categories.length > 0 && isMounted) {
-          setCategories(cloudData.categories);
-          try { localStorage.setItem('nuts_spices_categories', JSON.stringify(cloudData.categories)); } catch {}
+        if (cloudData && isMounted) {
+          if (Array.isArray(cloudData.products) && cloudData.products.length > 0) {
+            const sanitized = sanitizeProductList(cloudData.products);
+            setProducts(prev => {
+              const cloudIds = new Set(sanitized.map(p => p.id));
+              const localOnly = prev.filter(p => !cloudIds.has(p.id));
+              const merged = [...sanitized, ...localOnly];
+              try { localStorage.setItem('nuts_spices_products', JSON.stringify(merged)); } catch {}
+              return merged;
+            });
+          }
+          if (Array.isArray(cloudData.categories) && cloudData.categories.length > 0) {
+            setCategories(prev => {
+              const cloudIds = new Set(cloudData.categories.map(c => c.id));
+              const localOnly = prev.filter(c => !cloudIds.has(c.id));
+              const merged = [...cloudData.categories, ...localOnly];
+              try { localStorage.setItem('nuts_spices_categories', JSON.stringify(merged)); } catch {}
+              return merged;
+            });
+          }
         }
       } catch (err) {
         console.warn('Cloud catalog fetch error:', err);

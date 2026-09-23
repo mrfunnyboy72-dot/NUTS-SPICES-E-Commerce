@@ -1,5 +1,6 @@
 import { queryDb } from '../config/db.js';
 import { CATEGORIES } from '../../src/data/products.js';
+import { syncServerCatalog, inMemoryCatalog } from '../index.js';
 
 export const getAllCategories = async (req, res) => {
   try {
@@ -37,7 +38,19 @@ export const createCategory = async (req, res) => {
       [id, name, image, description || '', name, image, description || '']
     );
 
-    const newCategory = { id, name, image, description: description || '', iconLucideName: iconLucideName || 'Sparkles' };
+    const newCategory = { id, name, image, description: description || '', iconLucideName: iconLucideName || 'Sparkles', icon: '🌰' };
+    
+    // Refresh server catalog memory
+    const curCats = inMemoryCatalog.categories || CATEGORIES;
+    const existingIdx = curCats.findIndex(c => c.id === id);
+    let updatedCats = [];
+    if (existingIdx >= 0) {
+      updatedCats = curCats.map((c, i) => i === existingIdx ? { ...c, ...newCategory } : c);
+    } else {
+      updatedCats = [...curCats, newCategory];
+    }
+    await syncServerCatalog(inMemoryCatalog.products, updatedCats);
+
     res.status(201).json({ success: true, message: 'Category created successfully!', category: newCategory });
   } catch (error) {
     console.error('Create Category Error:', error);
@@ -48,12 +61,16 @@ export const createCategory = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, image, description } = req.body;
+    const { name, image, description, iconLucideName } = req.body;
 
     await queryDb(
       'UPDATE categories SET name = ?, image = ?, description = ? WHERE id = ?',
       [name, image, description, id]
     );
+
+    const curCats = inMemoryCatalog.categories || CATEGORIES;
+    const updatedCats = curCats.map(c => c.id === id ? { ...c, ...(name && { name }), ...(image && { image }), ...(description && { description }), ...(iconLucideName && { iconLucideName }) } : c);
+    await syncServerCatalog(inMemoryCatalog.products, updatedCats);
 
     res.json({ success: true, message: 'Category updated successfully!' });
   } catch (error) {
@@ -65,6 +82,11 @@ export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
     await queryDb('DELETE FROM categories WHERE id = ?', [id]);
+
+    const curCats = inMemoryCatalog.categories || CATEGORIES;
+    const updatedCats = curCats.filter(c => c.id !== id);
+    await syncServerCatalog(inMemoryCatalog.products, updatedCats);
+
     res.json({ success: true, message: 'Category deleted successfully!' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to delete category.' });

@@ -42,10 +42,30 @@ app.get('/api', (req, res) => {
 });
 
 // In-Memory Master Catalog cache for fast real-time Edge/Vercel Sync
-let inMemoryCatalog = {
+export let inMemoryCatalog = {
   products: null,
   categories: null,
   updatedAt: null
+};
+
+export const syncServerCatalog = async (products, categories) => {
+  if (Array.isArray(products)) inMemoryCatalog.products = products;
+  if (Array.isArray(categories)) inMemoryCatalog.categories = categories;
+  inMemoryCatalog.updatedAt = new Date().toISOString();
+
+  try {
+    const catalogJson = JSON.stringify({
+      products: inMemoryCatalog.products || PRODUCTS,
+      categories: inMemoryCatalog.categories || CATEGORIES,
+      updatedAt: inMemoryCatalog.updatedAt
+    });
+    await queryDb(
+      "INSERT INTO settings (setting_key, setting_value) VALUES ('master_catalog_json', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
+      [catalogJson, catalogJson]
+    );
+  } catch (err) {
+    console.warn('DB catalog sync note:', err.message);
+  }
 };
 
 app.get('/api/catalog', async (req, res) => {
@@ -64,22 +84,61 @@ app.get('/api/catalog', async (req, res) => {
       }
     }
 
-    // Also query TiDB categories table directly and merge any newly added categories
+    // Query TiDB categories table directly and merge all DB categories
     const dbCats = await queryDb("SELECT * FROM categories");
     if (dbCats && Array.isArray(dbCats) && dbCats.length > 0) {
-      const existingIds = new Set(categories.map(c => c.id));
+      const categoryMap = new Map();
+      // Put default/parsed categories in map first
+      categories.forEach(c => categoryMap.set(c.id, c));
+      // Override/Add from DB categories table
       dbCats.forEach(dbC => {
-        if (!existingIds.has(dbC.id)) {
-          categories.push({
-            id: dbC.id,
-            name: dbC.name,
-            icon: '🌰',
-            image: dbC.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600',
-            description: dbC.description || ''
-          });
-          existingIds.add(dbC.id);
-        }
+        categoryMap.set(dbC.id, {
+          id: dbC.id,
+          name: dbC.name,
+          image: dbC.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600',
+          description: dbC.description || '',
+          iconLucideName: dbC.iconLucideName || 'Sparkles',
+          icon: '🌰'
+        });
       });
+      categories = Array.from(categoryMap.values());
+    }
+
+    // Query TiDB products table directly and merge all DB products
+    const dbProds = await queryDb("SELECT * FROM products");
+    if (dbProds && Array.isArray(dbProds) && dbProds.length > 0) {
+      const productMap = new Map();
+      products.forEach(p => productMap.set(p.id, p));
+      dbProds.forEach(dbP => {
+        let weights = [];
+        if (dbP.weights_json) {
+          try { weights = typeof dbP.weights_json === 'string' ? JSON.parse(dbP.weights_json) : dbP.weights_json; } catch {}
+        }
+        if (!Array.isArray(weights) || weights.length === 0) {
+          const baseP = Number(dbP.price) || 290;
+          weights = [{ label: 'Standard', price: baseP, originalPrice: Math.round(baseP * 1.2) }];
+        }
+        const basePrice = weights[0] ? weights[0].price : (Number(dbP.price) || 290);
+        const status = dbP.status || (dbP.active !== false ? 'Active' : 'Inactive');
+
+        productMap.set(dbP.id, {
+          id: dbP.id,
+          name: dbP.name,
+          category: dbP.category_id || dbP.category || 'nuts-dry-fruits',
+          categoryName: dbP.category_name || dbP.categoryName || 'General',
+          badge: dbP.badge || 'Fresh',
+          image: dbP.image || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
+          price: basePrice,
+          weights: weights,
+          description: dbP.description || '',
+          origin: dbP.origin || 'India',
+          shelfLife: dbP.shelf_life || dbP.shelfLife || '6 Months',
+          stock: Number(dbP.stock) || 100,
+          status: status,
+          active: status === 'Active'
+        });
+      });
+      products = Array.from(productMap.values());
     }
   } catch (err) {
     console.warn('DB catalog fetch note:', err.message);
@@ -100,21 +159,7 @@ app.get('/api/catalog', async (req, res) => {
 app.post('/api/catalog', async (req, res) => {
   const { products, categories } = req.body || {};
   if (Array.isArray(products) && Array.isArray(categories)) {
-    const updatedAt = new Date().toISOString();
-    inMemoryCatalog.products = products;
-    inMemoryCatalog.categories = categories;
-    inMemoryCatalog.updatedAt = updatedAt;
-
-    try {
-      const catalogJson = JSON.stringify({ products, categories, updatedAt });
-      await queryDb(
-        "INSERT INTO settings (setting_key, setting_value) VALUES ('master_catalog_json', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
-        [catalogJson, catalogJson]
-      );
-    } catch (err) {
-      console.warn('DB catalog save note:', err.message);
-    }
-
+    await syncServerCatalog(products, categories);
     return res.json({ success: true, message: 'Catalog updated across all devices successfully' });
   }
   return res.status(400).json({ success: false, message: 'Invalid payload' });
