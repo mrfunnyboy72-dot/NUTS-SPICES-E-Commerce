@@ -1,5 +1,5 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
-export const CATALOG_VERSION = 'v9_1790067673196';
+export const CATALOG_VERSION = 'v10_manager_deleted_1790067673196';
 
 export const CATEGORIES = [
   {
@@ -73,12 +73,6 @@ export const CATEGORIES = [
     "name": "HERBALS",
     "icon": "🌿",
     "image": "https://images.unsplash.com/photo-1509358271058-acd01cc93898?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 'manager',
-    name: 'MANAGER',
-    icon: '👔',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800'
   }
 ];
 
