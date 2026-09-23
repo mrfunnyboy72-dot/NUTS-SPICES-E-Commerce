@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import { PRODUCTS } from '../data/products';
 import { ArrowLeft, Star, ShoppingBag, ShieldCheck, Truck, RefreshCw, Heart, Check, MessageSquare } from 'lucide-react';
 
 export default function ProductDetailsPage() {
   const { selectedProduct, products, addToCart, wishlist, toggleWishlist, navigate } = useCart();
   
-  const product = selectedProduct || (products && products.find(p => p.status !== 'Inactive' && p.active !== false)) || (products && products[0]) || PRODUCTS[0];
+  const activeProds = (products || []).filter(isProductActive);
+  const product = (selectedProduct && isProductActive(selectedProduct))
+    ? selectedProduct 
+    : (activeProds[0] || PRODUCTS[0]);
   
   const defaultWeight = { label: '250g', price: Number(product?.price) || 290, originalPrice: Math.round((Number(product?.price) || 290) * 1.2) };
   const safeWeights = (Array.isArray(product?.weights) && product.weights.length > 0) ? product.weights : [defaultWeight];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import { Search, X, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function SearchModal() {
@@ -8,7 +8,7 @@ export default function SearchModal() {
 
   if (!isSearchOpen) return null;
 
-  const activeProducts = products.filter(p => p.status !== 'Inactive' && p.active !== false);
+  const activeProducts = (products || []).filter(isProductActive);
 
   const filteredProducts = searchTerm.trim() === '' 
     ? activeProducts.slice(0, 4) // default suggestions

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import { ChevronLeft, ChevronRight, ShoppingBag, Check, ChevronDown } from 'lucide-react';
 
 function FeaturedCard({ product }) {
@@ -141,7 +141,7 @@ export default function FeaturedTodaySection() {
       const catName = (cat.name || '').toLowerCase();
 
       const matched = (products || []).find(p => {
-        if (p.status === 'Inactive' || p.active === false) return false;
+        if (!isProductActive(p)) return false;
         const pCat = (p.category || '').toLowerCase();
         const pCatName = (p.categoryName || '').toLowerCase();
         return pCat === catId || pCat === catName || pCatName === catName || pCatName === catId;

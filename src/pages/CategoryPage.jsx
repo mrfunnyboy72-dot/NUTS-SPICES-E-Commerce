@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import { ArrowLeft, SlidersHorizontal, Sparkles, ShoppingBag } from 'lucide-react';
 
@@ -20,7 +20,7 @@ export default function CategoryPage() {
 
   // Filter products for ONLY this category
   const filteredProducts = (products || [])
-    .filter(p => p.status !== 'Inactive' && p.active !== false)
+    .filter(isProductActive)
     .filter(p => {
       if (!selectedCategory || selectedCategory === 'all') return true;
       const cId = (selectedCategory || '').toLowerCase().trim();

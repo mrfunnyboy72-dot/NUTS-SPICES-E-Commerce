@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import { Filter, SlidersHorizontal, Search, X } from 'lucide-react';
 
@@ -22,7 +22,7 @@ export default function ShopPage() {
   }, [selectedCategory]);
 
   // Filtering
-  let filtered = (products || []).filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
+  let filtered = (products || []).filter(isProductActive).filter(p => {
     if (!activeCategory || activeCategory === 'all') {
       const matchesSearch = !searchFilter.trim() || 
                             p.name.toLowerCase().includes(searchFilter.toLowerCase()) ||

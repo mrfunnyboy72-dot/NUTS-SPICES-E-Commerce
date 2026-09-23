@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import FeaturedTodaySection from '../components/FeaturedTodaySection';
 import BestSellingSection from '../components/BestSellingSection';
@@ -55,7 +55,7 @@ export default function HomePage() {
 
   const categoriesList = (categories || []).filter(c => c.id !== 'all');
 
-  const filteredHomeProducts = (products || []).filter(p => p.status !== 'Inactive' && p.active !== false).filter(p => {
+  const filteredHomeProducts = (products || []).filter(isProductActive).filter(p => {
     if (!homeCategory || homeCategory === 'all') return true;
     const catObj = (categories || []).find(c => c.id === homeCategory);
     const cId = homeCategory.toLowerCase();

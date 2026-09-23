@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import { Heart, Star, ShoppingBag, Check, ChevronDown } from 'lucide-react';
 
 export default function ProductCard({ product }) {
   const { addToCart, wishlist, toggleWishlist, navigate } = useCart();
   
-  if (!product) return null;
-  if ((product.status && String(product.status).toLowerCase() === 'inactive') || product.active === false) return null;
+  if (!product || !isProductActive(product)) return null;
 
   const defaultWeight = (product.weights && product.weights[0]) 
     ? product.weights[0] 

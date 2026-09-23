@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart, isProductActive } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import { Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
 
@@ -8,7 +8,7 @@ export default function WishlistPage() {
 
   // Filter products that are in the user's wishlist
   const wishlistProducts = (products || [])
-    .filter(p => p.status !== 'Inactive' && p.active !== false)
+    .filter(isProductActive)
     .filter(p => (wishlist || []).includes(p.id));
 
   return (

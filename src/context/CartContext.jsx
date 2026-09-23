@@ -10,6 +10,16 @@ import {
 
 const CartContext = createContext();
 
+export const isProductActive = (p) => {
+  if (!p || typeof p !== 'object') return false;
+  if (p.active === false || p.active === 0 || p.active === 'false') return false;
+  if (p.status) {
+    const s = String(p.status).trim().toLowerCase();
+    if (s === 'inactive' || s === 'disabled' || s === 'hidden' || s === '0' || s === 'false') return false;
+  }
+  return true;
+};
+
 export const CartProvider = ({ children }) => {
   // 1. STORE & APPLICATION SETTINGS (Admin Configurable)
   const [storeSettings, setStoreSettings] = useState(() => {
@@ -39,7 +49,7 @@ export const CartProvider = ({ children }) => {
           }))
         : defaultWeights;
 
-      const isInactive = (p.status && String(p.status).toLowerCase() === 'inactive') || p.active === false;
+      const activeState = isProductActive(p);
 
       return {
         ...p,
@@ -50,8 +60,8 @@ export const CartProvider = ({ children }) => {
         image: p.image || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
         price: basePrice,
         weights: validWeights,
-        status: isInactive ? 'Inactive' : 'Active',
-        active: !isInactive
+        status: activeState ? 'Active' : 'Inactive',
+        active: activeState
       };
     }).filter(Boolean);
   };
@@ -601,8 +611,8 @@ export const CartProvider = ({ children }) => {
     setProducts(prev => {
       const updated = prev.map(p => {
         if (p.id === productId) {
-          const isCurrentlyInactive = (p.status && String(p.status).toLowerCase() === 'inactive') || p.active === false;
-          const newStatus = isCurrentlyInactive ? 'Active' : 'Inactive';
+          const currentlyActive = isProductActive(p);
+          const newStatus = currentlyActive ? 'Inactive' : 'Active';
           return { ...p, status: newStatus, active: newStatus === 'Active' };
         }
         return p;
