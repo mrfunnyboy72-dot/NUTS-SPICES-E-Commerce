@@ -116,7 +116,7 @@ export default function Footer() {
                 <button onClick={() => navigate('shipping-policy')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Shipping Policy</button>
               </li>
               <li>
-                <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Returns & Refunds</button>
+                <button onClick={() => navigate('returns-refunds')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Returns & Refunds</button>
               </li>
               <li>
                 <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer">Privacy Policy</button>
