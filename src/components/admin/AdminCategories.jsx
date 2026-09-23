@@ -253,37 +253,19 @@ export default function AdminCategories() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
-              {/* Category Name */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                  Category Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
-                  placeholder="e.g. ADIYAL"
-                  className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-3 py-2 text-xs font-normal text-gray-800 outline-none transition-all"
-                />
-              </div>
-
-              {/* Icon (Lucide Name) */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                  Icon (Lucide Name)
-                </label>
-                <input
-                  type="text"
-                  value={iconLucideName}
-                  onChange={(e) => setIconLucideName(e.target.value)}
-                  placeholder="e.g. Sparkles"
-                  className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-3 py-2 text-xs font-normal text-gray-800 outline-none transition-all placeholder:text-gray-400"
-                />
-              </div>
-
+            {/* Category Name */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                Category Name
+              </label>
+              <input
+                type="text"
+                required
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                placeholder="e.g. ADIYAL / NUTS & DRY FRUITS"
+                className="w-full bg-white border border-gray-200 focus:border-amber-500 rounded-lg px-3 py-2 text-xs font-normal text-gray-800 outline-none transition-all"
+              />
             </div>
 
             {/* Category Image URL & File Upload */}
