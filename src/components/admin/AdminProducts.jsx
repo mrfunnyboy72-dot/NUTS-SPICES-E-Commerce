@@ -22,14 +22,16 @@ export default function AdminProducts() {
     category: 'nuts-dry-fruits',
     description: '',
     image: 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
-    price: 350,
     discountPercent: 10,
-    weightString: '250g, 500g, 1 kg',
+    weightOptions: [
+      { label: '250g', price: 250 },
+      { label: '500g', price: 450 }
+    ],
     stock: 50,
-    ingredients: '100% Natural Premium Nuts',
+    ingredients: '100% Natural Premium Grade',
     origin: 'India',
     shelfLife: '9 Months',
-    storage: 'Store in a cool dry place in airtight container',
+    storage: 'Store in airtight jar in cool dry place',
     status: 'Active'
   });
 
@@ -48,14 +50,16 @@ export default function AdminProducts() {
       category: categories[1]?.id || 'nuts-dry-fruits',
       description: '',
       image: 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
-      price: 350,
       discountPercent: 10,
-      weightString: '250g, 500g, 1 kg',
+      weightOptions: [
+        { label: '250g', price: 250 },
+        { label: '500g', price: 450 }
+      ],
       stock: 50,
       ingredients: '100% Natural Premium Grade',
       origin: 'India',
       shelfLife: '9 Months',
-      storage: 'Store in airtight jar in cool dark place',
+      storage: 'Store in airtight jar in cool dry place',
       status: 'Active'
     });
     setIsModalOpen(true);
@@ -63,17 +67,17 @@ export default function AdminProducts() {
 
   const handleOpenEditModal = (product) => {
     setEditingProduct(product);
-    const weightLabels = product.weights ? product.weights.map(w => w.label).join(', ') : '250g, 500g';
-    const firstPrice = product.weights && product.weights[0] ? product.weights[0].price : product.price || 350;
+    const existingWeights = Array.isArray(product.weights) && product.weights.length > 0 
+      ? product.weights.map(w => ({ label: w.label || '250g', price: Number(w.price) || 250 }))
+      : [{ label: '250g', price: Number(product.price) || 250 }];
 
     setFormData({
       name: product.name || '',
       category: product.category || 'nuts-dry-fruits',
       description: product.description || '',
       image: product.image || '',
-      price: firstPrice,
       discountPercent: product.discountPercent || 10,
-      weightString: weightLabels,
+      weightOptions: existingWeights,
       stock: product.stock !== undefined ? product.stock : 45,
       ingredients: product.ingredients || '100% Natural',
       origin: product.origin || 'India',
@@ -106,20 +110,19 @@ export default function AdminProducts() {
   const handleSubmitForm = (e) => {
     e.preventDefault();
 
-    const weightParts = formData.weightString.split(',').map(s => s.trim()).filter(Boolean);
-    const basePrice = Number(formData.price) || 100;
     const discountFactor = (100 - (Number(formData.discountPercent) || 0)) / 100;
 
-    const weights = weightParts.map((w, idx) => {
-      const priceMultiplier = idx === 0 ? 1 : idx === 1 ? 1.8 : 3.4;
-      const calculatedPrice = Math.round(basePrice * priceMultiplier);
-      const original = Math.round(calculatedPrice / discountFactor);
+    const weights = formData.weightOptions.map(w => {
+      const p = Number(w.price) || 100;
+      const original = Math.round(p / discountFactor);
       return {
-        label: w,
-        price: calculatedPrice,
+        label: w.label.trim() || '250g',
+        price: p,
         originalPrice: original
       };
     });
+
+    const basePrice = weights[0] ? weights[0].price : 250;
 
     const categoryObj = categories.find(c => c.id === formData.category);
     const categoryName = categoryObj ? categoryObj.name : 'General';
@@ -165,7 +168,7 @@ export default function AdminProducts() {
         className="hidden" 
       />
 
-      {/* HEADER & RED ADD PRODUCT BUTTON matching screenshot */}
+      {/* HEADER & ADD PRODUCT BUTTON */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
@@ -207,7 +210,7 @@ export default function AdminProducts() {
         </div>
       </div>
 
-      {/* PRODUCTS TABLE matching reference screenshot layout */}
+      {/* PRODUCTS TABLE */}
       <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden text-gray-800">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
@@ -215,7 +218,7 @@ export default function AdminProducts() {
               <tr className="border-b border-gray-200/80 bg-gray-50/80 text-gray-600 font-bold uppercase text-[11px] tracking-wider">
                 <th className="py-4 px-4">Image</th>
                 <th className="py-4 px-4">Product Name</th>
-                <th className="py-4 px-4">Selling Price</th>
+                <th className="py-4 px-4">Weights & Prices</th>
                 <th className="py-4 px-4">Discount</th>
                 <th className="py-4 px-4 text-center">Visibility</th>
                 <th className="py-4 px-4 text-center">Actions</th>
@@ -247,60 +250,71 @@ export default function AdminProducts() {
                     {/* 2. Product Name */}
                     <td className="py-3.5 px-4">
                       <div className="font-semibold text-gray-800 text-xs">{p.name}</div>
+                      <div className="text-[10px] font-bold text-amber-700 uppercase mt-0.5">{p.categoryName || p.category}</div>
                     </td>
 
-                    {/* 3. Selling Price (Red Bold) */}
-                    <td className="py-3.5 px-4 whitespace-nowrap font-serif text-red-600 font-extrabold text-sm">
-                      ₹{sellingPrice}
+                    {/* 3. Weights & Prices */}
+                    <td className="py-3.5 px-4">
+                      <div className="flex flex-wrap gap-1.5 max-w-xs">
+                        {p.weights && p.weights.length > 0 ? (
+                          p.weights.map((w, wIdx) => (
+                            <span key={wIdx} className="px-2 py-0.5 bg-amber-50 text-amber-900 border border-amber-200/60 rounded text-[10px] font-bold">
+                              {w.label}: ₹{w.price}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="font-bold text-gray-900 text-xs">₹{sellingPrice}</span>
+                        )}
+                      </div>
                     </td>
 
-                    {/* 6. Discount (Green Bold) */}
-                    <td className="py-3.5 px-4 whitespace-nowrap text-emerald-600 font-extrabold text-xs">
+                    {/* 4. Discount */}
+                    <td className="py-3.5 px-4 font-semibold text-gray-700">
                       {discountPct}% OFF
                     </td>
 
-                    {/* 7. Visibility (ON/OFF Badge) */}
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    {/* 5. Visibility Status Toggle */}
+                    <td className="py-3.5 px-4 text-center">
                       <button
                         onClick={() => toggleProductStatus(p.id)}
-                        className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-extrabold uppercase cursor-pointer transition-colors ${
+                        className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wider uppercase transition-all cursor-pointer ${
                           !isInactive 
-                            ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' 
-                            : 'bg-gray-100 text-gray-500 border border-gray-200'
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
+                            : 'bg-rose-100 text-rose-800 border border-rose-300'
                         }`}
                       >
-                        {!isInactive ? 'ON' : 'OFF'}
+                        {!isInactive ? 'Active' : 'Inactive'}
                       </button>
                     </td>
 
-                    {/* 8. Actions (Upload Image, Edit, Delete) matching screenshot icons */}
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                      <div className="inline-flex items-center justify-center gap-1.5">
-                        {/* Purple Upload/Change Image Button */}
+                    {/* 6. Actions */}
+                    <td className="py-3.5 px-4 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        {/* Quick Image Change */}
                         <button
                           onClick={() => handleQuickImageUpload(p.id)}
-                          className="p-1.5 bg-purple-100 hover:bg-purple-200 text-purple-600 rounded-lg transition-colors cursor-pointer"
-                          title="Upload/Change Product Image"
+                          className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          title="Change Product Image"
                         >
-                          <Upload className="w-3.5 h-3.5" />
+                          <Upload className="w-4 h-4" />
                         </button>
 
-                        {/* Blue Edit Button */}
+                        {/* Edit Button */}
                         <button
                           onClick={() => handleOpenEditModal(p)}
-                          className="p-1.5 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors cursor-pointer"
-                          title="Edit Product Details"
+                          className="p-1.5 text-amber-700 hover:text-amber-900 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
+                          title="Edit Product"
                         >
-                          <Edit className="w-3.5 h-3.5" />
+                          <Edit className="w-4 h-4" />
                         </button>
 
-                        {/* Red/Pink Delete Button */}
+                        {/* Delete Button */}
                         <button
                           onClick={() => setDeleteConfirmProduct(p)}
-                          className="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                           title="Delete Product"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
@@ -308,83 +322,63 @@ export default function AdminProducts() {
                   </tr>
                 );
               })}
+
+              {filteredProducts.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="py-8 text-center text-gray-400 font-medium">
+                    No products found matching your search.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* CUSTOM DELETE CONFIRMATION MODAL */}
-      {deleteConfirmProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl my-auto text-gray-800 text-center animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
-              <Trash2 className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900">Delete Product?</h3>
-            <p className="text-xs text-gray-500">
-              Are you sure you want to delete <strong className="text-gray-800">"{deleteConfirmProduct.name}"</strong>? This action cannot be undone.
-            </p>
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={() => setDeleteConfirmProduct(null)}
-                className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  deleteProduct(deleteConfirmProduct.id);
-                  setDeleteConfirmProduct(null);
-                }}
-                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md cursor-pointer"
-              >
-                Confirm Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ADD / EDIT PRODUCT MODAL */}
+      {/* EDIT / ADD PRODUCT MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white border border-gray-200 rounded-2xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl my-auto text-gray-800 relative animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto my-8">
             
-            {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Package className="w-5 h-5 text-amber-600" />
-                {editingProduct ? 'Edit Product Details' : 'Add New Product'}
-              </h3>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-amber-50 text-amber-800 rounded-xl border border-amber-200/60">
+                  <Package className="w-5 h-5" />
+                </div>
+                <h2 className="text-xl font-extrabold text-gray-900">
+                  {editingProduct ? 'Edit Product Details' : 'Add New Product'}
+                </h2>
+              </div>
               <button
-                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 cursor-pointer"
+                className="p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmitForm} className="space-y-4 text-xs">
+            {/* Modal Form */}
+            <form onSubmit={handleSubmitForm} className="space-y-5 text-xs font-semibold">
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
                 {/* 1. Product Name */}
                 <div className="sm:col-span-2">
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Product Name *</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Product Name *</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. California Jumbo Almonds"
-                    className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
+                    placeholder="e.g. VEG CHIPS / California Jumbo Almonds"
+                    className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none font-bold"
                   />
                 </div>
 
                 {/* 2. Category */}
                 <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Category *</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Category *</label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -396,22 +390,9 @@ export default function AdminProducts() {
                   </select>
                 </div>
 
-                {/* 3. Base Price */}
+                {/* 3. Discount % */}
                 <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Base Price (₹) *</label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none font-bold"
-                  />
-                </div>
-
-                {/* 4. Discount % */}
-                <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Discount %</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Discount %</label>
                   <input
                     type="number"
                     min="0"
@@ -422,34 +403,95 @@ export default function AdminProducts() {
                   />
                 </div>
 
-                {/* 5. Stock */}
-                <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Stock Units *</label>
+                {/* 4. Stock Units */}
+                <div className="sm:col-span-2">
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Stock Units *</label>
                   <input
                     type="number"
                     min="0"
+                    required
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                     className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
                   />
                 </div>
 
-                {/* 6. Weight Variants (Comma Separated) */}
-                <div className="sm:col-span-2">
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Weight Options (Comma Separated) *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.weightString}
-                    onChange={(e) => setFormData({ ...formData, weightString: e.target.value })}
-                    placeholder="250g, 500g, 1 kg"
-                    className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
-                  />
+                {/* 5. DYNAMIC WEIGHT & PRICE OPTIONS LIST (REPLACES BASE PRICE) */}
+                <div className="sm:col-span-2 space-y-3 bg-amber-50/40 p-4 rounded-2xl border border-amber-200/60">
+                  <div className="flex items-center justify-between">
+                    <label className="block font-extrabold uppercase text-xs text-[#2B1509]">
+                      Weight & Price Options *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          weightOptions: [...formData.weightOptions, { label: '', price: '' }]
+                        });
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] font-extrabold text-[11px] uppercase tracking-wider rounded-lg transition-all cursor-pointer shadow-xs"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      <span>+ Add Weight</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {formData.weightOptions.map((wOpt, idx) => (
+                      <div key={idx} className="flex items-center gap-3 bg-white p-2.5 rounded-xl border border-gray-200 shadow-xs">
+                        <div className="flex-1">
+                          <label className="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Weight Pack Label</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. 250g, 500g, 1kg"
+                            value={wOpt.label}
+                            onChange={(e) => {
+                              const updated = [...formData.weightOptions];
+                              updated[idx].label = e.target.value;
+                              setFormData({ ...formData, weightOptions: updated });
+                            }}
+                            className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-lg p-2 text-xs font-semibold text-gray-900 outline-none"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Price (₹)</label>
+                          <input
+                            type="number"
+                            required
+                            min="1"
+                            placeholder="Price ₹ (e.g. 250)"
+                            value={wOpt.price}
+                            onChange={(e) => {
+                              const updated = [...formData.weightOptions];
+                              updated[idx].price = e.target.value;
+                              setFormData({ ...formData, weightOptions: updated });
+                            }}
+                            className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-lg p-2 text-xs font-extrabold text-gray-900 outline-none"
+                          />
+                        </div>
+                        {formData.weightOptions.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = formData.weightOptions.filter((_, i) => i !== idx);
+                              setFormData({ ...formData, weightOptions: updated });
+                            }}
+                            className="p-2 mt-4 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                            title="Remove Option"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* 7. Description */}
+                {/* 6. Description */}
                 <div className="sm:col-span-2">
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Description *</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Description *</label>
                   <textarea
                     rows={3}
                     required
@@ -460,96 +502,70 @@ export default function AdminProducts() {
                   />
                 </div>
 
-                {/* 8. Ingredients */}
+                {/* 7. Ingredients */}
                 <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Ingredients</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Ingredients</label>
                   <input
                     type="text"
                     value={formData.ingredients}
                     onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
-                    placeholder="e.g. 100% Pure Almonds"
+                    placeholder="e.g. 100% Natural Premium Grade"
                     className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
                   />
                 </div>
 
-                {/* 9. Origin */}
+                {/* 8. Origin */}
                 <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Origin</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Origin</label>
                   <input
                     type="text"
                     value={formData.origin}
                     onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
-                    placeholder="e.g. California, USA"
+                    placeholder="e.g. India / California / Kashmir"
                     className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
                   />
                 </div>
 
-                {/* 10. Shelf Life */}
+                {/* 9. Shelf Life */}
                 <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Shelf Life</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Shelf Life</label>
                   <input
                     type="text"
                     value={formData.shelfLife}
                     onChange={(e) => setFormData({ ...formData, shelfLife: e.target.value })}
-                    placeholder="e.g. 9 Months"
+                    placeholder="e.g. 6 Months / 9 Months"
                     className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
                   />
                 </div>
 
-                {/* 11. Storage */}
+                {/* 10. Storage Instructions */}
                 <div>
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Storage Instructions</label>
+                  <label className="block font-bold uppercase text-gray-600 mb-1">Storage Instructions</label>
                   <input
                     type="text"
                     value={formData.storage}
                     onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
-                    placeholder="e.g. Cool & dry place"
+                    placeholder="e.g. Cool dry place / Airtight container"
                     className="w-full bg-gray-50 border border-gray-200 focus:border-amber-500 rounded-xl p-2.5 text-gray-900 outline-none"
                   />
                 </div>
 
-                {/* 12. Status */}
-                <div className="sm:col-span-2">
-                  <label className="block font-semibold uppercase text-gray-600 mb-1">Status</label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center gap-2 text-gray-800 font-bold cursor-pointer">
-                      <input
-                        type="radio"
-                        name="status"
-                        value="Active"
-                        checked={formData.status === 'Active'}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                      />
-                      <span>Active</span>
-                    </label>
-                    <label className="flex items-center gap-2 text-gray-500 font-bold cursor-pointer">
-                      <input
-                        type="radio"
-                        name="status"
-                        value="Inactive"
-                        checked={formData.status === 'Inactive'}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                      />
-                      <span>Inactive</span>
-                    </label>
-                  </div>
-                </div>
-
               </div>
 
-              <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">
+              {/* Submit Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl cursor-pointer"
+                  className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#130924] hover:bg-[#291749] text-[#FACC15] font-bold uppercase rounded-xl shadow-md cursor-pointer"
+                  className="px-6 py-2.5 bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] font-extrabold rounded-xl shadow-md transition-all cursor-pointer border border-[#D4AF37]/40"
                 >
-                  {editingProduct ? 'Save Product Updates' : 'Publish Product'}
+                  {editingProduct ? 'Save Product Changes' : 'Create Product'}
                 </button>
               </div>
 
@@ -559,8 +575,38 @@ export default function AdminProducts() {
         </div>
       )}
 
+      {/* DELETE CONFIRMATION MODAL */}
+      {deleteConfirmProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-gray-100 text-center">
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-extrabold text-gray-900">Delete Product?</h3>
+            <p className="text-xs text-gray-600">
+              Are you sure you want to delete <strong className="text-gray-900">{deleteConfirmProduct.name}</strong>? This action cannot be undone.
+            </p>
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <button
+                onClick={() => setDeleteConfirmProduct(null)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all cursor-pointer text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteProduct(deleteConfirmProduct.id);
+                  setDeleteConfirmProduct(null);
+                }}
+                className="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold rounded-xl transition-all cursor-pointer text-xs shadow-md"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
-
-
