@@ -9,6 +9,9 @@ import { initializeDatabase } from './scripts/initDb.js';
 
 dotenv.config();
 
+// Initialize TiDB database schema & seeds on server startup
+initializeDatabase().catch(err => console.warn('Database initialization note:', err.message));
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
