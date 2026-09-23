@@ -18,11 +18,19 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Health Check Endpoint
-app.get('/', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
-    store: 'NUTS & SPICES Gourmet Backend',
+    store: 'HAJI NUTS & SPICES Gourmet Backend',
     database: 'TiDB / MySQL Compatible',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    status: 'online',
+    store: 'HAJI NUTS & SPICES Gourmet Backend API',
     timestamp: new Date().toISOString()
   });
 });
@@ -39,11 +47,13 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-// Start Express Server
-app.listen(PORT, async () => {
-  console.log(`\n🚀 NUTS & SPICES Backend running on http://localhost:${PORT}`);
-  console.log(`🔌 Database Engine: TiDB / MySQL Compatible`);
-  
-  // Initialize DB tables & Seed Data
-  await initializeDatabase();
-});
+// Only listen on port if run directly locally
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, async () => {
+    console.log(`\n🚀 HAJI NUTS & SPICES Backend running on http://localhost:${PORT}`);
+    console.log(`🔌 Database Engine: TiDB / MySQL Compatible`);
+    await initializeDatabase();
+  });
+}
+
+export default app;
