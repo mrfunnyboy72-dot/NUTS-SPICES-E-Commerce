@@ -21,6 +21,7 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import BulkOrdersPage from './pages/BulkOrdersPage';
 import ShippingPolicyPage from './pages/ShippingPolicyPage';
 import ReturnsRefundsPage from './pages/ReturnsRefundsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
@@ -70,6 +71,8 @@ function MainContent() {
         return <ShippingPolicyPage />;
       case 'returns-refunds':
         return <ReturnsRefundsPage />;
+      case 'privacy-policy':
+        return <PrivacyPolicyPage />;
       case 'login':
         return <LoginPage />;
       case 'register':
