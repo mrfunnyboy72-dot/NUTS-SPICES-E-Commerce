@@ -12,6 +12,8 @@ import {
 
 const CartContext = createContext();
 
+const seedProductImageMap = new Map(PRODUCTS.map(p => [p.id, p.image]));
+
 export { isProductActive };
 
 export const CartProvider = ({ children }) => {
@@ -51,7 +53,7 @@ export const CartProvider = ({ children }) => {
         name: p.name || 'Gourmet Item',
         category: p.category || 'nuts-dry-fruits',
         categoryName: p.categoryName || 'NUTS & DRY FRUITS',
-        image: p.image || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
+        image: p.image || seedProductImageMap.get(p.id) || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
         price: basePrice,
         weights: validWeights,
         status: activeState ? 'Active' : 'Inactive',
@@ -553,20 +555,8 @@ export const CartProvider = ({ children }) => {
     const prods = customProducts || products;
     const cats = customCategories || categories;
     
-    // Save to Realtime Cloud Storage for immediate sync across all devices
-    saveCloudCatalog(prods, cats);
-
-    try {
-      const endpoint = (typeof window !== 'undefined' && window.location && window.location.origin) 
-        ? `${window.location.origin}/api/catalog` 
-        : '/api/catalog';
-      
-      await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ products: prods, categories: cats })
-      });
-    } catch (err) {}
+    // Save to Realtime Cloud Storage (TiDB & Vercel API) for immediate sync across all devices
+    await saveCloudCatalog(prods, cats);
 
     if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
       try {

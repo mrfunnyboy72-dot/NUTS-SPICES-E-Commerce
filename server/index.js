@@ -48,9 +48,18 @@ export let inMemoryCatalog = {
   updatedAt: null
 };
 
+const seedProductImageMap = new Map(PRODUCTS.map(p => [p.id, p.image]));
+
 export const syncServerCatalog = async (products, categories) => {
-  if (Array.isArray(products)) inMemoryCatalog.products = products;
-  if (Array.isArray(categories)) inMemoryCatalog.categories = categories;
+  if (Array.isArray(products)) {
+    inMemoryCatalog.products = products.map(p => ({
+      ...p,
+      image: p.image || seedProductImageMap.get(p.id) || ''
+    }));
+  }
+  if (Array.isArray(categories)) {
+    inMemoryCatalog.categories = categories;
+  }
   inMemoryCatalog.updatedAt = new Date().toISOString();
 
   try {
@@ -59,16 +68,27 @@ export const syncServerCatalog = async (products, categories) => {
       categories: inMemoryCatalog.categories || CATEGORIES,
       updatedAt: inMemoryCatalog.updatedAt
     });
+
     await queryDb(
       "INSERT INTO settings (setting_key, setting_value) VALUES ('master_catalog_json', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
       [catalogJson, catalogJson]
     );
 
+    // Sync categories table in TiDB Cloud
+    if (Array.isArray(categories)) {
+      for (const cat of categories) {
+        await queryDb(
+          "INSERT INTO categories (id, name, image, description, status) VALUES (?, ?, ?, ?, 'active') ON DUPLICATE KEY UPDATE name = VALUES(name), image = VALUES(image)",
+          [cat.id, cat.name, cat.image || '', cat.description || '']
+        );
+      }
+    }
+
     // Also sync memoryStore so any in-memory queries see the exact active items
     try {
       const { memoryStore } = await import('./config/db.js');
-      if (Array.isArray(products)) memoryStore.products = [...products];
-      if (Array.isArray(categories)) memoryStore.categories = [...categories];
+      if (Array.isArray(inMemoryCatalog.products)) memoryStore.products = [...inMemoryCatalog.products];
+      if (Array.isArray(inMemoryCatalog.categories)) memoryStore.categories = [...inMemoryCatalog.categories];
     } catch {}
 
     // Save to /tmp filesystem for Vercel Lambda container reuse
@@ -87,13 +107,16 @@ app.get('/api/catalog', async (req, res) => {
   let updatedAt = inMemoryCatalog.updatedAt || new Date().toISOString();
   let hasMasterCatalog = false;
 
-  // 1. Try to load from master_catalog_json in settings table
+  // 1. Try to load from master_catalog_json in settings table (TiDB Cloud)
   try {
     const rows = await queryDb("SELECT setting_value FROM settings WHERE setting_key = 'master_catalog_json'");
     if (rows && rows.length > 0 && rows[0].setting_value) {
       const parsed = JSON.parse(rows[0].setting_value);
       if (parsed && Array.isArray(parsed.products) && Array.isArray(parsed.categories)) {
-        products = parsed.products;
+        products = parsed.products.map(p => ({
+          ...p,
+          image: p.image || seedProductImageMap.get(p.id) || ''
+        }));
         categories = parsed.categories;
         updatedAt = parsed.updatedAt || updatedAt;
         hasMasterCatalog = true;
@@ -110,7 +133,10 @@ app.get('/api/catalog', async (req, res) => {
       if (fs.existsSync('/tmp/master_catalog.json')) {
         const fileData = JSON.parse(fs.readFileSync('/tmp/master_catalog.json', 'utf8'));
         if (fileData && Array.isArray(fileData.products) && Array.isArray(fileData.categories)) {
-          products = fileData.products;
+          products = fileData.products.map(p => ({
+            ...p,
+            image: p.image || seedProductImageMap.get(p.id) || ''
+          }));
           categories = fileData.categories;
           updatedAt = fileData.updatedAt || updatedAt;
           hasMasterCatalog = true;
@@ -129,9 +155,18 @@ app.get('/api/catalog', async (req, res) => {
   inMemoryCatalog.categories = categories;
   inMemoryCatalog.updatedAt = updatedAt;
 
+  // Optimize payload over the wire: omit duplicate seed images to stay < 1MB (well below Vercel 4.5MB limit)
+  const optimizedProducts = (products || []).map(p => {
+    if (p.image && p.image === seedProductImageMap.get(p.id)) {
+      const { image, ...rest } = p;
+      return rest;
+    }
+    return p;
+  });
+
   res.json({
     success: true,
-    products,
+    products: optimizedProducts,
     categories,
     updatedAt
   });

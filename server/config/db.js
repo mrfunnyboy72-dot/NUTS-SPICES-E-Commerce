@@ -6,18 +6,21 @@ let pool = null;
 
 export const getPool = () => {
   if (!pool) {
+    const host = process.env.DB_HOST || 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com';
+    const isTiDB = host.includes('tidbcloud.com');
     const config = {
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: Number(process.env.DB_PORT) || 3306,
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'nuts_spices_db',
+      host: host,
+      port: Number(process.env.DB_PORT) || (isTiDB ? 4000 : 3306),
+      user: process.env.DB_USER || '2ufAsPLeYmcSNkD.root',
+      password: process.env.DB_PASSWORD || 'UABZuDoBgG5NcAcJ',
+      database: process.env.DB_NAME || 'nuts',
       waitForConnections: true,
       connectionLimit: 10,
-      queueLimit: 0
+      queueLimit: 0,
+      connectTimeout: 8000
     };
 
-    if (process.env.DB_SSL === 'true') {
+    if (process.env.DB_SSL === 'true' || isTiDB) {
       config.ssl = { rejectUnauthorized: false };
     }
 
