@@ -297,22 +297,12 @@ export const CartProvider = ({ children }) => {
         if (cloudData && isMounted) {
           if (Array.isArray(cloudData.products) && cloudData.products.length > 0) {
             const sanitized = sanitizeProductList(cloudData.products);
-            setProducts(prev => {
-              const cloudIds = new Set(sanitized.map(p => p.id));
-              const localOnly = prev.filter(p => !cloudIds.has(p.id));
-              const merged = [...sanitized, ...localOnly];
-              try { localStorage.setItem('nuts_spices_products', JSON.stringify(merged)); } catch {}
-              return merged;
-            });
+            setProducts(sanitized);
+            try { localStorage.setItem('nuts_spices_products', JSON.stringify(sanitized)); } catch {}
           }
           if (Array.isArray(cloudData.categories) && cloudData.categories.length > 0) {
-            setCategories(prev => {
-              const cloudIds = new Set(cloudData.categories.map(c => c.id));
-              const localOnly = prev.filter(c => !cloudIds.has(c.id));
-              const merged = [...cloudData.categories, ...localOnly];
-              try { localStorage.setItem('nuts_spices_categories', JSON.stringify(merged)); } catch {}
-              return merged;
-            });
+            setCategories(cloudData.categories);
+            try { localStorage.setItem('nuts_spices_categories', JSON.stringify(cloudData.categories)); } catch {}
           }
         }
       } catch (err) {

@@ -64,6 +64,13 @@ export const syncServerCatalog = async (products, categories) => {
       [catalogJson, catalogJson]
     );
 
+    // Also sync memoryStore so any in-memory queries see the exact active items
+    try {
+      const { memoryStore } = await import('./config/db.js');
+      if (Array.isArray(products)) memoryStore.products = [...products];
+      if (Array.isArray(categories)) memoryStore.categories = [...categories];
+    } catch {}
+
     // Save to /tmp filesystem for Vercel Lambda container reuse
     try {
       const fs = await import('fs');
@@ -75,10 +82,12 @@ export const syncServerCatalog = async (products, categories) => {
 };
 
 app.get('/api/catalog', async (req, res) => {
-  let products = inMemoryCatalog.products || PRODUCTS;
-  let categories = inMemoryCatalog.categories || CATEGORIES;
+  let products = inMemoryCatalog.products;
+  let categories = inMemoryCatalog.categories;
   let updatedAt = inMemoryCatalog.updatedAt || new Date().toISOString();
+  let hasMasterCatalog = false;
 
+  // 1. Try to load from master_catalog_json in settings table
   try {
     const rows = await queryDb("SELECT setting_value FROM settings WHERE setting_key = 'master_catalog_json'");
     if (rows && rows.length > 0 && rows[0].setting_value) {
@@ -87,90 +96,33 @@ app.get('/api/catalog', async (req, res) => {
         products = parsed.products;
         categories = parsed.categories;
         updatedAt = parsed.updatedAt || updatedAt;
+        hasMasterCatalog = true;
       }
-    } else {
-      // Check /tmp file fallback on Vercel
-      try {
-        const fs = await import('fs');
-        if (fs.existsSync('/tmp/master_catalog.json')) {
-          const fileData = JSON.parse(fs.readFileSync('/tmp/master_catalog.json', 'utf8'));
-          if (fileData && Array.isArray(fileData.products)) {
-            products = fileData.products;
-            categories = fileData.categories || categories;
-            updatedAt = fileData.updatedAt || updatedAt;
-          }
-        }
-      } catch {}
-    }
-
-    // Query TiDB categories table directly and merge all DB categories
-    const dbCats = await queryDb("SELECT * FROM categories");
-    if (dbCats && Array.isArray(dbCats) && dbCats.length > 0) {
-      const categoryMap = new Map();
-      // Put default/parsed categories in map first
-      categories.forEach(c => categoryMap.set(c.id, c));
-      // Override/Add from DB categories table while strictly preserving user's original images
-      dbCats.forEach(dbC => {
-        const existing = categoryMap.get(dbC.id);
-        const resolvedImage = (dbC.image && !dbC.image.includes('photo-1596040033229'))
-          ? dbC.image
-          : (existing?.image || dbC.image);
-
-        categoryMap.set(dbC.id, {
-          id: dbC.id,
-          name: dbC.name,
-          image: resolvedImage,
-          description: dbC.description || existing?.description || '',
-          iconLucideName: dbC.iconLucideName || existing?.iconLucideName || 'Sparkles',
-          icon: dbC.icon || existing?.icon || '🌰'
-        });
-      });
-      categories = Array.from(categoryMap.values());
-    }
-
-    // Query TiDB products table directly and merge all DB products
-    const dbProds = await queryDb("SELECT * FROM products");
-    if (dbProds && Array.isArray(dbProds) && dbProds.length > 0) {
-      const productMap = new Map();
-      products.forEach(p => productMap.set(p.id, p));
-      dbProds.forEach(dbP => {
-        let weights = [];
-        if (dbP.weights_json) {
-          try { weights = typeof dbP.weights_json === 'string' ? JSON.parse(dbP.weights_json) : dbP.weights_json; } catch {}
-        }
-        if (!Array.isArray(weights) || weights.length === 0) {
-          const baseP = Number(dbP.price) || 290;
-          weights = [{ label: 'Standard', price: baseP, originalPrice: Math.round(baseP * 1.2) }];
-        }
-        const basePrice = weights[0] ? weights[0].price : (Number(dbP.price) || 290);
-        const status = dbP.status || (dbP.active !== false ? 'Active' : 'Inactive');
-
-        const existing = productMap.get(dbP.id);
-        const resolvedImage = (dbP.image && !dbP.image.includes('photo-1508061252966'))
-          ? dbP.image
-          : (existing?.image || dbP.image);
-
-        productMap.set(dbP.id, {
-          id: dbP.id,
-          name: dbP.name,
-          category: dbP.category_id || dbP.category || existing?.category || 'nuts-dry-fruits',
-          categoryName: dbP.category_name || dbP.categoryName || existing?.categoryName || 'General',
-          badge: dbP.badge || existing?.badge || 'Fresh',
-          image: resolvedImage,
-          price: basePrice,
-          weights: weights,
-          description: dbP.description || existing?.description || '',
-          origin: dbP.origin || existing?.origin || 'India',
-          shelfLife: dbP.shelf_life || dbP.shelfLife || existing?.shelfLife || '6 Months',
-          stock: Number(dbP.stock) || existing?.stock || 100,
-          status: status,
-          active: status === 'Active'
-        });
-      });
-      products = Array.from(productMap.values());
     }
   } catch (err) {
     console.warn('DB catalog fetch note:', err.message);
+  }
+
+  // 2. If not found in DB settings, check /tmp file fallback on Vercel
+  if (!hasMasterCatalog) {
+    try {
+      const fs = await import('fs');
+      if (fs.existsSync('/tmp/master_catalog.json')) {
+        const fileData = JSON.parse(fs.readFileSync('/tmp/master_catalog.json', 'utf8'));
+        if (fileData && Array.isArray(fileData.products) && Array.isArray(fileData.categories)) {
+          products = fileData.products;
+          categories = fileData.categories;
+          updatedAt = fileData.updatedAt || updatedAt;
+          hasMasterCatalog = true;
+        }
+      }
+    } catch {}
+  }
+
+  // 3. Only if NO master catalog was ever saved, initialize from seed PRODUCTS and CATEGORIES
+  if (!hasMasterCatalog) {
+    products = products || PRODUCTS;
+    categories = categories || CATEGORIES;
   }
 
   inMemoryCatalog.products = products;
