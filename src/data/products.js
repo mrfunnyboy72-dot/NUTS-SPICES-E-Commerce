@@ -1,5 +1,5 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
-export const CATALOG_VERSION = 'v8_1790223895414';
+export const CATALOG_VERSION = 'v8_1790224875581';
 
 export const CATEGORIES = [
   {
@@ -84,6 +84,34 @@ export const CATEGORIES = [
 ];
 
 export const PRODUCTS = [
+  {
+    "id": "prod-1790224865552",
+    "badge": "New",
+    "rating": 5,
+    "reviews": 0,
+    "status": "Active",
+    "active": true,
+    "name": "Organic Turmeric Powder",
+    "category": "organic-spices",
+    "categoryName": "Organic Spices",
+    "description": "Pure 100% Organic Turmeric Powder",
+    "image": "https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800",
+    "price": 199,
+    "discountPercent": 10,
+    "discount": "10% OFF",
+    "weights": [
+      {
+        "label": "250g",
+        "price": 199,
+        "originalPrice": 221
+      }
+    ],
+    "stock": 50,
+    "ingredients": "100% Natural Premium Grade",
+    "origin": "India",
+    "shelfLife": "9 Months",
+    "storage": "Store in airtight jar in cool dry place"
+  },
   {
     "id": "vp-01",
     "name": "VEG CHIPS",
