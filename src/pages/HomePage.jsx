@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useCart, isProductActive } from '../context/CartContext';
-import ProductCard from '../components/ProductCard';
+import React, { useRef, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
 import FeaturedTodaySection from '../components/FeaturedTodaySection';
 import BestSellingSection from '../components/BestSellingSection';
 import ComboOfferBanner from '../components/ComboOfferBanner';
 import TestimonialsSection from '../components/TestimonialsSection';
-import { ArrowRight, Compass, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HERO_SLIDES = [
   { id: 1, image: '/images/hero1.png' },
@@ -14,28 +12,8 @@ const HERO_SLIDES = [
 ];
 
 export default function HomePage() {
-  const { navigate, products, categories, selectedCategory, setSelectedCategory } = useCart();
-  const [homeCategory, setHomeCategory] = useState(selectedCategory || 'all');
+  const { navigate, categories } = useCart();
   const scrollRef = useRef(null);
-  const catScrollRef = useRef(null);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      setHomeCategory(selectedCategory);
-    }
-  }, [selectedCategory]);
-
-  const scrollCatLeft = () => {
-    if (catScrollRef.current) {
-      catScrollRef.current.scrollBy({ left: -260, behavior: 'smooth' });
-    }
-  };
-
-  const scrollCatRight = () => {
-    if (catScrollRef.current) {
-      catScrollRef.current.scrollBy({ left: 260, behavior: 'smooth' });
-    }
-  };
 
   // 5 Seconds Automatic Image Slide Interval
   useEffect(() => {
@@ -54,24 +32,6 @@ export default function HomePage() {
   }, []);
 
   const categoriesList = (categories || []).filter(c => c.id !== 'all');
-
-  const filteredHomeProducts = (products || []).filter(isProductActive).filter(p => {
-    if (!homeCategory || homeCategory === 'all') return true;
-    const catObj = (categories || []).find(c => c.id === homeCategory);
-    const cId = homeCategory.toLowerCase();
-    const cName = catObj ? catObj.name.toLowerCase() : '';
-    const pCat = (p.category || '').toLowerCase();
-    const pCatName = (p.categoryName || '').toLowerCase();
-
-    return pCat === cId || 
-           pCat === cName || 
-           (cName && pCatName === cName) || 
-           pCatName === cId ||
-           (pCat && cId && (pCat.includes(cId) || cId.includes(pCat))) ||
-           (pCatName && cName && (pCatName.includes(cName) || cName.includes(pCatName)));
-  });
-
-  const activeCatObj = (categories || []).find(c => c.id === homeCategory) || { name: 'All Products' };
 
   return (
     <div className="space-[#2B1509] space-y-16 pb-16">
@@ -146,39 +106,6 @@ export default function HomePage() {
       {/* BEST SELLING PRODUCTS CAROUSEL SECTION (FRESH FROM HARVEST SUBTITLE, UNIQUE PRODUCTS PER CATEGORY) */}
       <BestSellingSection />
 
-      {/* ALL PRODUCTS COLLECTION GRID SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E6D7C3]/60 pb-4">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-[#8B3A13] flex items-center gap-1.5 font-serif">
-              <Sparkles className="w-3.5 h-3.5 text-[#8B3A13]" />
-              <span>FRESH FROM HARVEST</span>
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B1509] font-serif mt-1">
-              {activeCatObj.name || 'All Products'}
-            </h2>
-          </div>
-          <button
-            onClick={() => navigate('shop')}
-            className="inline-flex items-center gap-2 text-xs font-extrabold text-[#8B3A13] hover:text-[#2B1509] uppercase tracking-wider transition-colors cursor-pointer group"
-          >
-            <span>View Full Shop</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
-
-        {filteredHomeProducts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-3xl border border-[#E6D7C3]/60">
-            <p className="text-sm font-bold text-[#4A3525]">No active products found in this category.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {filteredHomeProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
-      </section>
 
       {/* EXCLUSIVE COMBO OFFER PROMO BANNER SECTION */}
       <ComboOfferBanner />
