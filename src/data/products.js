@@ -1,6 +1,16 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
 export const CATALOG_VERSION = 'v8_1790226623389';
 
+export const isProductActive = (p) => {
+  if (!p || typeof p !== 'object') return false;
+  if (p.active === false || p.active === 0 || p.active === 'false') return false;
+  if (p.status) {
+    const s = String(p.status).trim().toLowerCase();
+    if (s === 'inactive' || s === 'disabled' || s === 'hidden' || s === '0' || s === 'false') return false;
+  }
+  return true;
+};
+
 export const CATEGORIES = [
   {
     "id": "all",

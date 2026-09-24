@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { PRODUCTS, CATEGORIES, STORE_WHATSAPP_NUMBER, CATALOG_VERSION } from '../data/products';
+import { PRODUCTS, CATEGORIES, STORE_WHATSAPP_NUMBER, CATALOG_VERSION, isProductActive } from '../data/products';
 import { fetchCloudCatalog, saveCloudCatalog } from '../services/cloudDb';
 import { createProduct as createProductApi, updateProduct as updateProductApi, deleteProduct as deleteProductApi } from '../api/productApi';
 import { createCategory as createCategoryApi, updateCategory as updateCategoryApi, deleteCategory as deleteCategoryApi } from '../api/categoryApi';
@@ -12,15 +12,7 @@ import {
 
 const CartContext = createContext();
 
-export const isProductActive = (p) => {
-  if (!p || typeof p !== 'object') return false;
-  if (p.active === false || p.active === 0 || p.active === 'false') return false;
-  if (p.status) {
-    const s = String(p.status).trim().toLowerCase();
-    if (s === 'inactive' || s === 'disabled' || s === 'hidden' || s === '0' || s === 'false') return false;
-  }
-  return true;
-};
+export { isProductActive };
 
 export const CartProvider = ({ children }) => {
   // 1. STORE & APPLICATION SETTINGS (Admin Configurable)
@@ -871,4 +863,7 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+  const context = useContext(CartContext);
+  return context || {};
+};

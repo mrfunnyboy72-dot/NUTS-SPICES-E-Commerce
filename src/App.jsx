@@ -31,7 +31,8 @@ import AuthModal from './components/AuthModal';
 import MobileBottomNav from './components/MobileBottomNav';
 
 function MainContent() {
-  const { activePage } = useCart();
+  const cartContext = useCart() || {};
+  const activePage = cartContext.activePage || 'home';
 
   // If in Admin Panel mode, render standalone AdminPage layout
   if (activePage === 'admin') {
