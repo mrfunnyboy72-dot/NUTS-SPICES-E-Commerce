@@ -109,15 +109,20 @@ app.get('/api/catalog', async (req, res) => {
       const categoryMap = new Map();
       // Put default/parsed categories in map first
       categories.forEach(c => categoryMap.set(c.id, c));
-      // Override/Add from DB categories table
+      // Override/Add from DB categories table while strictly preserving user's original images
       dbCats.forEach(dbC => {
+        const existing = categoryMap.get(dbC.id);
+        const resolvedImage = (dbC.image && !dbC.image.includes('photo-1596040033229'))
+          ? dbC.image
+          : (existing?.image || dbC.image);
+
         categoryMap.set(dbC.id, {
           id: dbC.id,
           name: dbC.name,
-          image: dbC.image || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600',
-          description: dbC.description || '',
-          iconLucideName: dbC.iconLucideName || 'Sparkles',
-          icon: '🌰'
+          image: resolvedImage,
+          description: dbC.description || existing?.description || '',
+          iconLucideName: dbC.iconLucideName || existing?.iconLucideName || 'Sparkles',
+          icon: dbC.icon || existing?.icon || '🌰'
         });
       });
       categories = Array.from(categoryMap.values());
@@ -140,19 +145,24 @@ app.get('/api/catalog', async (req, res) => {
         const basePrice = weights[0] ? weights[0].price : (Number(dbP.price) || 290);
         const status = dbP.status || (dbP.active !== false ? 'Active' : 'Inactive');
 
+        const existing = productMap.get(dbP.id);
+        const resolvedImage = (dbP.image && !dbP.image.includes('photo-1508061252966'))
+          ? dbP.image
+          : (existing?.image || dbP.image);
+
         productMap.set(dbP.id, {
           id: dbP.id,
           name: dbP.name,
-          category: dbP.category_id || dbP.category || 'nuts-dry-fruits',
-          categoryName: dbP.category_name || dbP.categoryName || 'General',
-          badge: dbP.badge || 'Fresh',
-          image: dbP.image || 'https://images.unsplash.com/photo-1508061252966-177bf9f7f457?auto=format&fit=crop&q=80&w=800',
+          category: dbP.category_id || dbP.category || existing?.category || 'nuts-dry-fruits',
+          categoryName: dbP.category_name || dbP.categoryName || existing?.categoryName || 'General',
+          badge: dbP.badge || existing?.badge || 'Fresh',
+          image: resolvedImage,
           price: basePrice,
           weights: weights,
-          description: dbP.description || '',
-          origin: dbP.origin || 'India',
-          shelfLife: dbP.shelf_life || dbP.shelfLife || '6 Months',
-          stock: Number(dbP.stock) || 100,
+          description: dbP.description || existing?.description || '',
+          origin: dbP.origin || existing?.origin || 'India',
+          shelfLife: dbP.shelf_life || dbP.shelfLife || existing?.shelfLife || '6 Months',
+          stock: Number(dbP.stock) || existing?.stock || 100,
           status: status,
           active: status === 'Active'
         });
