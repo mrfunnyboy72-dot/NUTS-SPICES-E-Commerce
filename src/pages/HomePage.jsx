@@ -1,7 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
-import FeaturedTodaySection from '../components/FeaturedTodaySection';
-import BestSellingSection from '../components/BestSellingSection';
 import ComboOfferBanner from '../components/ComboOfferBanner';
 import TestimonialsSection from '../components/TestimonialsSection';
 
@@ -100,11 +98,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FEATURED TODAY CAROUSEL SECTION (1 PRODUCT PER CATEGORY MATCHING USER REFERENCE SCREENSHOT) */}
-      <FeaturedTodaySection />
-
-      {/* BEST SELLING PRODUCTS CAROUSEL SECTION (FRESH FROM HARVEST SUBTITLE, UNIQUE PRODUCTS PER CATEGORY) */}
-      <BestSellingSection />
 
 
       {/* EXCLUSIVE COMBO OFFER PROMO BANNER SECTION */}
