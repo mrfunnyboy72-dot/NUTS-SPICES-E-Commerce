@@ -195,6 +195,6 @@ export async function initializeDatabase() {
 }
 
 // Run directly if called as a script
-if (process.argv[1].includes('initDb.js')) {
+if (process.argv && process.argv[1] && process.argv[1].includes('initDb.js')) {
   initializeDatabase().then(() => process.exit(0));
 }

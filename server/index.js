@@ -63,6 +63,12 @@ export const syncServerCatalog = async (products, categories) => {
       "INSERT INTO settings (setting_key, setting_value) VALUES ('master_catalog_json', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
       [catalogJson, catalogJson]
     );
+
+    // Save to /tmp filesystem for Vercel Lambda container reuse
+    try {
+      const fs = await import('fs');
+      fs.writeFileSync('/tmp/master_catalog.json', catalogJson);
+    } catch {}
   } catch (err) {
     console.warn('DB catalog sync note:', err.message);
   }
@@ -82,6 +88,19 @@ app.get('/api/catalog', async (req, res) => {
         categories = parsed.categories;
         updatedAt = parsed.updatedAt || updatedAt;
       }
+    } else {
+      // Check /tmp file fallback on Vercel
+      try {
+        const fs = await import('fs');
+        if (fs.existsSync('/tmp/master_catalog.json')) {
+          const fileData = JSON.parse(fs.readFileSync('/tmp/master_catalog.json', 'utf8'));
+          if (fileData && Array.isArray(fileData.products)) {
+            products = fileData.products;
+            categories = fileData.categories || categories;
+            updatedAt = fileData.updatedAt || updatedAt;
+          }
+        }
+      } catch {}
     }
 
     // Query TiDB categories table directly and merge all DB categories
@@ -178,8 +197,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-// Only listen on port if run directly locally
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+// Only listen on port if run directly as the main script (never when imported by api/index.js or Vercel)
+const isServerDirectRun = Boolean(process.argv[1] && (process.argv[1].endsWith('server\\index.js') || process.argv[1].endsWith('server/index.js')));
+if (isServerDirectRun) {
   app.listen(PORT, async () => {
     console.log(`\n🚀 HAJI NUTS & SPICES Backend running on http://localhost:${PORT}`);
     console.log(`🔌 Database Engine: TiDB / MySQL Compatible`);
