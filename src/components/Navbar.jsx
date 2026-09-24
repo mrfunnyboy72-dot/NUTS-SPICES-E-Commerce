@@ -52,18 +52,18 @@ export default function Navbar() {
         
         {/* TOP ANNOUNCEMENT BAR (SHOW ON HOME & TOP LINK PAGES) */}
         {['home', 'about', 'help', 'bulk-orders', 'contact', 'shipping-policy', 'returns-refunds', 'privacy-policy', 'faqs'].includes(activePage) && (
-          <div className="bg-[#2B1509] text-[#D4AF37] text-[12px] sm:text-[13px] font-extrabold py-2.5 sm:py-3 px-4 sm:px-6 border-b border-[#8B3A13]/40 tracking-wider uppercase">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 lg:gap-10">
+          <div className="bg-[#2B1509] text-[#D4AF37] text-[11px] sm:text-[12px] font-extrabold py-1.5 sm:py-2 px-4 sm:px-6 border-b border-[#8B3A13]/40 tracking-wider uppercase">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 lg:gap-8">
               
               {/* Left TV News Right-to-Left Scrolling Ticker */}
               <div className="flex-1 w-full sm:w-auto overflow-hidden flex items-center pr-4 lg:pr-8">
-                <marquee behavior="scroll" direction="left" scrollamount="5" className="font-extrabold text-[#D4AF37] tracking-wider text-[12px] sm:text-[13px] leading-relaxed block my-auto">
+                <marquee behavior="scroll" direction="left" scrollamount="5" className="font-extrabold text-[#D4AF37] tracking-wider text-[11px] sm:text-[12px] leading-relaxed block my-auto">
                   ORDER ABOVE ₹3500 GET FREE SHIPPING &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; WE DELIVER ACROSS INDIA &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; AUTHENTIC GOURMET SELECTION &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; ORDER ABOVE ₹3500 GET FREE SHIPPING &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; WE DELIVER ACROSS INDIA
                 </marquee>
               </div>
 
               {/* Right Quick Links to Dedicated Pages */}
-              <div className="hidden lg:flex items-center gap-4.5 shrink-0 text-[#E6D7C3] text-[12px] sm:text-[13px] pl-6 border-l border-[#8B3A13]/60">
+              <div className="hidden lg:flex items-center gap-4 shrink-0 text-[#E6D7C3] text-[11px] sm:text-[12px] pl-6 border-l border-[#8B3A13]/60">
                 <button onClick={() => navigate('about')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">OUR STORY</button>
                 <span className="text-[#8B3A13]">|</span>
                 <button onClick={() => navigate('help')} className="hover:text-[#D4AF37] transition-colors cursor-pointer font-serif">HELP CENTER</button>
@@ -79,27 +79,27 @@ export default function Navbar() {
 
         {/* MAIN HEADER ROW */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 sm:h-24 gap-2 sm:gap-4">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-4">
             
             {/* 1. LEFT: CATEGORY DRAWER ICON & BRAND LOGO */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button
                 onClick={() => setIsCategoryDrawerOpen(true)}
-                className="p-1.5 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
+                className="p-1 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
                 title="Browse Categories"
               >
-                <LayoutGrid className="w-6 h-6 sm:w-7 sm:h-7" />
+                <LayoutGrid className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
               <button 
                 onClick={() => navigate('home')}
                 className="flex flex-col text-left focus:outline-none cursor-pointer"
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg sm:text-2xl font-black tracking-wider text-[#2B1509] font-serif uppercase">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="text-base sm:text-xl font-black tracking-wider text-[#2B1509] font-serif uppercase">
                     HAJI
                   </span>
-                  <span className="text-[11px] sm:text-xs font-extrabold text-[#D4AF37] tracking-widest uppercase font-serif inline-block">
+                  <span className="text-[10px] sm:text-[11px] font-extrabold text-[#D4AF37] tracking-widest uppercase font-serif inline-block">
                     NUTS & SPICES
                   </span>
                 </div>
@@ -107,10 +107,10 @@ export default function Navbar() {
             </div>
 
             {/* 2. CENTER: PILL SEARCH BAR WITH LIVE POPUP DROPDOWN (DESKTOP) */}
-            <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-xl mx-4 relative">
+            <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-lg mx-4 relative">
               <form onSubmit={handleSearchSubmit} className="w-full relative flex items-center">
-                <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/60 shadow-sm p-1.5 focus-within:ring-2 focus-within:ring-[#8B3A13]/30">
-                  <Search className="w-5 h-5 text-[#8C7A6B] ml-3 shrink-0" />
+                <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/60 shadow-sm p-1 focus-within:ring-2 focus-within:ring-[#8B3A13]/30">
+                  <Search className="w-4 h-4 text-[#8C7A6B] ml-2.5 shrink-0" />
                   <input
                     type="text"
                     value={navSearchInput}
@@ -120,11 +120,11 @@ export default function Navbar() {
                       setIsSearchFocused(true);
                     }}
                     placeholder="Search..."
-                    className="w-full bg-transparent px-3 py-1.5 text-xs sm:text-sm font-medium text-[#2B1509] focus:outline-none placeholder-[#8C7A6B]"
+                    className="w-full bg-transparent px-2.5 py-1 text-xs sm:text-sm font-medium text-[#2B1509] focus:outline-none placeholder-[#8C7A6B]"
                   />
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] font-extrabold text-xs rounded-full transition-all tracking-wider uppercase shrink-0 shadow-md cursor-pointer border border-[#D4AF37]/30"
+                    className="px-4.5 py-1.5 bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] font-extrabold text-xs rounded-full transition-all tracking-wider uppercase shrink-0 shadow-sm cursor-pointer border border-[#D4AF37]/30"
                   >
                     Search
                   </button>
@@ -227,21 +227,21 @@ export default function Navbar() {
               {/* User Profile Icon */}
               <button
                 onClick={() => navigate(user ? 'profile' : 'login')}
-                className="hidden sm:block p-1.5 text-[#2B1509] hover:text-[#8B3A13] transition-colors cursor-pointer"
+                className="hidden sm:block p-1 text-[#2B1509] hover:text-[#8B3A13] transition-colors cursor-pointer"
                 title={user ? user.name : "Login / Account"}
               >
-                <User className="w-5 h-5 sm:w-6 sm:h-6" />
+                <User className="w-5 h-5" />
               </button>
 
               {/* Wishlist Heart Icon */}
               <button
                 onClick={() => navigate('wishlist')}
-                className="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] items-center justify-center relative transition-transform hover:scale-105 shadow-md cursor-pointer border border-[#D4AF37]/40"
+                className="hidden sm:flex w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full bg-[#8B3A13] hover:bg-[#6E2C00] text-[#D4AF37] items-center justify-center relative transition-transform hover:scale-105 shadow-sm cursor-pointer border border-[#D4AF37]/40"
                 title="My Wishlist"
               >
-                <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-none" />
+                <Heart className="w-4 h-4 fill-none" />
                 {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#D4AF37] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                  <span className="absolute -top-1 -right-1 bg-[#D4AF37] text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center border border-white">
                     {wishlist.length}
                   </span>
                 )}
@@ -250,10 +250,10 @@ export default function Navbar() {
               {/* Cart Shopping Bag Icon */}
               <button
                 onClick={() => navigate('cart')}
-                className="p-1.5 text-[#D4AF37] hover:text-[#8B3A13] transition-colors relative cursor-pointer"
+                className="p-1 text-[#D4AF37] hover:text-[#8B3A13] transition-colors relative cursor-pointer"
                 title="Shopping Cart"
               >
-                <ShoppingBag className="w-6 h-6" />
+                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-[#8B3A13] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {cartItemCount}
@@ -264,19 +264,19 @@ export default function Navbar() {
               {/* Search Icon Button (Mobile Header) */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="md:hidden p-1.5 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
+                className="md:hidden p-1 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
                 title="Search"
               >
-                <Search className="w-6 h-6" />
+                <Search className="w-5 h-5" />
               </button>
 
               {/* 3-LINE HAMBURGER MENU BUTTON (MOBILE ONLY - HIDDEN ON PC/LAPTOP) */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="md:hidden p-1.5 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
+                className="md:hidden p-1 text-[#D4AF37] hover:text-[#8B3A13] transition-colors cursor-pointer"
                 title="Menu"
               >
-                <Menu className="w-6 h-6 sm:w-7 sm:h-7" />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
             </div>
@@ -284,7 +284,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Search Input Row with Live Dropdown */}
-          <div className="block md:hidden pb-3 relative">
+          <div className="block md:hidden pb-2 relative">
             <form onSubmit={handleSearchSubmit} className="w-full">
               <div className="w-full relative flex items-center bg-white rounded-full border border-[#D4AF37]/50 shadow-sm p-1">
                 <Search className="w-4 h-4 text-[#8C7A6B] ml-2.5 shrink-0" />
