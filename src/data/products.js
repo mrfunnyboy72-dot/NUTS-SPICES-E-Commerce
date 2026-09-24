@@ -1,5 +1,5 @@
 export const STORE_WHATSAPP_NUMBER = '919876543210';
-export const CATALOG_VERSION = 'v8_1790224875581';
+export const CATALOG_VERSION = 'v8_1790226620847';
 
 export const CATEGORIES = [
   {
@@ -80,6 +80,13 @@ export const CATEGORIES = [
     "iconLucideName": "Sparkles",
     "icon": "🌰",
     "image": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600"
+  },
+  {
+    "id": "cross-browser-sync",
+    "name": "Cross Browser Sync",
+    "iconLucideName": "Sparkles",
+    "icon": "🌰",
+    "image": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d"
   }
 ];
 
