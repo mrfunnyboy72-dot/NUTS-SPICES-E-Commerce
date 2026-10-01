@@ -79,3 +79,30 @@ export const PRODUCTS = ${JSON.stringify(products, null, 2)};
     res.status(500).json({ success: false, message: 'Failed to sync catalog to codebase.' });
   }
 };
+
+export const syncAdminState = async (req, res) => {
+  try {
+    const adminStateJson = JSON.stringify(req.body);
+    await queryDb(
+      "INSERT INTO settings (setting_key, setting_value) VALUES ('master_admin_state_json', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
+      [adminStateJson, adminStateJson]
+    );
+    res.json({ success: true, message: 'Admin state synced to database successfully' });
+  } catch (error) {
+    console.error('Error syncing admin state:', error);
+    res.status(500).json({ success: false, message: 'Failed to sync admin state.' });
+  }
+};
+
+export const getAdminState = async (req, res) => {
+  try {
+    const rows = await queryDb("SELECT setting_value FROM settings WHERE setting_key = 'master_admin_state_json'");
+    if (rows && rows.length > 0 && rows[0].setting_value) {
+      return res.json({ success: true, data: JSON.parse(rows[0].setting_value) });
+    }
+    res.json({ success: true, data: null });
+  } catch (error) {
+    console.error('Error fetching admin state:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch admin state.' });
+  }
+};

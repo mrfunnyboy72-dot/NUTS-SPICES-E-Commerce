@@ -4,6 +4,7 @@ export const isProductActive = (p) => p && p.active !== false && p.status !== 'I
 import { fetchCloudCatalog, saveCloudCatalog } from '../services/cloudDb';
 import { createProduct as createProductApi, updateProduct as updateProductApi, deleteProduct as deleteProductApi } from '../api/productApi';
 import { createCategory as createCategoryApi, updateCategory as updateCategoryApi, deleteCategory as deleteCategoryApi } from '../api/categoryApi';
+import { fetchAdminStateApi, syncAdminStateApi } from '../api/index.js';
 import { 
   INITIAL_STORE_SETTINGS, 
   INITIAL_ORDERS, 
@@ -343,6 +344,23 @@ export const CartProvider = ({ children }) => {
     };
   }, []);
 
+  
+  useEffect(() => {
+    const loadAdmin = async () => {
+      try {
+        const res = await fetchAdminStateApi();
+        if (res && res.success && res.data) {
+          if (res.data.orders && res.data.orders.length > 0) setOrders(res.data.orders);
+          if (res.data.offers && res.data.offers.length > 0) setOffers(res.data.offers);
+          if (res.data.reviews && res.data.reviews.length > 0) setReviews(res.data.reviews);
+          if (res.data.storeSettings) setStoreSettings(res.data.storeSettings);
+          if (res.data.registeredUsers && res.data.registeredUsers.length > 0) setRegisteredUsers(res.data.registeredUsers);
+        }
+      } catch(err) {}
+    };
+    loadAdmin();
+  }, []);
+
   // Helper to reset store state to default seed data
   const resetStoreToDefault = () => {
     setProducts(PRODUCTS);
@@ -360,7 +378,21 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('nuts_spices_store_settings', JSON.stringify(INITIAL_STORE_SETTINGS));
   };
 
-  // USER AUTH HANDLERS
+  
+  const syncAdminStateToCloud = async (newStates = {}) => {
+    try {
+      const payload = {
+        orders: newStates.orders || orders,
+        offers: newStates.offers || offers,
+        reviews: newStates.reviews || reviews,
+        storeSettings: newStates.storeSettings || storeSettings,
+        registeredUsers: newStates.registeredUsers || registeredUsers
+      };
+      await syncAdminStateApi(payload);
+    } catch(err) {}
+  };
+
+// USER AUTH HANDLERS
   const registerUser = (userData) => {
     const newUser = {
       name: userData.name,
@@ -374,7 +406,9 @@ export const CartProvider = ({ children }) => {
         !(u.phone && u.phone === newUser.phone) && 
         !(u.email && u.email.toLowerCase() === newUser.email.toLowerCase())
       );
-      return [...filtered, newUser];
+      const upd = [...filtered, newUser];
+      syncAdminStateToCloud({ registeredUsers: upd });
+      return upd;
     });
 
     setUser(newUser);
@@ -713,17 +747,17 @@ export const CartProvider = ({ children }) => {
       customer: orderDetails.customer,
       timestamp: orderDetails.timestamp || new Date().toLocaleString()
     };
-    setOrders(prev => [newOrderObj, ...prev]);
+    setOrders(prev => { const upd = [newOrderObj, ...prev]; syncAdminStateToCloud({ orders: upd }); return upd; });
     setLastOrder(newOrderObj);
     return newOrderObj;
   };
 
   const updateOrderStatus = (orderId, newStatus) => {
-    setOrders(prev => prev.map(o => o.orderId === orderId ? { ...o, status: newStatus } : o));
+    setOrders(prev => { const upd = prev.map(o => o.orderId === orderId ? { ...o, status: newStatus } : o); syncAdminStateToCloud({ orders: upd }); return upd; });
   };
 
   const deleteOrder = (orderId) => {
-    setOrders(prev => prev.filter(o => o.orderId !== orderId));
+    setOrders(prev => { const upd = prev.filter(o => o.orderId !== orderId); syncAdminStateToCloud({ orders: upd }); return upd; });
   };
 
   // ADMIN - OFFERS CRUD
@@ -733,15 +767,15 @@ export const CartProvider = ({ children }) => {
       status: 'ACTIVE',
       ...offerData
     };
-    setOffers(prev => [newOffer, ...prev]);
+    setOffers(prev => { const upd = [newOffer, ...prev]; syncAdminStateToCloud({ offers: upd }); return upd; });
   };
 
   const updateOffer = (offerId, updatedFields) => {
-    setOffers(prev => prev.map(off => off.id === offerId ? { ...off, ...updatedFields } : off));
+    setOffers(prev => { const upd = prev.map(off => off.id === offerId ? { ...off, ...updatedFields } : off); syncAdminStateToCloud({ offers: upd }); return upd; });
   };
 
   const deleteOffer = (offerId) => {
-    setOffers(prev => prev.filter(off => off.id !== offerId));
+    setOffers(prev => { const upd = prev.filter(off => off.id !== offerId); syncAdminStateToCloud({ offers: upd }); return upd; });
   };
 
   // ADMIN - REVIEWS CRUD
@@ -759,16 +793,16 @@ export const CartProvider = ({ children }) => {
       productName: reviewData.productName || 'Store Experience',
       productId: reviewData.productId || ''
     };
-    setReviews(prev => [newRev, ...prev]);
+    setReviews(prev => { const upd = [newRev, ...prev]; syncAdminStateToCloud({ reviews: upd }); return upd; });
     return newRev;
   };
 
   const updateReviewStatus = (reviewId, newStatus) => {
-    setReviews(prev => prev.map(r => r.id === reviewId ? { ...r, status: newStatus } : r));
+    setReviews(prev => { const upd = prev.map(r => r.id === reviewId ? { ...r, status: newStatus } : r); syncAdminStateToCloud({ reviews: upd }); return upd; });
   };
 
   const deleteReview = (reviewId) => {
-    setReviews(prev => prev.filter(r => r.id !== reviewId));
+    setReviews(prev => { const upd = prev.filter(r => r.id !== reviewId); syncAdminStateToCloud({ reviews: upd }); return upd; });
   };
 
   // ADMIN - CUSTOMER DELETE
@@ -799,7 +833,7 @@ export const CartProvider = ({ children }) => {
 
   // ADMIN - SETTINGS UPDATE
   const updateStoreSettings = (newSettings) => {
-    setStoreSettings(prev => ({ ...prev, ...newSettings }));
+    setStoreSettings(prev => { const upd = { ...prev, ...newSettings }; syncAdminStateToCloud({ storeSettings: upd }); return upd; });
   };
 
   return (

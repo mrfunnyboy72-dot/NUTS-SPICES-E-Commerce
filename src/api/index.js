@@ -29,6 +29,8 @@ export const apiFetch = async (endpoint, options = {}) => {
 
 // Export sub-module API functions
 export const fetchAdminStatsApi = () => apiFetch('/admin/dashboard/stats');
+export const fetchAdminStateApi = () => apiFetch('/admin/state');
+export const syncAdminStateApi = (statePayload) => apiFetch('/admin/state', { method: 'POST', body: JSON.stringify(statePayload) });
 export * from './authApi.js';
 export * from './productApi.js';
 export * from './categoryApi.js';
